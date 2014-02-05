@@ -1,0 +1,393 @@
+This file contains instructions of how to get ONVIF Export Player software built and run
+
+
+******************************
+I. Build external libraries 
+******************************
+
+0. Pre-build installations to be done
+========================================
+
+In order to go successfully through all the steps of build, following installations are required:
+	- MinGW with MSys option.
+	  Required to execute prebuild.sh and prerun.sh scripts, which are required to build and run the player itself.
+	  Required to build OpenSSL and PortAudio libraries for Qt Creator.
+	  Direct link to the latest installer is
+	  http://sourceforge.net/projects/mingw/files/latest/download?source=files
+	  Note! If you have Cygwin with MinGW option configured and installed, it can also be used to perform the actions.
+			MSys was chosen only because it's easier to deploy this software package.
+	  Note! It is also possible that you will need to add path to MinGW compiler into environment PATH variable to build OpenSSL and PortAudio.
+	- Perl.
+	  Required to build OpenSSL for Visual Studio.
+	  Suggested implementation is ActivePerl, located at
+	  http://www.activestate.com/activeperl/downloads
+	  Important! Do not use Stawberry Perl, as it was proved to work very unstable with OpenSSL build system.
+	- Corresponding version of Visual Studio.
+	  Required to build OpenSSL and PortAudio libraries for Visual Studio.
+	- 7-zip or any archive tool capable to extract .7z and .tar.gz archives
+	  Required to extract Zeranoe FFmpeg build.
+	  Required to extract OpenSSL and PortAudio libraries for Visual Studio builds.
+	  Note! In order to extract OpenSSL for MinGW build use MSys (or Cygwin) tar, see below for more details.
+	  Download link is
+	  http://www.7-zip.org/
+	  
+	  
+1. FFMPEG
+=======================
+Version
+--------
+
+Verified versions of FFmpeg are 1.2.0 - 1.2.2
+Another versions of FFmpeg can also be tried, but it is not guranteed that
+it will get linked and executed with ONVIF Player sucessfully
+
+Link to the publisher web site
+-------------------------------
+
+http://www.ffmpeg.org/
+
+Downloads page link
+--------------------
+
+http://www.ffmpeg.org/download.html
+
+Build instructions
+-------------------
+	You can go with either of the following options:
+
+	a) Use availible builds recommended by FFmpeg:
+	   http://ffmpeg.zeranoe.com/builds/
+	   http://ffmpeg.zeranoe.com/builds/win32/shared/
+	   http://ffmpeg.zeranoe.com/builds/win64/shared/
+	   http://ffmpeg.zeranoe.com/builds/win32/dev/
+	   http://ffmpeg.zeranoe.com/builds/win64/dev/
+ 
+	   You should download 32-bit DEV and SHARED packages. Links to ffmpeg-1.2 build downloads:
+	   http://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-1.2-win32-dev.7z
+	   http://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-1.2-win32-shared.7z
+ 	   
+
+	b) Build FFmpeg by yourself following official recommendations:
+	   https://ffmpeg.org/trac/ffmpeg/wiki/CrossCompilingForWindows
+
+	c) Use provided script to build lightweight LGPL version of FFmpeg
+	   This is an updated script from option b) above. Script name is 
+	   cross_compile_ffmpeg.sh and it is located in the same folder with 
+	   this README file.
+	   
+ 	   !Note. This script is designed and implemented to run on Linux OS.
+	   According to recommendations and experiments, FFmpeg built on 
+	   Linux with cross-compiler is much "faster" than the one built 
+	   with "native" compilation in windows
+	   
+	   The following changes have been applied to original script:
+	   - all external libraries are switched off;
+	   - documentation and programs (ffmpeg.exe, ffplay.exe etc.) generation
+	     is disabled;
+	   - debug symbols generation is switched off;
+	   - target platform is set to 32-bit version;
+	   - all DLL and LIB files will be copied to the BUILD folder after
+	     the build will be completed
+
+
+2. OPENSSL
+=======================
+
+Version
+---------
+
+Verified version(s) of OpenSSL is 1.0.1e
+Another versions of OpenSSL can also be tried, but it is not guranteed that
+it will get linked and executed with ONVIF Player sucessfully 
+
+Link to the publisher web site
+-------------------------------
+
+http://www.openssl.org/
+
+Downloads page link
+--------------------
+
+http://www.openssl.org/source/
+ftp://ftp.openssl.org/source/
+
+Build instructions
+-------------------
+	Common build steps:
+		- Unpack OpenSSL source code to some path at your PC
+		  Important! Create several different source folders, if you 
+		  plan to mantain several builds (like VS2010 and VS2012, or
+		  MinGW and VS2012)
+		  Important! For some reasons MinGW builds need to be extracted 
+		  with MSys tar in order the build to finish successfully
+		  Execute tar -zxvf /path/to/openssl/archive.tar.gz from MSys 
+		  console in order to extract source files
+		- Create a folder for build output
+		  Important! Create several different output folders,
+		  if you plan to mantain several builds (like VS2010 and VS2012, 
+		  or MinGW and VS2012)
+	MinGW build for Qt Creator with MinGW:
+		- Create a folder for build output
+		- Run MSys
+		- Execute following commands
+		  cd /path/to/source/folder
+		  ./Configure --prefix=/absolute/path/to/output/folder no-idea no-mdc2 no-rc5 shared mingw
+		  make depend
+		  make
+		  make install
+	Visual Studio 2010 and Visual Studio 2012 Build
+		- Run corresponding Visual Studio x86 Command Prompt from Start menu
+		- Execute following commands
+		  cd X:\path\to\source\folder
+		  perl Configure VC-WIN32 --prefix=X:\path\to\output\folder
+		  ms\do_ms.bat
+		  nmake -f ms\ntdll.mak
+		  nmake -f ms\ntdll.mak install
+
+
+3. PORTAUDIO
+=======================
+
+Version
+-----------
+Verified version of PortAudio is 19
+Another versions of PortAudio can also be tried, but it is not guranteed
+that it will get linked and executed with ONVIF Player sucessfully
+
+Link to the publisher web site
+-------------------------------
+
+http://portaudio.com/
+
+Downloads page link
+--------------------
+
+http://portaudio.com/download.html
+http://portaudio.com/archives/
+
+Build instructions
+-------------------
+-in order to build for MinGW use the following instructions:
+	http://portaudio.com/docs/v19-doxydocs/compile_windows_mingw.html
+
+-in order to build for Visual Studio 2010 and Visual Studio 2012 use 
+ the following instructions:
+	http://portaudio.com/docs/v19-doxydocs/compile_windows.html
+	ONVIF Player does not need ASIO support, so follow the steps to build 
+	without ASIO support
+
+
+4. QT
+=======================
+
+Version
+--------
+
+Verified versions of Qt are 5.0.1 - 5.1.0
+Higher versions of Qt can also be tried, but it is not guranteed that it will 
+get linked and executed with ONVIF Player sucessfully
+
+Link to the publisher web site
+-------------------------------
+
+http://qt-project.org/
+
+Downloads page link
+--------------------
+http://qt-project.org/downloads
+http://download.qt-project.org/official_releases/qt/
+Please install the followng versions of Qt libraries on your build machine:
+
+	MinGW:
+		(>= 5.0.1) for Windows 32-bit
+	for Visual Studio 2010:
+		(>= 5.0.1) for Windows 32-bit
+	for Visual Studio 2012:
+		(>= 5.1.0) for Windows 32-bit 
+
+
+
+*******************************************
+II.  Prepare for ONVIF Export Player build
+*******************************************
+
+First of all we need to copy all needed files from external libraries.
+This can be done with prebuild.sh script.
+The script should be executed from MSys console.
+Working directory should be set to the script parent folder.
+This script is interactive, so just follow the instruction.
+
+The script needs to know following things:
+		- Configuration type
+			- MinGW
+			- Visual Studio 2010
+			- Visual Studio 2012
+		- FFmpeg source type
+			- binaries from http://ffmpeg.zeranoe.com/builds/
+			- built from scratch
+		- Path to FFmpeg-1.2-win32-dev folder for Zeranoe FFmpeg build
+		or
+		- Path to FFmpeg build folder for binaries built from scratch
+		- Path to OpenSSL build folder (specified in --prefix)
+		- Path to PortAudio build folder (note, that Visual Studio files
+		  are searched under path/specified/build/msvc/Win32/Release)
+
+The script does also perform patching of the ffmpeg/include/libavutil/common.h
+
+
+
+*******************************
+III.  Build ONVIF Export Player  
+*******************************
+ 
+1. MinGW 
+===========
+
+
+Building using QtCreator
+-------------------------
+The easiest way is to build project using QtCreator.
+If you installed Qt from http://qt-project.org/downloads, then just 
+start QtCreator, open /proj/ONVIFPlayer-MinGW/ONVIFPlayer.pro 
+file and select where to build Debug or Release configuration.
+ 
+Other builds
+-------------
+
+You can build project using MinGW and command line. Please find 
+commands to build release version:
+ 	qmake PATH_TO_PRO_FILE -r -spec win32-g++
+	ming32-make in project folder
+
+See for help:
+http://www.developer.nokia.com/Community/Wiki/How_to_Compile_Qt(.cpp)_file_from_command_prompt
+http://qt-project.org/doc/qt-4.8/qmake-running.html
+
+
+2. Visual Studio 2010 ( not Visual Studio 2010 Express )
+=========================================================
+
+Configuring Visual Studio Add-in
+----------------------------------
+- download from http://qt-project.org/downloads and install
+  Visual Studio Add-in for Qt5 ( >= 1.2.1 )
+- open Visual Studio, find a Dropdown menu item 'Qt5' and 
+  select 'Qt Options' from a dropdown menu.
+	In opened dialog you should see a list of auto-detected Qt Versions installed.
+  	If the right Qt Version is not present, or there are none Qt Versions
+	detected, you should do it manually, by clicking 'Add' button.
+	Select a path of an installed Qt version. This should be something like
+	"C:\Qt\Qt[QTVERSION]\[QTVERSION]\msvc2010"
+	Here [QTVERSION] is a version of your Qt library and "C:\Qt\Qt[QTVERSION]" is an
+	install path for Qt Library
+ 
+Building using Visual Studio 2010
+----------------------------------
+- open the solution file /proj/ONVIFPlayer-VS2010/ONVIFPlayer-VS2010.sln.
+- ensure, that Qt version is set for a solution:
+	Right click the solution file and find a menu item 
+	'Change solution's Qt Version'
+	Ensure that the right Qt Version is selected
+	Click Ok
+- select a build configuration and press build.
+ 
+
+3. Visual Studio 2012 ( not Visual Studio 2012 Express )
+=========================================================
+
+Configuring Visual Studio Add-in
+----------------------------------
+- download from http://qt-project.org/downloads and install
+  Visual Studio Add-in for Qt5 ( >= 1.2.2 )
+- open Visual Studio, find a Dropdown menu item 'Qt5' and select
+ 'Qt Options' from a dropdown menu.
+	In opened dialog you should see a list of auto-detected Qt Versions installed.
+  	If the right Qt Version is not present, or there are none Qt Versions 
+	detected, you should do it manually, by clicking 'Add' button.
+	Select a path of an installed Qt version. This should be something like
+	"C:\Qt\Qt[QTVERSION]\[QTVERSION]\msvc2012"
+	Here [QTVERSION] is a version of your Qt library and "C:\Qt\Qt[QTVERSION]" is 
+	an install path for Qt Library
+
+Building using Visual Studio 2012
+----------------------------------
+- install Visual Studio Add-in for Qt5 ( >= 1.2.2 )
+- open the solution file /proj/ONVIFPlayer-VS2012/ONVIFPlayer-VS2012.sln.
+- ensure, that Qt version is set for a solution:
+	Right click the solution file and find a menu item 
+	'Change solution's Qt Version'
+	Ensure that the right Qt Version is selected
+	Click Ok
+- select a build configuration and press build.
+
+
+
+******************************
+IV.  Run ONVIF Export Player  
+******************************
+
+As a preparation for execution it is required to ensure that all needed dynamic libraries are in place.
+This can be done with prerun.sh script.
+The script should be executed from MSys console.
+Working directory should be set to the script parent folder.
+This script is interactive, so just follow the instruction.
+
+The script needs to know following things
+		- Configuration type
+			- MinGW
+			- Visual Studio 2010
+			- Visual Studio 2012
+		- FFmpeg source type
+			- binaries from http://ffmpeg.zeranoe.com/builds/
+			- built from scratch
+		- Path to FFmpeg-1.2-win32-shared folder for Zeranoe FFmpeg build
+		or
+		- Path to FFmpeg build folder for binaries built from scratch
+		- Path to OpenSSL build folder (specified in --prefix)
+		- Path to PortAudio build folder (note, that Visual Studio files 
+		  are searched under path/specified/build/msvc/Win32/Release)
+
+If you run player from your IDE, then you don't need to copy Qt .dll files.
+If you run it from any place on the hard disc, then you should copy Qt libraries as well
+or make sure path to the QT libraries is in system search path.
+
+
+The following Qt files are required:
+
+	for MinGW:
+		platforms\qwindows.dll
+		D3DCompiler_xx.dll
+		icudtxx.dll
+		icuinxx.dll
+		icuucxx.dll
+		libEGL.dll
+		libgcc_s_sjlj-1.dll
+		libGLESv2.dll
+		libstdc++-6.dll
+		libwinpthread-1.dll
+		Qt5Core.dll
+		Qt5Gui.dll
+		Qt5Multimedia.dll
+		Qt5Network.dll
+		Qt5Widgets.dll
+		Qt5Xml.dll
+	
+	for Visual Studio:
+		platforms\qwindows.dll
+		icudtxx.dll
+		icuinxx.dll
+		icuucxx.dll
+		libEGL.dll
+		libGLESv2.dll
+		Qt5Core.dll
+		Qt5Gui.dll
+		Qt5Multimedia.dll
+		Qt5Network.dll
+		Qt5Widgets.dll
+		Qt5Xml.dll
+
+!Note. For Debug version you should place Qt .dll files which are ending with 'd' symbol. For example Qt5Cored.dll
+
+
+
+

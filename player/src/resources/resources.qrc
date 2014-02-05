@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="next">media_next.png</file>
+        <file alias="pause">media_pause.png</file>
+        <file alias="play">media_play.png</file>
+        <file alias="prev">media_prev.png</file>
+        <file alias="stop">media_stop.png</file>
+        <file alias="frame">movie_frame.png</file>
+        <file alias="mute">mute.png</file>
+        <file alias="volume">volume.png</file>
+        <file alias="icon">Onvif.png</file>
+        <file alias="fullscreen">fullscreen.png</file>
+    </qresource>
+</RCC>
