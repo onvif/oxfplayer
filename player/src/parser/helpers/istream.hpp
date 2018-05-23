@@ -101,6 +101,11 @@ public:
     }
 
 public:
+	//! Goto defined position
+	void seek(uint64_t pos) 
+	{
+        m_stream_ptr->seekg(pos);
+	}
     //! Rewinds a stream read pointer to the left boundary and updates the stream state.
     void restart()
     {
@@ -351,7 +356,13 @@ public:
         return m_stream.getStreamState();
     }
 
-    //! Rewinds stream read position to a left boundary and does not updates the stream state.
+	//! Goto defined position
+	void seek(uint64_t pos) 
+	{
+        m_stream.seek(pos);
+	}
+	
+	//! Rewinds stream read position to a left boundary and does not updates the stream state.
     void rewindToStart()
     {
         m_stream.rewindToStart();
