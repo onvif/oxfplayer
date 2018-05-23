@@ -43,7 +43,7 @@
 #define DECODE_SLEEP_TIMEOUT 50
 
 //! Extentions for Open File dialog.
-#define AVAILIBLE_EXTENTIONS "Video (*.mp4);;All (*.*)"
+#define AVAILIBLE_EXTENTIONS "Video (*.mp4 *.mov);;All (*.*)"
 
 //! Notification interval for audio playback.
 #define AUDIO_NOTIFY_TIMEOUT 200
