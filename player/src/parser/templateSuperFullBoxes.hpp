@@ -190,8 +190,9 @@ public:
         uint64_t off = stream.getCurrentOffset();
 		uint32_t size;
         stream.read(size);
+        stream.read(size);
 		static FourCC hdlr_four_cc("hdlr");
-		stream.seek((size == hdlr_four_cc) ? off - 8 : off - 4);
+		stream.seek((size == hdlr_four_cc) ? off - 4 : off);
         uint64_t off2 = stream.getCurrentOffset();
 		SuperFullBoxType::initialize(stream);
 	}

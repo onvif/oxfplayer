@@ -41,6 +41,8 @@ FragmentInfo::~FragmentInfo()
 void FragmentInfo::readMovieHeaderBox(MovieHeaderBox *box)
 {
     m_timescale = box->getTimeScale();
+	uint64_t delta = box->getDuration() / m_timescale;
+	m_fragment_start = box->getCreationTime().addSecs(-delta);
 }
 
 void FragmentInfo::readAfIdentificationBox(AFIdentificationBox *box)
