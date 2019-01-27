@@ -46,12 +46,11 @@ Source: "input/ONVIFPlayer.exe"; DestDir: "{app}"
 ; Qt
 Source: "input/Qt*.dll"; DestDir: "{app}"
 Source: "input/platforms/*.*"; DestDir: "{app}/platforms"
+Source: "input/audio/*.*"; DestDir: "{app}/audio"
+Source: "input/styles/*.*"; DestDir: "{app}/styles"
 #ifdef MinGW
 Source: "input/D3DCompiler_*.dll"; DestDir: "{app}"
 #endif
-Source: "input/icudt*.dll"; DestDir: "{app}"
-Source: "input/icuin*.dll"; DestDir: "{app}"
-Source: "input/icuuc*.dll"; DestDir: "{app}"
 Source: "input/libEGL.dll"; DestDir: "{app}"
 Source: "input/libGLESv2.dll"; DestDir: "{app}"
 ; FFMpeg
