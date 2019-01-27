@@ -7,13 +7,11 @@ ONVIF SOFTWARE LICENSE
 
 2. COPYRIGHT. The SOFTWARE is owned by ONVIF and/or its licensor(s), if any, and is protected by copyright laws and international treaty provisions. Therefore you must treat the SOFTWARE like any other copyrighted material (e.g. a book or a musical recording) except that you may either (a) make a copy of the SOFTWARE solely for backup or archival purposes or (b) transfer the SOFTWARE to a single hard disk provided you keep the original solely for backup purposes.
 
-3. OTHER RESTRICTIONS. You may not rent, lease or sublicense the SOFTWARE. You may not reverse engineer, decompile, or disassemble the SOFTWARE.
+3. THIRD PARTY Software. The SOFTWARE may contain third party software, which requires notices and/or additional terms and conditions. Such required third party software notices and/or additional terms and conditions are located in the readme file or other product documentation. By accepting this license agreement, you are also accepting the additional terms and conditions, if any, set forth therein.
 
-4. THIRD PARTY Software. The SOFTWARE may contain third party software, which requires notices and/or additional terms and conditions. Such required third party software notices and/or additional terms and conditions are located in the readme file or other product documentation. By accepting this license agreement, you are also accepting the additional terms and conditions, if any, set forth therein.
+4. TERMINATION. This License is effective until terminated. Your rights under this License will terminate automatically without notice from ONVIF if you fail to comply with any term(s) of this License. Upon the termination of this License, you shall cease all use of the SOFTWARE and destroy all copies, full or partial, of the SOFTWARE.
 
-5. TERMINATION. This License is effective until terminated. Your rights under this License will terminate automatically without notice from ONVIF if you fail to comply with any term(s) of this License. Upon the termination of this License, you shall cease all use of the SOFTWARE and destroy all copies, full or partial, of the SOFTWARE.
-
-6. GOVERNING LAW. This agreement shall be deemed performed in and shall be construed by the laws of Switzerland.
+5. GOVERNING LAW. This agreement shall be deemed performed in and shall be construed by the laws of Switzerland.
 
 DISCLAIMER
 THE SOFTWARE IS DELIVERED AS IS WITHOUT WARRANTY OF ANY KIND. THE ENTIRE RISK AS TO THE RESULTS AND PERFORMANCE OF THE SOFTWARE IS ASSUMED BY THE PURCHASER/THE USER/YOU. ONVIF DISCLAIMS ALL WARRANTIES, WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT, OR ANY WARRANTY ARISING OUT OF ANY PROPOSAL, SPECIFICATION OR SAMPLE WITH RESPECT TO THE SOFTWARE.
