@@ -15,7 +15,7 @@ The UI is based on Qt. Build envrionments are provided for Windows and Linux.
 BSD 3 clause
 
 ## Binaries
- * [Version 1.0 (Windows)](https://github.com/onvif/oxfplayer/blob/1.0/OnvifExportFilePlayer_1.0_win32-setup.exe)
+ * [Version 1.0 (Windows)](https://github.com/onvif/oxfplayer/raw/1.0/OnvifExportFilePlayer_1.0_win32-setup.exe)
 
 ## References
 
