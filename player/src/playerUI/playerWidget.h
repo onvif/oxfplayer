@@ -91,6 +91,9 @@ signals:
     //! Debug. Memory info.
     void memoryInfo();
 
+	//! Use local or utc time
+	void showLocalTimeChanged(bool on);
+
 protected:
     //! On close event.
     virtual void closeEvent(QCloseEvent* event);
@@ -117,6 +120,9 @@ private slots:
 
     //! Select audio stream signal.
     void onAudioStreamSelected();
+
+	//! Use local or utc time
+	void showLocalTime();
 
 private:
     //! UI.

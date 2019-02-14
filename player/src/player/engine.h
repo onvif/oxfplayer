@@ -39,6 +39,7 @@
 #include "decoder.h"
 #include "audioPlayback.h"
 #include "videoPlayback.h"
+#include "fragmentInfo.h"
 
 class VideoFrameWidget;
 
@@ -57,7 +58,7 @@ public:
     void setVideoWidget(VideoFrameWidget* video_widget);
 
     //! Init engine with some file.
-    bool init(const QString& file_name, const QSet<int>& valid_streams = QSet<int>());
+    bool init(const QString& file_name, FragmentInfo& fragment);
 
     virtual void start();
 
@@ -79,7 +80,10 @@ public:
     //! Seek in stop state will pause too.
     void seek(int time_ms);
 
-    //! Get player state.
+	//! Show next frame in pause mode.
+	int showNextFrame();
+
+	//! Get player state.
     PlayerState getState() const { return m_player_state; }
 
     //! Get video streams count.
@@ -110,14 +114,9 @@ public:
     void memoryInfo(int& video_memory, int& audio_memory) const;
 #endif //MEMORY_INFO
 
-public:
-    //! Get duration (in ms) of streams in file using ffmpeg.
-    //! Answer is map where key is stream id (not index) and value is duration in ms.
-    static QMap<int, int> getStreamsDuration(const QString& file_name, const QSet<int>& valid_streams = QSet<int>());
-
 private:
     //! Init MainContext.
-    bool initMainContext(const QString& file_name, const QSet<int>& valid_streams = QSet<int>());
+    bool initMainContext(const QString& file_name, FragmentInfo& fragment);
 
     //! Clear MainContex;
     void clearMainContext();
@@ -146,7 +145,7 @@ private:
     //! Seek to some position.
     void doSeek(int time_ms);
 
-private slots:
+	private slots:
     //! This slot will be called when video or audio playback finished.
     void onFinished();
 
@@ -187,6 +186,8 @@ private:
 
     //! Index of selected audio stream.
     int             m_selected_audio_stream_index;
+
+	FragmentInfo * m_currentFragment;
 };
 
 #endif //ENGINE_H

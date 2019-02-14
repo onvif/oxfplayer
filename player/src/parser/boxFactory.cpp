@@ -56,6 +56,7 @@
 #include "trackFragmentRandomAccessBox.hpp"
 #include "trackHeaderBox.hpp"
 #include "trackRunBox.hpp"
+#include "correctstarttimebox.hpp"
 
 BoxFactory::BoxFactory()
 {
@@ -77,6 +78,7 @@ BoxFactory::BoxFactory()
     registerCreator<SoundMediaHeaderBox>();
     registerCreator<TrackExtendsBox>();
     registerCreator<VideoMediaHeaderBox>();
+    registerCreator<TrackFragmentDecodeTimeBox>();
     // -- template super boxes --
     registerCreator<AdditionalMetadataContainerBox>();
     registerCreator<DataInformationBox>();
@@ -131,6 +133,7 @@ BoxFactory::BoxFactory()
     registerCreator<TrackFragmentRandomAccessBox>();
     registerCreator<TrackHeaderBox>();
     registerCreator<TrackRunBox>();
+    registerCreator<CorrectStartTimeBox>();
 }
 
 BoxFactory & BoxFactory::instance()

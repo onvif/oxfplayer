@@ -25,52 +25,76 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#ifndef VIDEOCONTEXT_H
-#define VIDEOCONTEXT_H
+#ifndef CORRECTSTARTTIME_BOX_H
+#define CORRECTSTARTTIME_BOX_H
 
-class MainContext;
-struct AVStream;
-class VideoDecodeThread;
+#include "basic/fullBox.hpp"
 
-//! Class that contains and initialiaze main video parameters.
-class VideoContext
+typedef std::tuple<uint32_t, QDateTime> CorrectionEntry;
+
+typedef QList<CorrectionEntry> CorrectionTable;
+
+//! Class describing Correct Start Time box.
+/*!
+ * \brief Declared in Onvif Export Format. \n
+ * Type: 'suep' \n
+ * Container: Schi Box, file level \n
+ * Mandatory: Yes \n
+ * Quantity: Exactly one
+ */
+class CorrectStartTimeBox
+        : public Box
 {
 public:
-    VideoContext();
+    explicit CorrectStartTimeBox(ChildrenMixin * parent = nullptr)
+        : Box(parent)
+    {}
 
-    ~VideoContext();
+public:
+    //! Reads the box from the input stream.
+    virtual void initialize(LimitedStreamReader &stream)
+    {
+        Box::initialize(stream);
+		int entries;
+		stream.read(entries);
+			while (--entries >= 0) {
+				int id;
+				int64_t time;
+				stream.read(id);
+				stream.read(time);
+				CorrectionEntry value(id, QDateTime(QDate(1601, 1, 1), QTime(0, 0), Qt::UTC).addMSecs(time / 10000) );
+				m_entries.append(value);
+			}
+    }
 
-    //! Init class using video stream from Maincontext.
-    /*!
-     * \param main_context main context
-     * \param video_stream_index index of video stream in main context
-	 * \param fpsHint Hint for frame per seconds to be used in cases duration is not set
-     * \return
-     */
-    bool open(MainContext& main_context, int video_stream_index, double fpsHint);
+public:
 
-    //! Clear parameters.
-    void clear();
+    //! Returns the list of video entries.
+    CorrectionTable & getEntries()
+    {
+        return m_entries;
+    }
 
-    //! Increase current fps by 1.0.
-    void increaseFps();
+	//! Returns the start time of the first entry
+    QDateTime getStartTime() const
+	{
+		if (m_entries.count() == 0) return QDateTime();
+		return std::get<1>(m_entries.first());
+	}
 
-    //! Decrease current fps by 1.0. fps can't be less then 0.
-    void decreaseFps();
+public:
+    BOX_INFO("cstb", "Correction Start Time Box")
 
-    //! Set current fps equal to standart fps.
-    void flushCurrentFps();
-
-    //! Calculate next frame delay using current fps.
-    int getTimerDelay();
+protected:
+    //! Registers properties for a box type.
+    virtual void registerProperties() CC_CXX11_OVERRIDE
+    {
+        Box::registerProperties();
+        BOX_PROPERTY(Entries);
+    }
 
 private:
-    //! Video stream.
-    AVStream*   m_video_stream;
-    //! Fps readed from stream info. Average fps.
-    double      m_fps;
-    //! Fps used for playing. Can be greater or smaller then fps.
-    double      m_current_fps;
+    CorrectionTable m_entries;
 };
 
-#endif // VIDEOCONTEXT_H
+#endif // SURVIELANCE_EXPORT_BOX_H

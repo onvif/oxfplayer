@@ -539,5 +539,50 @@ protected:
     }
 };
 
+//! Class describing Handler box.
+/*!
+ * \brief Declared in ISO Base Media Format. \n
+ * Type: 'tfdt' \n
+ * Container: TrackFragmentBox \n
+ * Mandatory: No \n
+ * Quantity: Zero or one
+ */
+class TrackFragmentDecodeTimeBox
+        : public FullBox<uint64_t>
+{
+public:
+    typedef FullBox<uint64_t> FullBoxType;
+
+public:
+    explicit TrackFragmentDecodeTimeBox(ChildrenMixin * parent = nullptr)
+        : FullBox<uint64_t>(parent)
+    {}
+
+public:
+    //! Returns the predefined data.
+    uint64_t getPredefined()
+    {
+        return std::get<2>(FullBoxType::m_data);
+    }
+
+    //! Returns the time offset relative to scale.
+    uint64_t getStartTime()
+    {
+        return std::get<2>(FullBoxType::m_data);
+
+    }
+
+public:
+    BOX_INFO("tfdt", "Track Fragment Decode Time")
+
+protected:
+    //! Registers properties for a box type.
+    virtual void registerProperties() CC_CXX11_OVERRIDE
+    {
+        FullBoxType::registerProperties();
+        BOX_PROPERTY(StartTime);
+    }
+};
+
 
 #endif // TEMPLATE_FULL_BOX_H

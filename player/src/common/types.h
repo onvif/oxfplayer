@@ -80,9 +80,9 @@ struct DecodedFrame
     //! Calculate presentation time.
     void calcTime(int64_t pkt_dts, int64_t pkt_pts, AVRational time_base)
     {
-        m_selected_pts = pkt_dts;
-        if(m_selected_pts == AV_NOPTS_VALUE)
-            m_selected_pts = pkt_pts;
+        m_selected_pts = pkt_pts;
+        if(m_selected_pts == 0)
+            m_selected_pts = pkt_dts;
         if(m_selected_pts == AV_NOPTS_VALUE)
             m_selected_pts = 0;
         m_time = (int)((double)m_selected_pts * av_q2d(time_base) * 1000.0);

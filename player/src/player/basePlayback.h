@@ -68,7 +68,7 @@ signals:
     //! This signal will be seent time by time.
     void played(BasePlayback* playback);
 
-    //! This signal will be emitted when audio playback will be ended.
+    //! This signal will be emitted when audio playback has reached the end of the file.
     void playbackFinished();
 
 protected:

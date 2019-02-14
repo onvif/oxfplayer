@@ -28,6 +28,10 @@
 #include "controlsWidget.h"
 #include "ui_controlsWidget.h"
 
+#include <QApplication>
+
+#include "controller.h"
+
 #include "defines.h"
 
 #include <QTime>
@@ -42,7 +46,8 @@ ControlsWidget::ControlsWidget(QWidget* parent) :
     m_fragment_played(0),
     m_mute(false),
     m_old_volume(0),
-    m_fullscreen_mode(false)
+    m_fullscreen_mode(false),
+	m_showLocalTime(true)
 {
     m_ui->setupUi(this);
 
@@ -293,9 +298,9 @@ void ControlsWidget::setTimeLabels()
         QString current_time   = "";
         if(m_fragments_list.size())
         {
-            QDateTime cur_time = m_fragments_list[m_playing_fragment_index].getStartTime();
-            cur_time = cur_time.addMSecs(m_fragment_played);
-            current_time = cur_time.toString(DATETIME_CONVERSION_FORMAT);
+            QDateTime cur_time = m_fragments_list[m_playing_fragment_index].getStartTime().addMSecs(m_fragment_played);
+            if (m_showLocalTime) current_time = cur_time.toLocalTime().toString(DATETIME_CONVERSION_FORMAT);
+			else current_time = cur_time.toString("dd-MM-yyyy hh:mm:ss.zzz");
         }
         m_ui->current_time->setText(current_time);
     }
@@ -315,15 +320,18 @@ void ControlsWidget::onPlayBtn()
     {
     case Stopped:
         m_player_state = Playing;
-        emit started();
+		m_ui->next_btn->setEnabled(false);
+		emit started();
         break;
     case Playing:
         m_player_state = Paused;
-        emit paused();
+		m_ui->next_btn->setEnabled(true);
+		emit paused();
         break;
     case Paused:
         m_player_state = Playing;
-        emit started();
+		m_ui->next_btn->setEnabled(false);
+		emit started();
         break;
     }
     setPlayBtnIcon();

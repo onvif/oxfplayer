@@ -41,13 +41,14 @@ VideoContext::~VideoContext()
 
 }
 
-bool VideoContext::open(MainContext& mainContext, int videoStreamIndex)
+bool VideoContext::open(MainContext& mainContext, int videoStreamIndex, double fpsHint)
 {
     m_video_stream = mainContext.getStream(videoStreamIndex);
-    if(m_video_stream == nullptr)
-        return false;
-
-    m_fps = av_q2d(m_video_stream->avg_frame_rate);
+    if(m_video_stream == nullptr) return false;
+	m_fps = fpsHint;
+	if (m_video_stream->avg_frame_rate.num != 0) {
+	    m_fps = av_q2d(m_video_stream->avg_frame_rate);
+	}
     m_current_fps = m_fps;
 
     qDebug() << "FPS" << m_fps;

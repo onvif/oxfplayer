@@ -32,9 +32,11 @@
 
 typedef std::tuple<QUuid, QString, QString, QString, QString> SurveillanceVideoEntry;
 typedef std::tuple<QUuid, QString, QString, QString> SurveillanceAudioEntry;
+typedef std::tuple<uint32_t, QString, QString, QString, QString> SurveillanceEntry;
 
 typedef QList<SurveillanceVideoEntry> SurveillanceVideoTable;
 typedef QList<SurveillanceAudioEntry> SurveillanceAudioTable;
+typedef QList<SurveillanceEntry> SurveillanceTable;
 
 //! Class describing Surveillance Export box.
 /*!
@@ -95,6 +97,11 @@ public:
     }
 
     //! Returns the list of video entries.
+    SurveillanceTable & getEntries()
+    {
+        return m_entries;
+    }
+    //! Returns the list of video entries.
     SurveillanceVideoTable & getVideoEntries()
     {
         return m_video_entries;
@@ -119,6 +126,7 @@ protected:
         BOX_PROPERTY(ExportUnitMAC);
         BOX_PROPERTY(ExportUnitTime);
         BOX_PROPERTY(ExportOperator);
+        BOX_PROPERTY(Entries);
         BOX_PROPERTY(VideoEntries);
         BOX_PROPERTY(AudioEntries);
     }
@@ -127,23 +135,35 @@ private:
     //! Reads the lists of video and audio entries from the stream.
     void readContents(LimitedStreamReader &stream)
     {
-        uint8_t table_size;
-        stream.read(table_size);
-        m_video_entries.reserve(table_size);
-        while(table_size--)
-        {
-            SurveillanceVideoEntry value;
-            stream.read(value);
-            m_video_entries.append(value);
-        }
-        stream.read(table_size);
-        m_audio_entries.reserve(table_size);
-        while(table_size--)
-        {
-            SurveillanceAudioEntry value;
-            stream.read(value);
-            m_audio_entries.append(value);
-        }
+		int version = getVersion();
+	if (version == 1) {
+			int entries;
+			stream.read(entries);
+			while (--entries >= 0) {
+				SurveillanceEntry value;
+				stream.read(value);
+				m_entries.append(value);
+			}
+		}
+		else if (version == 0) {
+			uint8_t table_size;
+			stream.read(table_size);
+			m_video_entries.reserve(table_size);
+			while(table_size--)
+			{
+				SurveillanceVideoEntry value;
+				stream.read(value);
+				m_video_entries.append(value);
+			}
+			stream.read(table_size);
+			m_audio_entries.reserve(table_size);
+			while(table_size--)
+			{
+				SurveillanceAudioEntry value;
+				stream.read(value);
+				m_audio_entries.append(value);
+			}
+		}
     }
 
 private:
@@ -151,6 +171,7 @@ private:
     SurveillanceVideoTable m_video_entries;
     //! List of audio entries.
     SurveillanceAudioTable m_audio_entries;
+    SurveillanceTable m_entries;
 };
 
 #endif // SURVIELANCE_EXPORT_BOX_H

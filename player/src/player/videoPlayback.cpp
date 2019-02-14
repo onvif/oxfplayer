@@ -197,7 +197,7 @@ void VideoPlayback::syncWithAudio(BasePlayback* playback)
                 {
                     //end of the video queue riched
                     qDebug() << "Video ended";
-                    stop();
+                    pause();
                     current_frame_changed = false;
                     emit playbackFinished();
                     break;
@@ -255,7 +255,7 @@ void VideoPlayback::showFrame(bool single_frame)
     else
     {
         qDebug() << "Video ended";
-        stop();
+        pause();
         emit playbackFinished();
     }
 }

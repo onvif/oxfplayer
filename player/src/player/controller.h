@@ -81,7 +81,7 @@ private slots:
     //! Stop button pressed.
     void onStop();
 
-    //! Engine send new played time.
+	//! Engine send new played time.
     void onPlayed(BasePlayback* playback);
 
     //! Fragment slider released - seek to some position.
@@ -116,6 +116,9 @@ private slots:
 
     //! When engine says that playback finished.
     void onPlaybackFinished();
+
+	//! Use local or utc time
+	void onshowLocalTimeChanged(bool on);
 
 #ifdef MEMORY_INFO
     //!Debug. Show memory info.

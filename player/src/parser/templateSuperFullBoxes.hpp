@@ -191,9 +191,7 @@ public:
 		uint32_t size;
         stream.read(size);
         stream.read(size);
-		static FourCC hdlr_four_cc("hdlr");
-		stream.seek((size == hdlr_four_cc) ? off - 4 : off);
-        uint64_t off2 = stream.getCurrentOffset();
+		stream.seek((size == 'hdlr') ? off - 4 : off);
 		SuperFullBoxType::initialize(stream);
 	}
 

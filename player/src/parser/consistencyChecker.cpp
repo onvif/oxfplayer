@@ -54,6 +54,7 @@
 #include "trackFragmentRandomAccessBox.hpp"
 #include "trackHeaderBox.hpp"
 #include "trackRunBox.hpp"
+#include "correctstarttimebox.hpp"
 
 ConsistencyChecker::ConsistencyChecker()
     : m_current_box(nullptr)
@@ -220,6 +221,7 @@ ConsistencyChecker::ConsistencyChecker()
         this->exactlyOneCheck<CertificateBox>();
         this->zeroOrOneCheck<SignatureConfigurationBox>();
         this->zeroOrOneCheck<AdditionalUserInformationBox>();
+        this->zeroOrOneCheck<CorrectStartTimeBox>();
     });
 
     registerChecker<TrackReferenceBox>( [this] () {
@@ -245,6 +247,7 @@ ConsistencyChecker::ConsistencyChecker()
     registerChecker<TrackFragmentBox>( [this] () {
         this->exactlyOneCheck<TrackFragmentHeaderBox>();
         this->anyCountCheck<TrackRunBox>();
+		this->zeroOrOneCheck<TrackFragmentDecodeTimeBox>();
     });
 
     registerChecker<MovieFragmentRandomAccessBox>( [this] () {

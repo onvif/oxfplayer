@@ -56,6 +56,7 @@ Controller::Controller(Engine& engine,
     QObject::connect(&m_player_widget, SIGNAL(verifyFileSignature()), this, SLOT(verifyFileSignature()));
     QObject::connect(&m_player_widget, SIGNAL(openCertificateStorage()), this, SLOT(openCertificateStorage()));
     QObject::connect(&m_player_widget, SIGNAL(exit()), this, SLOT(exit()));
+    QObject::connect(&m_player_widget, SIGNAL(showLocalTimeChanged(bool)), this, SLOT(onshowLocalTimeChanged(bool)));
 
     QObject::connect(&m_engine, SIGNAL(playbackFinished()), this, SLOT(onPlaybackFinished()));    
 
@@ -126,7 +127,7 @@ void Controller::openFile(const QString& file_name)
     m_fragments_list = m_media_parser.getFragmentsList();
     updateFragmentsList(m_fragments_list);
 
-    if(!m_engine.init(file_name, m_fragments_list.front().getValidMediaStreamIds()))
+    if(!m_engine.init(file_name, m_fragments_list.front()))
     {
         QMessageBox message_box(QMessageBox::Information,
                                m_player_widget.windowTitle(),
@@ -184,7 +185,7 @@ void Controller::openDir(const QString& dir_name)
             {
                 m_fragments_list = m_media_parser.getFragmentsList();
                 updateFragmentsList(m_fragments_list);
-                if(m_engine.init(m_fragments_list.front().getFileName(), m_fragments_list.front().getValidMediaStreamIds()))
+                if(m_engine.init(m_fragments_list.front().getFileName(), m_fragments_list.front()))
                 {
                     m_parser_widget.showFilesetInformation(m_media_parser.getFilesetInformation());
                     m_verifyer_dialog.initialize(m_media_parser);
@@ -301,7 +302,7 @@ void Controller::onSeek(int fragment_index, int time_ms)
     m_engine.stop();
     m_engine.clear();
     FragmentInfo fragment_info = m_fragments_list[fragment_index];
-    if(!m_engine.init(fragment_info.getFileName(), fragment_info.getValidMediaStreamIds()))
+    if(!m_engine.init(fragment_info.getFileName(), fragment_info))
     {
         m_controls_widget.updateUI();
         //TODO - common function for this message
@@ -355,7 +356,7 @@ void Controller::onFragmentSelected(FragmentInfo fragment_info)
     m_engine.stop();
     m_engine.clear();
     m_controls_widget.stopPlayback();
-    if(!m_engine.init(fragment_info.getFileName(), fragment_info.getValidMediaStreamIds()))
+    if(!m_engine.init(fragment_info.getFileName(), fragment_info))
     {
         m_controls_widget.updateUI();
         //TODO - common function for this message
@@ -389,11 +390,15 @@ void Controller::onFragmentSelected(FragmentInfo fragment_info)
 
 void Controller::onNextFragment()
 {
-    if(m_fragments_list.size() == 1 ||
-       m_playing_fragment_index == m_fragments_list.size() - 1)
-        return;
-
-    onFragmentSelected(m_fragments_list[m_playing_fragment_index + 1]);
+	if (m_fragments_list.size() == 1 ||
+		m_playing_fragment_index == m_fragments_list.size() - 1) {
+		m_controls_widget.setPlayedTime(m_engine.showNextFrame());
+		m_controls_widget.setTimeLabels();
+		return;
+	}
+	else {
+		onFragmentSelected(m_fragments_list[m_playing_fragment_index + 1]);
+	}
 }
 
 void Controller::onPrevFragment()
@@ -441,13 +446,19 @@ void Controller::onSpace()
     m_controls_widget.updateUI();
 }
 
+void Controller::onshowLocalTimeChanged(bool on)
+{
+	m_controls_widget.m_showLocalTime = on;
+	m_controls_widget.setTimeLabels();
+}
+
 void Controller::onPlaybackFinished()
 {
     if(m_fragments_list.size() == 1 ||
        (m_fragments_list.size() > 1 &&
         m_playing_fragment_index == m_fragments_list.size() - 1))
     {
-        m_controls_widget.stopPlayback();
+        m_controls_widget.pausePlayback();
         m_controls_widget.updateUI();
     }
     else
@@ -466,23 +477,9 @@ void Controller::showMemoryInfo()
 }
 #endif //MEMORY_INFO
 
-void Controller::updateFragmentsList(FragmentsList& fragments_list)
+void Controller::updateFragmentsList(FragmentsList&)
 {
-    for(FragmentsList::iterator iter = fragments_list.begin(); iter != fragments_list.end(); ++iter)
-    {
-        if(iter->getDuration() == 0)
-        {
-            QMap<int, int> streams_duration = Engine::getStreamsDuration(iter->getFileName(), iter->getValidMediaStreamIds());
-            if(streams_duration.size())
-            {
-                int duration = INT_MAX;
-                for(QMap<int, int>::const_iterator cIter = streams_duration.begin(); cIter != streams_duration.end(); ++cIter)
-                    if(cIter.value() < duration)
-                       duration = cIter.value();
-                iter->setDuration(duration);
-            }
-        }
-    }
+	// currently nothing tbd
 }
 
 void Controller::changeStreamIndex(int index, bool video)

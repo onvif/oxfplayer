@@ -15,7 +15,16 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item row="0" column="2">
@@ -27,7 +36,16 @@
        </sizepolicy>
       </property>
       <layout class="QGridLayout" name="video_layout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
       </layout>
@@ -42,7 +60,16 @@
        </sizepolicy>
       </property>
       <layout class="QGridLayout" name="controls_layout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
       </layout>
@@ -57,7 +84,16 @@
        </size>
       </property>
       <layout class="QGridLayout" name="frames_list_layout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
       </layout>
@@ -104,6 +140,8 @@
     </property>
     <addaction name="actionVideo_streams"/>
     <addaction name="actionAudio_streams"/>
+    <addaction name="separator"/>
+    <addaction name="actionLocalTime"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuRender"/>
@@ -157,6 +195,17 @@
   <action name="actionCertificate_storage">
    <property name="text">
     <string>Certificate storage</string>
+   </property>
+  </action>
+  <action name="actionLocalTime">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show local time</string>
    </property>
   </action>
  </widget>

@@ -31,6 +31,8 @@
 #include "mediaHeaderBox.hpp"
 #include "movieHeaderBox.hpp"
 #include "trackHeaderBox.hpp"
+#include "trackFragmentHeaderBox.hpp"
+#include "correctstarttimebox.hpp"
 
 FragmentExtractor::FragmentExtractor(QObject *parent) :
     QObject(parent)
@@ -81,25 +83,33 @@ void FragmentExtractor::onFileClosed()
 
 void FragmentExtractor::onBoxCreated(Box *box)
 {
-    static const FourCC sc_mvhd_four_cc(MovieHeaderBox::getFourCC()),
-            sc_sumi_four_cc(AFIdentificationBox::getFourCC()),
-            sc_tkhd_four_cc(TrackHeaderBox::getFourCC());
-
-    FourCC four_cc = box->getBoxFourCC();
-
-    if(!m_fragments_list.isEmpty())
-    {
-        if(four_cc == sc_mvhd_four_cc)
-        {
-            m_fragments_list.back().readMovieHeaderBox(dynamic_cast<MovieHeaderBox *>(box));
-        }
-        else if(four_cc == sc_sumi_four_cc)
-        {
-            m_fragments_list.back().readAfIdentificationBox(dynamic_cast<AFIdentificationBox *>(box));
-        }
-        else if(four_cc == sc_tkhd_four_cc)
-        {
-            m_fragments_list.back().readTrackHeaderBox(dynamic_cast<TrackHeaderBox *>(box));
-        }
-    }
+	switch((uint32_t)box->getBoxFourCC()) {
+	case 'mvhd':
+		m_fragments_list.back().readMovieHeaderBox(dynamic_cast<MovieHeaderBox *>(box));
+		break;
+	case 'sumi':
+		m_fragments_list.back().readAfIdentificationBox(dynamic_cast<AFIdentificationBox *>(box));
+		break;
+	case 'tkhd':
+		m_fragments_list.back().readTrackHeaderBox(dynamic_cast<TrackHeaderBox *>(box));
+		break;
+	case 'cstb':
+		m_fragments_list.back().readCorrectionStartTimeBox(dynamic_cast<CorrectStartTimeBox *>(box));
+		break;
+	case 'stts':
+		m_fragments_list.back().read(dynamic_cast<TimeToSampleBox*>(box));
+		break;
+	case 'ctts':
+		m_fragments_list.back().read(dynamic_cast<CompositionOffsetBox*>(box));
+		break;
+	case 'tfhd':
+		m_fragments_list.back().m_currentParserTrackId = dynamic_cast<TrackFragmentHeaderBox*>(box)->getTrackID();
+		break;
+	case 'trun':
+		m_fragments_list.back().read(dynamic_cast<TrackRunBox*>(box));
+		break;
+	case 'mdhd':
+		m_fragments_list.back().read(dynamic_cast<MediaHeaderBox*>(box));
+		break;
+	}
 }

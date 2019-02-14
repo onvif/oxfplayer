@@ -40,8 +40,12 @@
 
 #include "afIdentificationBox.hpp"
 #include "movieHeaderBox.hpp"
+#include "mediaHeaderBox.hpp"
 #include "trackHeaderBox.hpp"
+#include "trackRunBox.hpp"
+#include "correctstarttimebox.hpp"
 #include "helpers/optional.hpp"
+#include "templateTableBoxes.hpp"
 
 //! Class that descibes one frament in video.
 class FragmentInfo
@@ -59,6 +63,11 @@ public:
 
     //! Try to get id of media stream from track header box
     void readTrackHeaderBox(TrackHeaderBox * box);
+    void readCorrectionStartTimeBox(CorrectStartTimeBox * box);
+    void read(TimeToSampleBox* box);
+	void read(CompositionOffsetBox* box);
+	void read(TrackRunBox* box);
+	void read(MediaHeaderBox* box);
 
     //! Returns if a fragment is a Surveillance file.
     bool isSurveillanceFragment() const;
@@ -77,6 +86,7 @@ public:
 
     //! Compute a duration of a fragment in milliseconds.
     uint64_t getDuration() const;
+	bool hasDuration() const { return m_duration != 0;}
 
     //! Set duration of a fragment if it is not filled from SUMI box.
     void setDuration(uint64_t duration);
@@ -99,6 +109,8 @@ public:
     //! Returns ids of valid media streams.
     QSet<int> getValidMediaStreamIds() const;
 
+    //! Gets the estimated fps from sample information
+    double getFpsFromSamples() const;
 private:
     //! Compute name for a fragment. This name will be shown in UI.
     void createName() const;
@@ -120,10 +132,23 @@ private:
     QSet<int>                       m_valid_stream_ids;
     //! Timescale of the fragment.
     uint32_t                        m_timescale;
+    //! Video timescale of the fragment.
+    uint32_t                        m_videoTimescale;
     //! Duration of the surveillance fragment in timescales, if present.
     uint64_t                        m_duration;
     //! Name that will be shown in UI.
     mutable QString                 m_name;
+    //! Number of samples.
+    uint32_t                        m_samples;
+    //! Accumulated sample duration
+    uint64_t                        m_accumulatedSampleDuration;
+	//! Optional Composition offset of last sample
+	uint64_t                        m_firstSampleCompositionOffset;
+	//! Optional Composition offset of last sample
+    uint64_t                        m_lastSampleCompositionOffset;
+	uint32_t						m_firstTrackId;
+public:
+	uint32_t						m_currentParserTrackId;		///< track id currently beingparsed
 };
 
 typedef QList<FragmentInfo> FragmentsList;

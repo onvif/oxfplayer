@@ -79,13 +79,13 @@ public:
     //! Returns fragment start time.
     QDateTime getStartTime()
     {
-        return QDateTime(QDate(1601, 1, 1), QTime(0, 0), Qt::UTC).addSecs(std::get<3>(DataBoxType::m_data) / 10000000);
+        return QDateTime(QDate(1601, 1, 1), QTime(0, 0), Qt::UTC).addMSecs(std::get<3>(DataBoxType::m_data) / 10000);
     }
 
-    //! Returns the fragment duration.
-    uint64_t getDuration()
+    //! Returns the fragment duration in seconds.
+    double getDuration()
     {
-        return std::get<4>(DataBoxType::m_data) / 10000000;
+        return std::get<4>(DataBoxType::m_data) / 10000000.0;
     }
 
     //! Returns predecessor URI size.

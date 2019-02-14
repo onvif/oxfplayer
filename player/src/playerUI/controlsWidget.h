@@ -57,7 +57,10 @@ public:
     //! Start playback with selected length at some total position.
     void startFragment(int fragment_index);
 
-public slots:
+	//! Setup time labels.
+	void setTimeLabels();
+
+	public slots:
     //! Set played time for fragment.
     void setPlayedTime(BasePlayback* playback);
 
@@ -82,6 +85,9 @@ public:
 
     //! Update UI. Call this function after all updates.
     void updateUI();
+
+	//! Set played time for fragment.
+	void setPlayedTime(int time) { m_fragment_played = time; }
 
 signals:
     //! Started.
@@ -135,9 +141,6 @@ private:
     //! Set up time sliders position.
     void setTimePositions();
 
-    //! Setup time labels.
-    void setTimeLabels();
-
 private slots:
     //! Play button pressed.
     void onPlayBtn();
@@ -174,6 +177,8 @@ private:
     int                 m_old_volume;
     //! Is in fullscreen mode.
     bool                m_fullscreen_mode;
+public:
+	bool				m_showLocalTime;
 };
 
 #endif // CONTROLSWIDGET_H

@@ -84,11 +84,11 @@ void Engine::setVideoWidget(VideoFrameWidget* video_widget)
     m_video_playback.setVideoWidget(m_video_widget);
 }
 
-bool Engine::init(const QString& file_name, const QSet<int>& valid_streams)
+bool Engine::init(const QString& file_name, FragmentInfo& fragment)
 {
-    bool res = true;
-
-    res = res && initMainContext(file_name, valid_streams);
+	m_currentFragment = &fragment;
+	bool res = true;
+	res = res && initMainContext(file_name, fragment);
     res = res && initDecoders();
     res = res && initVideoPlayback();
     res = res && initAudioPlayback();
@@ -264,7 +264,7 @@ void Engine::setVideoStreamIndex(int index)
     stop();
     m_selected_video_stream_index = index;
     m_video_context.clear();
-    m_video_context.open(m_video_main_context, m_selected_video_stream_index);
+	m_video_context.open(m_video_main_context, m_selected_video_stream_index, m_currentFragment->getFpsFromSamples());
     m_video_decoder->setStream(m_video_main_context.getStream(m_selected_video_stream_index));
 }
 
@@ -311,44 +311,16 @@ void Engine::memoryInfo(int& video_memory, int& audio_memory) const
 }
 #endif //MEMORY_INFO
 
-QMap<int, int> Engine::getStreamsDuration(const QString& file_name, const QSet<int>& valid_streams)
-{
-    QMap<int, int> streams_duration;
-    {
-        MainContext video_main_context(AVMEDIA_TYPE_VIDEO);
-        if(video_main_context.open(file_name, valid_streams))
-        {
-            for(int i = 0; i < video_main_context.getStreamsCount(); ++i)
-            {
-                AVStream* stream = video_main_context.getStream(i);
-                streams_duration.insert(stream->id, (int)((double)stream->duration * av_q2d(stream->time_base) * 1000.0));
-            }
-        }
-    }
-    {
-        MainContext audio_main_context(AVMEDIA_TYPE_AUDIO);
-        if(audio_main_context.open(file_name, valid_streams))
-        {
-            for(int i = 0; i < audio_main_context.getStreamsCount(); ++i)
-            {
-                AVStream* stream = audio_main_context.getStream(i);
-                streams_duration.insert(stream->id, (int)((double)stream->duration * av_q2d(stream->time_base) * 1000.0));
-            }
-        }
-    }
-    return streams_duration;
-}
-
 /*********************************************************************************************/
 
-bool Engine::initMainContext(const QString& file_name, const QSet<int>& valid_streams)
+bool Engine::initMainContext(const QString& file_name, FragmentInfo& fragment)
 {
     bool res = true;
 
-    res = res && m_video_main_context.open(file_name, valid_streams);
-    res = res && m_audio_main_context.open(file_name, valid_streams);
+    res = res && m_video_main_context.open(file_name, fragment.getValidMediaStreamIds());
+    res = res && m_audio_main_context.open(file_name, fragment.getValidMediaStreamIds());
     res = res && m_video_main_context.getStreamsCount();
-    res = res && m_video_context.open(m_video_main_context, m_selected_video_stream_index);
+	res = res && m_video_context.open(m_video_main_context, m_selected_video_stream_index, fragment.getFpsFromSamples());
     if(m_audio_main_context.getStreamsCount())
         res = res && m_audio_context.open(m_audio_main_context, m_selected_audio_stream_index);
 
@@ -487,9 +459,17 @@ void Engine::doSeek(int time_ms)
     m_video_context.flushCurrentFps();
 }
 
+int Engine::showNextFrame()
+{
+	VideoFrame video_frame;
+	m_video_decoder->getNextFrame(video_frame);
+	m_video_widget->setDrawImage(video_frame.m_image);
+	return video_frame.m_time;
+}
+
 void Engine::onFinished()
 {
-    stop();
+    pause();
 
     emit playbackFinished();
 }

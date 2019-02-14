@@ -31,6 +31,11 @@ FragmentInfo::FragmentInfo(QString file_name /*= QString()*/)
     : m_fragment_number(0)
     , m_file_name(file_name)
     , m_duration(0)
+	, m_samples(0)
+	, m_accumulatedSampleDuration(0)
+	, m_firstSampleCompositionOffset(0)
+	, m_lastSampleCompositionOffset(0)
+	, m_videoTimescale(0)
 {
 }
 
@@ -41,13 +46,19 @@ FragmentInfo::~FragmentInfo()
 void FragmentInfo::readMovieHeaderBox(MovieHeaderBox *box)
 {
     m_timescale = box->getTimeScale();
-	uint64_t delta = box->getDuration() / m_timescale;
-	m_fragment_start = box->getCreationTime().addSecs(-delta);
+	int64_t delta = box->getDuration() * 1000 / m_timescale;
+	m_fragment_start = box->getCreationTime().addMSecs(-delta);
+}
+
+void FragmentInfo::read(MediaHeaderBox*box)
+{
+	// assume that first track is Video
+    if (m_videoTimescale == 0) m_videoTimescale = box->getTimeScale();
 }
 
 void FragmentInfo::readAfIdentificationBox(AFIdentificationBox *box)
 {
-    m_duration = box->getDuration();
+    m_duration = box->getDuration() / m_videoTimescale;
     m_predecessor_uuid = box->getPredecessorUUID().toString();
     m_fragment_uuid = box->getFragmentUUID().toString();
     m_successor_uuid = box->getSuccessorUUID().toString();
@@ -56,7 +67,55 @@ void FragmentInfo::readAfIdentificationBox(AFIdentificationBox *box)
 
 void FragmentInfo::readTrackHeaderBox(TrackHeaderBox *box)
 {
-    m_valid_stream_ids << box->getTrackID();
+	m_currentParserTrackId = box->getTrackID();
+	if (m_valid_stream_ids.count() == 0) m_firstTrackId = m_currentParserTrackId;
+    m_valid_stream_ids << m_currentParserTrackId;
+}
+
+void FragmentInfo::readCorrectionStartTimeBox(CorrectStartTimeBox * box)
+{
+    m_fragment_start = box->getStartTime();
+}
+
+void FragmentInfo::read(TimeToSampleBox* box)
+{
+	if (m_currentParserTrackId != m_firstTrackId) return;		// only accumulate first track
+	QListIterator<TimeToSampleEntry> it(box->getTable());
+	while (it.hasNext()) {
+		TimeToSampleEntry e = it.next();
+		m_samples += std::get<0>(e);
+		m_accumulatedSampleDuration += std::get<0>(e) * std::get<1>(e);
+	}
+}
+
+void FragmentInfo::read(TrackRunBox* box)
+{
+	if (m_currentParserTrackId != m_firstTrackId) return;		// only accumulate first track
+	QListIterator<TrackRunEntry> it(box->getTable());
+	while (it.hasNext()) {
+		TrackRunEntry e = it.next();
+		if (std::get<0>(e).hasValue()) {
+			m_samples++;
+			m_accumulatedSampleDuration += std::get<0>(e).value();
+		}
+	}
+}
+
+double FragmentInfo::getFpsFromSamples() const
+{
+	if (m_samples == 0 || m_videoTimescale == 0) return 0.0;
+	double duration = (double)(m_accumulatedSampleDuration + m_lastSampleCompositionOffset - m_firstSampleCompositionOffset) / (double)m_videoTimescale;
+	return (double)m_samples / duration;
+}
+
+
+void FragmentInfo::read(CompositionOffsetBox* box)
+{
+	if (m_currentParserTrackId != m_firstTrackId) return;		// only accumulate first track
+	CompositionOffsetEntry last = box->getTable().last();
+	m_lastSampleCompositionOffset = std::get<1>(last);
+	CompositionOffsetEntry first = box->getTable().first();
+	m_firstSampleCompositionOffset = std::get<1>(first);
 }
 
 bool FragmentInfo::isSurveillanceFragment() const
@@ -66,7 +125,7 @@ bool FragmentInfo::isSurveillanceFragment() const
 
 QDateTime FragmentInfo::getStartTime() const
 {
-    return m_fragment_start;
+    return m_fragment_start.addMSecs(m_firstSampleCompositionOffset * 1000 / m_videoTimescale);
 }
 
 QDateTime FragmentInfo::getFinishTime() const
@@ -90,7 +149,9 @@ uint64_t FragmentInfo::getDuration() const
 {
     // Will return 0 for non-surveillance files
     // In this case duration will be determined with the use of FFMpeg methods
-    return 1000 * m_duration / m_timescale;
+	if (m_duration) return 1000 * m_duration / m_timescale;
+	else if (m_videoTimescale) return 1000 * (m_accumulatedSampleDuration + m_lastSampleCompositionOffset - m_firstSampleCompositionOffset) / m_videoTimescale;
+	return 0;
 }
 
 void FragmentInfo::setDuration(uint64_t duration)

@@ -54,6 +54,7 @@ PlayerWidget::PlayerWidget(QWidget* parent) :
     QObject::connect(m_ui->actionFile_signature, SIGNAL(triggered()), this, SIGNAL(verifyFileSignature()));
     QObject::connect(m_ui->actionCertificate_storage, SIGNAL(triggered()), this, SIGNAL(openCertificateStorage()));
     QObject::connect(m_ui->actionExit, SIGNAL(triggered()), this, SIGNAL(exit()));
+	QObject::connect(m_ui->actionLocalTime, SIGNAL(triggered()), this, SLOT(showLocalTime()));
 #ifdef MEMORY_INFO
     QObject::connect(m_ui->actionMemory, SIGNAL(triggered()), this, SIGNAL(memoryInfo()));
 #endif //MEMORY_INFO
@@ -176,4 +177,9 @@ void PlayerWidget::onAudioStreamSelected()
         if(checked)
             emit changeAudioStream(i);
     }
+}
+
+void PlayerWidget::showLocalTime()
+{
+	emit showLocalTimeChanged((bool)((QAction*)sender())->isChecked());
 }
