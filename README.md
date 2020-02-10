@@ -21,3 +21,4 @@ BSD 3 clause
 
  * [ISO/IEC 14496-12](https://www.iso.org/standard/68960.html)
  * [ONVIF Export File Format](https://www.onvif.org/specs/stream/ONVIF-ExportFileFormat-Spec.pdf)
+ * [MP4RA Box registry](https://mp4ra.org/#/atoms)
