@@ -78,18 +78,16 @@ struct DecodedFrame
     int64_t     m_selected_pts;
 
     //! Calculate presentation time.
-    void calcTime(int64_t pkt_dts, int64_t pkt_pts, AVRational time_base)
+    void calcTime(int64_t pkt_pts, AVRational time_base)
     {
         m_selected_pts = pkt_pts;
-        if(m_selected_pts == 0)
-            m_selected_pts = pkt_dts;
         if(m_selected_pts == AV_NOPTS_VALUE)
             m_selected_pts = 0;
         m_time = (int)((double)m_selected_pts * av_q2d(time_base) * 1000.0);
     }
 
     //! Get occupied memory.
-    virtual int size() const = 0;
+    virtual size_t size() const = 0;
 
     //! Clear frame.
     virtual void clear()
@@ -104,14 +102,15 @@ struct VideoFrame : public DecodedFrame
 {
     //! Qt image containing decode video frame.
     QImage      m_image;
+    bool        m_isOverlay;
 
     VideoFrame() :
-        DecodedFrame()
+        DecodedFrame(), m_isOverlay(false)
     {}
 
-    virtual int size() const
+    virtual size_t size() const
     {
-        return sizeof(VideoFrame) + m_image.byteCount();
+        return sizeof(VideoFrame) + m_image.sizeInBytes();
     }
 
     virtual void clear()
@@ -131,7 +130,7 @@ struct AudioFrame : public DecodedFrame
         DecodedFrame()
     {}
 
-    int size() const
+    size_t size() const
     {
         return sizeof(AudioFrame) + m_data.size();
     }

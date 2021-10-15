@@ -90,7 +90,7 @@ bool NonQueuedAudioDecoder::processPacket(AVPacket* packet, AVStream* stream, Au
 
     while(packet_size > 0)
     {
-        avcodec_get_frame_defaults(frame);
+        av_frame_unref(frame);
 
         int got_frame = 0;
         int len1 = avcodec_decode_audio4(stream->codec, frame, &got_frame, packet);
@@ -104,7 +104,7 @@ bool NonQueuedAudioDecoder::processPacket(AVPacket* packet, AVStream* stream, Au
             if(data_size > 0)
             {
                 AudioFrame audio_frame;
-                audio_frame.calcTime(frame->pkt_dts, frame->pkt_pts, stream->time_base);
+                audio_frame.calcTime(packet->pts, stream->time_base);
 
                 if(m_skip_threshold == -1 ||
                    audio_frame.m_selected_pts >= m_skip_threshold)

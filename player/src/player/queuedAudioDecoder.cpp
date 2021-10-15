@@ -58,7 +58,7 @@ void QueuedAudioDecoder::processPacket(AVPacket* packet, int* readed_frames)
 
     while(packet_size > 0)
     {
-        avcodec_get_frame_defaults(frame);
+        av_frame_unref(frame);
 
         int got_frame = 0;
         int len1 = avcodec_decode_audio4(m_stream->codec, frame, &got_frame, packet);
@@ -72,7 +72,7 @@ void QueuedAudioDecoder::processPacket(AVPacket* packet, int* readed_frames)
             if(data_size > 0)
             {
                 if(m_skip_threshold == -1 ||
-                   frame->pkt_pts >= m_skip_threshold)
+                   packet->pts >= m_skip_threshold)
                 {
                     //resample audio
                     if(m_swr_context == nullptr)
@@ -97,7 +97,7 @@ void QueuedAudioDecoder::processPacket(AVPacket* packet, int* readed_frames)
                             int new_data_size = len2 * m_audio_params.m_channels * m_audio_params.m_fmt_size;
                             AudioFrame audio_frame;
                             audio_frame.m_data = QByteArray((const char*)out_buffer, new_data_size);
-                            audio_frame.calcTime(frame->pkt_dts, frame->pkt_pts, m_stream->time_base);
+                            audio_frame.calcTime(packet->pts, m_stream->time_base);
                             m_queue.push(audio_frame);
                             ++(*readed_frames);
                         }

@@ -66,7 +66,7 @@ bool NonQueuedVideoDecoder::processPacket(AVPacket* packet, AVStream* stream, Vi
     avcodec_decode_video2(stream->codec, frame, &got_frame, packet);
     if(got_frame)
     {
-        decoded_frame.calcTime(frame->pkt_dts, frame->pkt_pts, stream->time_base);
+        decoded_frame.calcTime(packet->pts, stream->time_base);
 
         //do we need to skip or not?
         if(m_skip_threshold == -1 ||
@@ -119,18 +119,18 @@ void NonQueuedVideoDecoder::initSwsContext(AVFrame* frame, const QSize& widget_s
     //create scale context
     m_sws_context = sws_getCachedContext(0,
                                          frame->width, frame->height, (AVPixelFormat)frame->format,
-                                         m_image_size.width(), m_image_size.height(), PIX_FMT_RGB32,
+                                         m_image_size.width(), m_image_size.height(), AV_PIX_FMT_RGB32,
                                          SWS_BICUBIC, 0, 0, 0);
 
     //create RGB frame
-    m_frame_RGB = avcodec_alloc_frame();
+    m_frame_RGB = av_frame_alloc();
 
     //allocate buffer for RGBFrame
-    m_buffer_size = avpicture_get_size(PIX_FMT_RGB32, m_image_size.width(), m_image_size.height());
+    m_buffer_size = avpicture_get_size(AV_PIX_FMT_RGB32, m_image_size.width(), m_image_size.height());
     m_buffer = (uint8_t*)av_malloc(m_buffer_size * sizeof(uint8_t));
 
     //assign buffer with frame
-    avpicture_fill((AVPicture*)m_frame_RGB, m_buffer, PIX_FMT_RGB32, m_image_size.width(), m_image_size.height());
+    avpicture_fill((AVPicture*)m_frame_RGB, m_buffer, AV_PIX_FMT_RGB32, m_image_size.width(), m_image_size.height());
 }
 
 void NonQueuedVideoDecoder::clearSwsContext()
@@ -138,7 +138,7 @@ void NonQueuedVideoDecoder::clearSwsContext()
     if(m_sws_context != nullptr)
     {
         av_free(m_buffer);
-        avcodec_free_frame(&m_frame_RGB);
+        av_frame_free(&m_frame_RGB);
         sws_freeContext(m_sws_context);
         m_sws_context = 0;
         m_frame_RGB = 0;

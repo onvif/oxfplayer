@@ -30,7 +30,6 @@
 #include <QApplication>
 
 #include "controller.h"
-
 int main(int argc, char *argv[])
 {
     QApplication    a(argc, argv);
@@ -57,3 +56,11 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
+
+#ifdef WIN32
+#include <Windows.h>
+int CALLBACK WinMain(HINSTANCE , HINSTANCE , LPSTR pCmdLine, int )
+{
+    return main(1, &pCmdLine);
+}
+#endif

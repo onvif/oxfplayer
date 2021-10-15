@@ -1,0 +1,13 @@
+For windows build either build from sources or obtain binaries from 
+
+	https://raw.githubusercontent.com/adfernandes/precompiled-portaudio-windows/master/portaudio-r1891-build.zip
+
+	https://indy.fulgan.com/SSL/LinkLibs/openssl-1.0.1u-x64_86-win64_LinkLibs.zip
+
+Additionally you need the include directory which may be taken from the respective branch at github:
+
+	https://github.com/openssl/openssl
+	
+
+
+

@@ -82,11 +82,6 @@ public:
         Decoder<T>::m_skip_threshold = -1;
     }
 
-    virtual int buffersSize() const
-    {
-        return m_queue.dataSize();
-    }
-
     virtual void clearBuffers()
     {
         Decoder<T>::clearBuffers();
@@ -124,10 +119,8 @@ protected:
                     if(packet.stream_index == Decoder<T>::m_stream->index)
                     {
                         processPacket(&packet, &readed_frames);
-                        av_free_packet(&packet);
                     }
-                    else
-                        av_free_packet(&packet);
+                    av_packet_unref(&packet);
                 }
                 else
                 {

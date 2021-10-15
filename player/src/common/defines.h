@@ -64,7 +64,7 @@
 #define MOVING_AREA_SHOW_TIME 5000
 
 //! Format of conversion of QDateTime to string
-#define DATETIME_CONVERSION_FORMAT Qt::SystemLocaleLongDate
+#define DATETIME_CONVERSION_FORMAT Qt::ISODate
 
 //! Short ormat of conversion of QDateTime to string
 #define DATETIME_SHORT_CONVERSION_FORMAT "hh:mm:ss"

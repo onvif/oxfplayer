@@ -45,23 +45,13 @@ Source: "input/ONVIFPlayer.exe"; DestDir: "{app}"
 ; dlls
 ; Qt
 Source: "input/Qt*.dll"; DestDir: "{app}"
-Source: "input/platforms/*.*"; DestDir: "{app}/platforms"
-Source: "input/audio/*.*"; DestDir: "{app}/audio"
-Source: "input/styles/*.*"; DestDir: "{app}/styles"
+Source: "input/plugins/platforms/*.*"; DestDir: "{app}/plugins/platforms"
 #ifdef MinGW
 Source: "input/D3DCompiler_*.dll"; DestDir: "{app}"
 #endif
-Source: "input/libEGL.dll"; DestDir: "{app}"
-Source: "input/libGLESv2.dll"; DestDir: "{app}"
 ; FFMpeg
-Source: "input/avcodec-54.dll"; DestDir: "{app}"
-Source: "input/avdevice-54.dll"; DestDir: "{app}"
-Source: "input/avcodec-54.dll"; DestDir: "{app}"
-Source: "input/avfilter-3.dll"; DestDir: "{app}"
-Source: "input/avformat-54.dll"; DestDir: "{app}"
-Source: "input/avutil-52.dll"; DestDir: "{app}"
-Source: "input/swresample-0.dll"; DestDir: "{app}"
-Source: "input/swscale-2.dll"; DestDir: "{app}"
+Source: "input/av*.dll"; DestDir: "{app}"
+Source: "input/sw*.dll"; DestDir: "{app}"
 #ifdef MinGW
 ; MinGW
 Source: "input/libgcc_s_sjlj-1.dll"; DestDir: "{app}"
@@ -69,10 +59,12 @@ Source: "input/libstdc++-6.dll"; DestDir: "{app}"
 Source: "input/libwinpthread-1.dll"; DestDir: "{app}"
 #endif
 ; PortAudio
-Source: "input/*portaudio*.dll"; DestDir: "{app}"
+Source: "input/portaudio*.dll"; DestDir: "{app}"
 ; OpenSSL
 Source: "input/libeay32.dll"; DestDir: "{app}"
 Source: "input/ssleay32.dll"; DestDir: "{app}"
+;Licenses
+Source: "license.txt"; DestDir: "{app}"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
