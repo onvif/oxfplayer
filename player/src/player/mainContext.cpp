@@ -110,8 +110,6 @@ bool MainContext::init(const QString& file_name, const QSet<int>& valid_streams)
        !QFile::exists(file_name))
         return false;
 
-    av_register_all();
-
     if(avformat_open_input(&m_format_context, file_name.toUtf8().data(), 0, 0) != 0)
         return false;
 

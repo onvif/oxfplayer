@@ -51,24 +51,19 @@ public:
 
         bool ret = true;
 
-        AVPacket packet;
-        av_init_packet(&packet);
+        AVPacket *packet = av_packet_alloc();
 
         while(true)
         {
-            int read_result = av_read_frame(Decoder<T>::m_main_context->getFormatContext(), &packet);
+            int read_result = av_read_frame(Decoder<T>::m_main_context->getFormatContext(), packet);
             if(read_result == 0)
             {
                 //packet readed
-                if(packet.stream_index == Decoder<T>::m_stream->index)
+                if(packet->stream_index == Decoder<T>::m_stream->index)
                 {
-                    ret = processPacket(&packet, Decoder<T>::m_stream, decoded_frame, additional_data);
-                    av_free_packet(&packet);
-                    if(ret)
+                    if (processPacket(packet, Decoder<T>::m_stream, decoded_frame, additional_data))
                         break;
                 }
-                else
-                    av_free_packet(&packet);
             }
             else
             {
@@ -77,6 +72,7 @@ public:
                 break;
             }
         }
+        av_packet_unref(packet);
 
         return ret;
     }

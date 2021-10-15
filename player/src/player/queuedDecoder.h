@@ -106,21 +106,19 @@ protected:
         {
             //read another frame
             //exit if file ended
-            AVPacket packet;
-            av_init_packet(&packet);
+            AVPacket *packet = av_packet_alloc();
             int readed_frames = 0;
             for(;readed_frames < FRAMES_TO_READ;)
             {
-                int read_result = av_read_frame(Decoder<T>::m_main_context->getFormatContext(), &packet);
+                int read_result = av_read_frame(Decoder<T>::m_main_context->getFormatContext(), packet);
 
                 if(read_result == 0)
                 {
                     //packet read normally
-                    if(packet.stream_index == Decoder<T>::m_stream->index)
+                    if(packet->stream_index == Decoder<T>::m_stream->index)
                     {
-                        processPacket(&packet, &readed_frames);
+                        processPacket(packet, &readed_frames);
                     }
-                    av_packet_unref(&packet);
                 }
                 else
                 {
@@ -128,6 +126,7 @@ protected:
                     return false;
                 }
             }
+            av_packet_unref(packet);
         }
 
         return true;

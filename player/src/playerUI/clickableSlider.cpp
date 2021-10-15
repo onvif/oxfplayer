@@ -139,8 +139,8 @@ int ClickableSlider::calcValue(QMouseEvent* event)
     int min = minimum();
     int max = maximum();
     if (orientation() == Qt::Vertical)
-        value = (int)((double)min + (double)(max - min) * (double)(height() - event->y())/(double)height());
+        value = (int)((double)min + (double)(max - min) * (double)(height() - event->position().y())/(double)height());
     else
-        value = (int)((double)min + (double)(max - min) * (double)(event->x()) / (double)width()) ;
+        value = (int)((double)min + (double)(max - min) * (double)(event->position().x()) / (double)width()) ;
     return value;
 }

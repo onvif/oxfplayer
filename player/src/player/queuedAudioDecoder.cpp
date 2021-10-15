@@ -51,67 +51,55 @@ void QueuedAudioDecoder::clear()
 
 void QueuedAudioDecoder::processPacket(AVPacket* packet, int* readed_frames)
 {
-    AVFrameWrapperPtr frame_wrapper(new AVFrameWrapper());
-    AVFrame* frame = frame_wrapper->get();
+    AVFrame* frame = av_frame_alloc();
 
-    int packet_size = packet->size;
+    avcodec_send_packet(m_stream->codec, packet);
 
-    while(packet_size > 0)
+    while (avcodec_receive_frame(m_stream->codec, frame) == 0)
     {
-        av_frame_unref(frame);
+        int data_size = av_samples_get_buffer_size(0, frame->channels, frame->nb_samples, (AVSampleFormat)frame->format, 1);
 
-        int got_frame = 0;
-        int len1 = avcodec_decode_audio4(m_stream->codec, frame, &got_frame, packet);
-        if(len1 > 0 &&
-           got_frame)
+        if(data_size > 0)
         {
-            packet_size -= len1;
-
-            int data_size = av_samples_get_buffer_size(0, frame->channels, frame->nb_samples, (AVSampleFormat)frame->format, 1);
-
-            if(data_size > 0)
+            if(m_skip_threshold == -1 ||
+                packet->pts >= m_skip_threshold)
             {
-                if(m_skip_threshold == -1 ||
-                   packet->pts >= m_skip_threshold)
+                //resample audio
+                if(m_swr_context == nullptr)
+                    initSwrContext(frame);
+
+                if(m_swr_context != nullptr)
                 {
-                    //resample audio
-                    if(m_swr_context == nullptr)
-                        initSwrContext(frame);
+                    const uint8_t **in = (const uint8_t **)frame->extended_data;
+                    uint8_t* out_buffer = 0;
+                    unsigned int outBufferSize = 0;
+                    uint8_t **out = &out_buffer;
+                    int out_count = (int64_t)frame->nb_samples * m_audio_params.m_freq / frame->sample_rate + 256;
+                    int out_size  = av_samples_get_buffer_size(NULL, m_audio_params.m_channels, out_count, m_audio_params.m_fmt, 0);
 
-                    if(m_swr_context != nullptr)
+                    av_fast_malloc(&out_buffer, &outBufferSize, out_size);
+
+                    int len2 = swr_convert(m_swr_context, out, out_count, in, frame->nb_samples);
+
+                    if(len2 > 0 &&
+                        len2 != out_count)
                     {
-                        const uint8_t **in = (const uint8_t **)frame->extended_data;
-                        uint8_t* out_buffer = 0;
-                        unsigned int outBufferSize = 0;
-                        uint8_t **out = &out_buffer;
-                        int out_count = (int64_t)frame->nb_samples * m_audio_params.m_freq / frame->sample_rate + 256;
-                        int out_size  = av_samples_get_buffer_size(NULL, m_audio_params.m_channels, out_count, m_audio_params.m_fmt, 0);
-
-                        av_fast_malloc(&out_buffer, &outBufferSize, out_size);
-
-                        int len2 = swr_convert(m_swr_context, out, out_count, in, frame->nb_samples);
-
-                        if(len2 > 0 &&
-                           len2 != out_count)
-                        {
-                            int new_data_size = len2 * m_audio_params.m_channels * m_audio_params.m_fmt_size;
-                            AudioFrame audio_frame;
-                            audio_frame.m_data = QByteArray((const char*)out_buffer, new_data_size);
-                            audio_frame.calcTime(packet->pts, m_stream->time_base);
-                            m_queue.push(audio_frame);
-                            ++(*readed_frames);
-                        }
-
-                        av_freep(&out_buffer);
+                        int new_data_size = len2 * m_audio_params.m_channels * m_audio_params.m_fmt_size;
+                        AudioFrame audio_frame;
+                        audio_frame.m_data = QByteArray((const char*)out_buffer, new_data_size);
+                        audio_frame.calcTime(packet->pts, m_stream->time_base);
+                        m_queue.push(audio_frame);
+                        ++(*readed_frames);
                     }
+
+                    av_freep(&out_buffer);
                 }
-                else
-                    qDebug() << "Skipping due to threshold";
             }
+            else
+                qDebug() << "Skipping due to threshold";
         }
-        else
-            break;
     }
+    av_frame_unref(frame);
 }
 
 void QueuedAudioDecoder::initSwrContext(AVFrame* frame)

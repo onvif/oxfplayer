@@ -54,12 +54,11 @@ void QueuedVideoDecoder::clear()
 
 void QueuedVideoDecoder::processPacket(AVPacket* packet, int* readed_frames)
 {
-    AVFrameWrapperPtr frame_wrapper(new AVFrameWrapper());
-    AVFrame* frame = frame_wrapper->get();
+    AVFrame* frame = av_frame_alloc();
 
-    int got_frame = 0;
-    avcodec_decode_video2(m_stream->codec, frame, &got_frame, packet);
-    if(got_frame)
+    avcodec_send_packet(m_stream->codec, packet);
+
+    if (avcodec_receive_frame(m_stream->codec, frame) == 0)
     {
         //create frame
         VideoFrame video_frame;
@@ -94,6 +93,7 @@ void QueuedVideoDecoder::processPacket(AVPacket* packet, int* readed_frames)
         else
             qDebug() << "Skipping due to threshold";
     }
+    av_frame_unref(frame);
 }
 
 void QueuedVideoDecoder::initSwsContext(AVFrame* frame)
