@@ -235,9 +235,10 @@ ConsistencyChecker::ConsistencyChecker()
         m_counter_info.clear();
     });
 
-    registerChecker<MovieExtendsHeaderBox>( [this] () {
+    registerChecker<MovieExtendsBox>( [this] () {
         this->exactlyOneCheck<MovieExtendsHeaderBox>();
-    });
+        this->anyCountCheck<TrackExtendsBox>();
+        });
 
     registerChecker<MovieFragmentBox>( [this] () {
         this->exactlyOneCheck<MovieFragmentHeaderBox>();
@@ -323,18 +324,20 @@ void ConsistencyChecker::markUnexpectedBoxes()
 ConsistencyChecker::CounterInfo ConsistencyChecker::countBoxes(ChildrenMixin * box)
 {
     CounterInfo result;
-	auto box_children = box->getChildren();
-    for(auto it = box_children.begin(), end = box_children.end(); it != end; ++it)
-    {
-		Box* child = *it;
-        FourCC four_cc = child->getBoxFourCC();
-        if(result.contains(four_cc))
+    if (box) {
+        auto box_children = box->getChildren();
+        for (auto it = box_children.begin(), end = box_children.end(); it != end; ++it)
         {
-            result[four_cc]++;
-        }
-        else
-        {
-            result[four_cc] = 1;
+            Box* child = *it;
+            FourCC four_cc = child->getBoxFourCC();
+            if (result.contains(four_cc))
+            {
+                result[four_cc]++;
+            }
+            else
+            {
+                result[four_cc] = 1;
+            }
         }
     }
     return result;
