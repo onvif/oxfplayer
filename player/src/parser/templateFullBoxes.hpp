@@ -559,6 +559,19 @@ public:
     {}
 
 public:
+    //! Read this box to support v0 and v1
+    virtual void initialize(LimitedStreamReader& stream) CC_CXX11_OVERRIDE
+    {
+        initializeHeaders(stream);
+        if (getVersion() == 0) {
+            uint32_t size2;
+            stream.read(size2);
+            std::get<2>(FullBoxType::m_data) = size2;
+        }
+        else {
+            stream.read(std::get<2>(FullBoxType::m_data));
+        }
+    }
     //! Returns the predefined data.
     uint64_t getPredefined()
     {

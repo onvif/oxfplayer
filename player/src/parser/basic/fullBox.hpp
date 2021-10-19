@@ -64,6 +64,14 @@ protected:
         BOX_PROPERTY(Version);
         BOX_PROPERTY(Flags);
     }
+
+    //! Read headers only to allow version dependent reading
+    void initializeHeaders(LimitedStreamReader& stream)
+    {
+        Box::initialize(stream);
+        stream.read(std::get<0>(m_data));
+        stream.read(std::get<1>(m_data));
+    }
 };
 
 #else
