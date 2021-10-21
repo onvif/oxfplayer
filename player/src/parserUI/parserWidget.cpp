@@ -95,6 +95,9 @@ void ParserWidget::showFilesetInformation(FilesetInformation fileset_information
             m_ui->boxTree->addTopLevelItem(item);
         }
         resizeTreeToContents(m_ui->boxTree);
+        if (fileset_information.size() == 1) {
+            m_ui->boxTree->expandToDepth(2);
+        }
     }
 }
 
