@@ -98,6 +98,8 @@ private:
     VideoFrame              m_current_frame;
     //! Current delay till next frame.
     int                     m_current_delay;
+    //! Image with metadata overlay information
+    QImage                  m_overlay;
 };
 
 #endif // VIDEOPLAYBACK_H

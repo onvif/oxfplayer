@@ -31,7 +31,8 @@
 
 MainContext::MainContext(AVMediaType stream_type) :
     m_stream_type(stream_type),
-    m_format_context(nullptr)
+    m_format_context(nullptr),
+    m_metadataIndex(-1)
 {
 }
 
@@ -118,7 +119,9 @@ bool MainContext::init(const QString& file_name, const QSet<int>& valid_streams)
 
     for(unsigned int index = 0; index < m_format_context->nb_streams; ++index)
     {
-        if(m_format_context->streams[index]->codec->codec_type != m_stream_type ||
+        auto codec_type = m_format_context->streams[index]->codec->codec_type;
+        if(m_format_context->streams[index]->codec->codec_type != m_stream_type
+            && !(m_stream_type == AVMEDIA_TYPE_VIDEO && codec_type == AVMEDIA_TYPE_DATA) ||
            (valid_streams.size() &&
             !valid_streams.contains(m_format_context->streams[index]->id))
           )
@@ -128,6 +131,10 @@ bool MainContext::init(const QString& file_name, const QSet<int>& valid_streams)
         si.m_index = index;
         if(openStream(index, si.m_stream, si.m_codec_context, si.m_codec))
             m_streams.push_back(si);
+
+        if (m_stream_type == AVMEDIA_TYPE_VIDEO && codec_type == AVMEDIA_TYPE_DATA) {
+            m_metadataIndex = index;
+        }
     }
 
     return true;

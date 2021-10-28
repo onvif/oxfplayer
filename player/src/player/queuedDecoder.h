@@ -115,7 +115,7 @@ protected:
                 if(read_result == 0)
                 {
                     //packet read normally
-                    if(packet->stream_index == Decoder<T>::m_stream->index)
+                    if(packet->stream_index == Decoder<T>::m_stream->index || packet->stream_index == Decoder<T>::m_main_context->metadataIndex())
                     {
                         processPacket(packet, &readed_frames);
                     }

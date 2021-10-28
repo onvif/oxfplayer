@@ -73,6 +73,8 @@ public:
     //! Conver time in ms to pts for supported streams.
     void timeToPTS(int timestamp_ms, QVector<int>& pts_vector);
 
+    //! Get index of optional metadata stream. 
+    int metadataIndex() const { return m_metadataIndex; }
 private:
     //! Init with file.
     bool init(const QString& file_name, const QSet<int>& valid_streams = QSet<int>());
@@ -120,6 +122,8 @@ private:
     AVFormatContext*    m_format_context;
     //! QVector of streams.
     QVector<StreamInfo> m_streams;
+    //! Optional index of the metadata stream
+    int                 m_metadataIndex;
 };
 
 #endif // MAINCONTEXT_H

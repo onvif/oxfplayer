@@ -51,6 +51,9 @@ private:
     //! Clear scale context.
     void clearSwsContext();
 
+    //! Try to parse metadata
+    QImage parseMetadata(const unsigned char* buffer, size_t bytes);
+
 private:
     //! Scale context.
     SwsContext* m_sws_context;
@@ -60,6 +63,7 @@ private:
     int         m_buffer_size;
     //! Temp buffer for conversion.
     uint8_t*    m_buffer;
+    int m_frame_width, m_frame_height;
 };
 
 #endif // QUEUEDVIDEODECODER_H
