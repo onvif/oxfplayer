@@ -47,9 +47,11 @@ Engine::Engine() :
     m_video_widget(nullptr),
     m_video_main_context(AVMEDIA_TYPE_VIDEO),
     m_audio_main_context(AVMEDIA_TYPE_AUDIO),
+    m_metadata_main_context(AVMEDIA_TYPE_DATA),
 #ifdef DECODE_USING_QUEUE
     m_video_decoder(new QueuedVideoDecoder()),
     m_audio_decoder(new QueuedAudioDecoder()),
+    m_metadata_decoder(new MetadataDecoder((QueuedVideoDecoder*)m_video_decoder)),
 #endif //DECODE_USING_QUEUE
 #ifdef DECODE_WITHOUT_QUEUE
     m_video_decoder(new NonQueuedVideoDecoder()),
@@ -59,7 +61,8 @@ Engine::Engine() :
     m_player_state(Stopped),
     m_playing_time(0),
     m_selected_video_stream_index(0),
-    m_selected_audio_stream_index(0)
+    m_selected_audio_stream_index(0),
+    m_currentFragment(0)
 {
     QObject::connect(&m_video_playback, SIGNAL(played(BasePlayback*)), this, SIGNAL(played(BasePlayback*)));
     QObject::connect(&m_video_playback, SIGNAL(playbackFinished()), this, SLOT(onFinished()));
@@ -107,6 +110,7 @@ void Engine::start()
 
     bool have_video = m_video_main_context.getStreamsCount();
     bool have_audio = m_audio_main_context.getStreamsCount();
+    bool have_meta = m_metadata_main_context.getStreamsCount();
 
     if(!have_video)
         return;
@@ -115,6 +119,7 @@ void Engine::start()
     {
         //just video
         m_video_decoder->start();
+        if (have_meta) m_metadata_decoder->start();
         m_video_playback.start();
     }
     else
@@ -122,6 +127,7 @@ void Engine::start()
         //video and audio - modify fps
         m_video_decoder->start();
         m_audio_decoder->start();
+        if (have_meta) m_metadata_decoder->start();
         m_video_playback.start();
         m_audio_playback.start();
     }
@@ -319,6 +325,7 @@ bool Engine::initMainContext(const QString& file_name, FragmentInfo& fragment)
 
     res = res && m_video_main_context.open(file_name, fragment.getValidMediaStreamIds());
     res = res && m_audio_main_context.open(file_name, fragment.getValidMediaStreamIds());
+    res = res && m_metadata_main_context.open(file_name, fragment.getValidMediaStreamIds());
     res = res && m_video_main_context.getStreamsCount();
 	res = res && m_video_context.open(m_video_main_context, m_selected_video_stream_index, fragment.getFpsFromSamples());
     if(m_audio_main_context.getStreamsCount())
@@ -331,8 +338,10 @@ void Engine::clearMainContext()
 {
     m_video_main_context.clear();
     m_audio_main_context.clear();
+    m_metadata_main_context.clear();
     m_video_context.clear();
     m_audio_context.clear();
+    m_metadata_context.clear();
     m_is_initialized = false;
 }
 
@@ -353,6 +362,11 @@ bool Engine::initDecoders()
 #endif //DECODE_WITHOUT_QUEUE
     }
 
+    if (m_metadata_main_context.getStreamsCount()) {
+        m_metadata_decoder->setMainContext(&m_metadata_main_context);
+        m_metadata_decoder->setStream(m_metadata_main_context.getStream(0));
+    }
+
     return true;
 }
 
@@ -365,7 +379,7 @@ void Engine::clearDecoders()
 bool Engine::initVideoPlayback()
 {
     m_video_playback.setVideoContext(&m_video_context);
-    m_video_playback.setVideoDecoder(m_video_decoder);
+    m_video_playback.setVideoDecoder(m_video_decoder, m_metadata_decoder);
     m_video_playback.setVideoWidget(m_video_widget);
 
     return true;
@@ -397,9 +411,11 @@ void Engine::stopPlayback()
 
     m_audio_decoder->stop();
     m_video_decoder->stop();
+    m_metadata_decoder->stop();
 
     m_audio_decoder->clearBuffers();
     m_video_decoder->clearBuffers();
+    m_metadata_decoder->clearBuffers();
 
     m_playing_time = 0;
 
@@ -454,6 +470,7 @@ void Engine::doSeek(int time_ms)
     //audio seek
     if(have_audio)
         m_audio_main_context.seek(time_ms);
+    m_metadata_main_context.seek(time_ms);
 
     //clear video context fps
     m_video_context.flushCurrentFps();

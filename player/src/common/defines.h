@@ -40,7 +40,7 @@
 #define FRAMES_TO_READ 10
 
 //! Sleep timeout for DecodeThread.
-#define DECODE_SLEEP_TIMEOUT 50
+#define DECODE_SLEEP_TIMEOUT 25
 
 //! Extentions for Open File dialog.
 #define AVAILIBLE_EXTENTIONS "Video (*.mp4 *.mov);;All (*.*)"

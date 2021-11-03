@@ -157,16 +157,22 @@ private:
     MainContext     m_video_main_context;
     //! MainContext for audio.
     MainContext     m_audio_main_context;
+    //! MainContext for metadata.
+    MainContext     m_metadata_main_context;
 
     //! Video context.
     VideoContext    m_video_context;
     //! Audio context.
     AudioContext    m_audio_context;
+    //! Video context.
+    VideoContext    m_metadata_context;
 
     //! Video decoder.
     Decoder<VideoFrame>*    m_video_decoder;
     //! Audio decoder.
     Decoder<AudioFrame>*    m_audio_decoder;
+    //! Video decoder.
+    Decoder<VideoFrame>*    m_metadata_decoder;
 
     //! Video playback.
     VideoPlayback   m_video_playback;

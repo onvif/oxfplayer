@@ -40,6 +40,9 @@ public:
     ~QueuedVideoDecoder();
 
     virtual void clear();
+    int frameWidth() const { return m_frame_width;}
+    int frameHeight() const { return m_frame_height; }
+
 
 protected:
     virtual void processPacket(AVPacket* packet, int* readed_frames);
@@ -51,7 +54,7 @@ private:
     //! Clear scale context.
     void clearSwsContext();
 
-private:
+protected:
     //! Scale context.
     SwsContext* m_sws_context;
     //! RGB frame used for conversion.
@@ -60,6 +63,20 @@ private:
     int         m_buffer_size;
     //! Temp buffer for conversion.
     uint8_t*    m_buffer;
+    int m_frame_width, m_frame_height;
+};
+
+class MetadataDecoder : public QueuedVideoDecoder
+{
+public:
+    MetadataDecoder(QueuedVideoDecoder* vc) { m_decoder = vc; }
+protected:
+    virtual void processPacket(AVPacket* packet, int* readed_frames);
+
+private:
+    //! Try to parse metadata
+    QImage parseMetadata(const unsigned char* buffer, size_t bytes);
+    QueuedVideoDecoder* m_decoder;
 };
 
 #endif // QUEUEDVIDEODECODER_H

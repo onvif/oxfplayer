@@ -29,15 +29,18 @@
 
 #include "ffmpeg.h"
 #include "avFrameWrapper.h"
-
+#include "../../ext/pugixml/src/pugixml.hpp"
 #include <QDebug>
+#include <qpainter.h>
 
 QueuedVideoDecoder::QueuedVideoDecoder() :
     QueuedDecoder<VideoFrame>(),
     m_sws_context(0),
     m_frame_RGB(0),
     m_buffer_size(-1),
-    m_buffer(0)
+    m_buffer(0),
+    m_frame_width(0),
+    m_frame_height(0)
 {
 
 }
@@ -56,32 +59,31 @@ void QueuedVideoDecoder::processPacket(AVPacket* packet, int* readed_frames)
 {
     AVFrame* frame = av_frame_alloc();
 
+    //create frame
+    VideoFrame video_frame;
+    video_frame.calcTime(packet->pts, m_stream->time_base);
+
     avcodec_send_packet(m_stream->codec, packet);
 
     if (avcodec_receive_frame(m_stream->codec, frame) == 0)
     {
-        //create frame
-        VideoFrame video_frame;
-        video_frame.calcTime(packet->pts, m_stream->time_base);
-
         //do we need to skip or not?
-        if(m_skip_threshold == -1 ||
-           video_frame.m_selected_pts >= m_skip_threshold)
+        if (m_skip_threshold == -1 ||
+            video_frame.m_selected_pts >= m_skip_threshold)
         {
             //conver frame to RGB frame and create image
-            if(m_sws_context == nullptr)
+            if (m_sws_context == nullptr)
                 initSwsContext(frame);
 
-            if(m_sws_context != nullptr)
+            if (m_sws_context != nullptr)
             {
                 //scale image
                 sws_scale(m_sws_context, (uint8_t**)frame->data, frame->linesize, 0, frame->height, m_frame_RGB->data, m_frame_RGB->linesize);
 
                 //conert to image
                 QImage image(frame->width, frame->height, QImage::Format_RGB32);
-                for(int y = 0; y < frame->height; ++y)
+                for (int y = 0; y < frame->height; ++y)
                     memcpy(image.scanLine(y), m_frame_RGB->data[0] + y * m_frame_RGB->linesize[0], frame->width * 4);
-
                 //fill other fields
                 video_frame.m_image = image;
 
@@ -106,6 +108,8 @@ void QueuedVideoDecoder::initSwsContext(AVFrame* frame)
 
     //create RGB frame
     m_frame_RGB = av_frame_alloc();
+    m_frame_width = frame->width;
+    m_frame_height = frame->height;
 
     //allocate buffer for RGBFrame
     m_buffer_size = avpicture_get_size(AV_PIX_FMT_RGB32, frame->width, frame->height);
@@ -127,4 +131,86 @@ void QueuedVideoDecoder::clearSwsContext()
         m_buffer_size = -1;
         m_buffer = 0;
     }
+}
+static bool hasLocalname(pugi::xml_node node, const char* name) {
+    const char* n = node.name();
+    for (int i = 0; i < 6 && n[i]; i++) {
+        if (n[i] == ':') {
+            n += i + 1;
+            break;
+        }
+    }
+    return strcmp(n, name) == 0;
+}
+static pugi::xml_node read(pugi::xml_node &node, const char* localname) {
+    if (!hasLocalname(node, localname)) return pugi::xml_node();
+    pugi::xml_node ret = node;
+    node = node.next_sibling();
+    return ret;
+}
+
+//**************************** Metadata *************************
+
+void MetadataDecoder::processPacket(AVPacket* packet, int* readed_frames)
+{
+    //create frame
+    VideoFrame video_frame;
+    video_frame.calcTime(packet->pts, m_stream->time_base);
+
+    video_frame.m_isOverlay = true;
+    if (m_decoder) {
+        m_frame_height = m_decoder->frameHeight();
+        m_frame_width = m_decoder->frameWidth();
+        QImage image = parseMetadata(packet->buf->data, packet->buf->size);
+        video_frame.m_image = image;
+        m_queue.push(video_frame);
+        (*readed_frames)++;
+    }
+}
+
+QImage MetadataDecoder::parseMetadata(const unsigned char* buffer, size_t bytes)
+{
+    QImage image(m_frame_width, m_frame_height, QImage::Format_RGB32);
+    image.fill(Qt::black);
+    QPainter painter(&image);
+    QPen redpen(Qt::red, 5
+    );
+    painter.setPen(redpen);
+    double fx = m_frame_width / 2.0;
+    double fy = m_frame_height / 2.0;
+
+    pugi::xml_document doc;
+    if (doc.load_buffer(buffer, bytes, pugi::encoding_utf8).status == 0) {
+        for (pugi::xml_node n = doc.first_child().first_child(); n; n = n.next_sibling()) {
+            if (hasLocalname(n, "VideoAnalytics")) {
+                for (pugi::xml_node f = n.first_child(); f; f = f.next_sibling()) {
+                    if (hasLocalname(f, "Frame")) {
+                        auto fparam = f.first_child();
+                        auto ptzStatus = read(fparam, "PTZStatus");
+                        auto transform = read(fparam, "Transformation");
+                        while (auto obj = read(fparam, "Object")) {
+                            auto appearance = obj.first_child().first_child();
+                            auto trans2 = read(appearance, "Transformation");
+                            auto shape = read(appearance, "Shape").first_child();
+                            auto bounds = read(shape, "BoundingBox");
+                            double top = 0, left = 0, right = 0, bottom = 0;
+                            for (auto attr = bounds.attributes_begin(); attr != bounds.attributes_end(); attr++) {
+                                switch(attr->name()[0]) {
+                                case 't': top = (-strtod(attr->value(), 0) + 1.0) * fy; break;
+                                case 'l': left = (strtod(attr->value(), 0) + 1.0)* fx; break;
+                                case 'r': right = (strtod(attr->value(), 0) + 1.0)* fx; break;
+                                case 'b': bottom = (-strtod(attr->value(), 0) + 1.0)* fy; break;
+                                }
+                            }
+                            if (bounds && right > left) {
+                                painter.drawRect(left, top, right - left, bottom - top);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    painter.end();
+    return image;
 }

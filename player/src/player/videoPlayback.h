@@ -54,7 +54,10 @@ public:
     void setVideoContext(VideoContext* video_context) { m_video_context = video_context; }
 
     //! Set decoder to read from.
-    void setVideoDecoder(Decoder<VideoFrame>* video_decoder) { m_video_decoder = video_decoder; }
+    void setVideoDecoder(Decoder<VideoFrame>* video_decoder, Decoder<VideoFrame>* meta_decoder) { 
+        m_video_decoder = video_decoder; 
+        m_metadata_decoder = meta_decoder;
+    }
 
     //! Set widget to draw on.
     void setVideoWidget(VideoFrameWidget* video_widget);
@@ -90,6 +93,7 @@ private:
     VideoContext*           m_video_context;
     //! Decoder that provides data.
     Decoder<VideoFrame>*    m_video_decoder;
+    Decoder<VideoFrame>*    m_metadata_decoder;
     //! Widget to draw on.
     VideoFrameWidget*       m_video_widget;
     //! Timer till next frame drawing.
@@ -98,6 +102,8 @@ private:
     VideoFrame              m_current_frame;
     //! Current delay till next frame.
     int                     m_current_delay;
+    //! Image with metadata overlay information
+    VideoFrame              m_overlay;
 };
 
 #endif // VIDEOPLAYBACK_H

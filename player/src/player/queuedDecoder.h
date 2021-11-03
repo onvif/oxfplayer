@@ -132,7 +132,7 @@ protected:
         return true;
     }
 
-protected:
+public:
     //! Queue with decoded frames.
     Queue<T>        m_queue;
 };

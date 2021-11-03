@@ -117,6 +117,11 @@ struct VideoFrame : public DecodedFrame
     {
         DecodedFrame::clear();
         m_image = QImage();
+        m_selected_pts = 0;
+    }
+
+    operator bool() {
+        return m_image.width() > 0;
     }
 };
 

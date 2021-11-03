@@ -102,6 +102,8 @@ public:
         return T();
     }
 
+    bool empty() const { return m_queue.isEmpty(); }
+
     //! Count of elements in queue.
     int size()
     {

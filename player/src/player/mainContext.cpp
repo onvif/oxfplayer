@@ -92,7 +92,7 @@ bool MainContext::seek(int timestamp_ms)
         res = avformat_seek_file(m_format_context, cIter->m_stream->index, 0, pos, pos, 0);
         if(res < 0)
             res = avformat_seek_file(m_format_context, cIter->m_stream->index, 0, pos, pos, AVSEEK_FLAG_ANY);
-        avcodec_flush_buffers(cIter->m_codec_context);
+        if (cIter->m_codec) avcodec_flush_buffers(cIter->m_codec_context);
     }
     return true;
 }
@@ -118,15 +118,16 @@ bool MainContext::init(const QString& file_name, const QSet<int>& valid_streams)
 
     for(unsigned int index = 0; index < m_format_context->nb_streams; ++index)
     {
-        if(m_format_context->streams[index]->codec->codec_type != m_stream_type ||
-           (valid_streams.size() &&
+        auto codec_type = m_format_context->streams[index]->codec->codec_type;
+        if(m_format_context->streams[index]->codec->codec_type != m_stream_type
+            || (valid_streams.size() &&
             !valid_streams.contains(m_format_context->streams[index]->id))
           )
             continue;
         StreamInfo si;
         si.m_type = m_stream_type;
         si.m_index = index;
-        if(openStream(index, si.m_stream, si.m_codec_context, si.m_codec))
+        if(openStream(index, si.m_stream, si.m_codec_context, si.m_codec) || m_stream_type == AVMEDIA_TYPE_DATA)
             m_streams.push_back(si);
     }
 

@@ -120,6 +120,7 @@ private:
     AVFormatContext*    m_format_context;
     //! QVector of streams.
     QVector<StreamInfo> m_streams;
+    //! Optional index of the metadata stream
 };
 
 #endif // MAINCONTEXT_H
