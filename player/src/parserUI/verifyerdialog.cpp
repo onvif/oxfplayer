@@ -164,7 +164,7 @@ void  VerifyerDialog::initialize(MediaParser& parser)
             signatures_found = true;
 
             QTreeWidgetItem * item = new QTreeWidgetItem(parent);
-            item->setData(0, Qt::UserRole, qVariantFromValue((void*)&refInf));
+            item->setData(0, Qt::UserRole, QVariant(&refInf));
             item->setText(0, QString("Signature %1").arg(j+1));
             {
                 OXFVerifier ver;
@@ -368,13 +368,13 @@ void VerifyerDialog::onOperationCompleted(VerificationStatus result)
     }
 
     ver_struct.m_tree_item->setText(2, signature_text);
-    ver_struct.m_tree_item->setBackgroundColor(2, signature_color);
+    ver_struct.m_tree_item->setBackground(2, signature_color);
     ver_struct.m_tree_item->setTextAlignment(2, Qt::AlignVCenter | Qt::AlignHCenter);
 
     // certificate
     bool certificate_known = CertificateStorage().isCertificateKnown(m_verifier->getBinaryCertificate());
     ver_struct.m_tree_item->setText(3, certificate_known ? tr("Known") : tr("Unknown"));
-    ver_struct.m_tree_item->setBackgroundColor(3, certificate_known ? QColor(green) : QColor(yellow));
+    ver_struct.m_tree_item->setBackground(3, certificate_known ? QColor(green) : QColor(yellow));
     ver_struct.m_tree_item->setTextAlignment(3, Qt::AlignVCenter | Qt::AlignHCenter);
 
     if(m_verifying_items.empty())

@@ -33,9 +33,9 @@ template<typename T>
 void modifyVolumeLevel(QByteArray& data, double factor)
 {
     T* ptr = (T*)data.data();
-    int count = data.size() / sizeof(T);
+    size_t count = data.size() / sizeof(T);
     double value = 0.0;
-    for(int i = 0; i < count; ++i, ++ptr)
+    for(size_t i = 0; i < count; ++i, ++ptr)
     {
         value = (double)(*ptr);
         value *= factor;

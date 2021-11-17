@@ -142,18 +142,6 @@ private:
         }
     }
 
-    //! Converts vectors to lists of properties.
-    template<typename T>
-    inline void convert(QVector<T> value)
-    {
-        m_string = QString("Vector of %1 records").arg(value.size());
-        for(auto it = value.begin(), end = value.end(); it != end; ++it)
-        {
-			T entry = *it;
-            push_back( Property(entry) );
-        }
-    }
-
     //! Converts byte-arrays to lists of properties.
     inline void convert(QByteArray value)
     {

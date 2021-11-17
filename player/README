@@ -37,7 +37,7 @@ In order to go successfully through all the steps of build, following installati
 Version
 --------
 
-Verified versions of FFmpeg are 1.2.0 - 1.2.2
+Verified versions of FFmpeg are 4.4
 Another versions of FFmpeg can also be tried, but it is not guranteed that
 it will get linked and executed with ONVIF Player sucessfully
 
@@ -56,15 +56,10 @@ Build instructions
 	You can go with either of the following options:
 
 	a) Use availible builds recommended by FFmpeg:
-	   http://ffmpeg.zeranoe.com/builds/
-	   http://ffmpeg.zeranoe.com/builds/win32/shared/
-	   http://ffmpeg.zeranoe.com/builds/win64/shared/
-	   http://ffmpeg.zeranoe.com/builds/win32/dev/
-	   http://ffmpeg.zeranoe.com/builds/win64/dev/
+	   https://www.gyan.dev/ffmpeg/builds/
  
-	   You should download 32-bit DEV and SHARED packages. Links to ffmpeg-1.2 build downloads:
-	   http://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-1.2-win32-dev.7z
-	   http://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-1.2-win32-shared.7z
+	   You should download 64-bit SHARED packages. Links to ffmpeg build downloads:
+	https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-4.4-full_build-shared.7z
  	   
 
 	b) Build FFmpeg by yourself following official recommendations:
@@ -96,9 +91,10 @@ Build instructions
 Version
 ---------
 
-Verified version(s) of OpenSSL is 1.0.1e
+Verified version(s) of OpenSSL is 1.0.1
 Another versions of OpenSSL can also be tried, but it is not guranteed that
-it will get linked and executed with ONVIF Player sucessfully 
+it will get linked and executed with ONVIF Player sucessfully. 
+Note: security vulnerabilities are of minor importance since the library is solely used for signature verification. 
 
 Link to the publisher web site
 -------------------------------
@@ -183,7 +179,7 @@ Build instructions
 Version
 --------
 
-Verified versions of Qt are 5.0.1 - 5.1.0
+Verified versions of Qt are 6.2
 Higher versions of Qt can also be tried, but it is not guranteed that it will 
 get linked and executed with ONVIF Player sucessfully
 
@@ -240,87 +236,18 @@ The script does also perform patching of the ffmpeg/include/libavutil/common.h
 III.  Build ONVIF Export Player  
 *******************************
  
-1. MinGW 
-===========
-
-
-Building using QtCreator
--------------------------
-The easiest way is to build project using QtCreator.
-If you installed Qt from http://qt-project.org/downloads, then just 
-start QtCreator, open /proj/ONVIFPlayer-MinGW/ONVIFPlayer.pro 
-file and select where to build Debug or Release configuration.
- 
-Other builds
--------------
-
-You can build project using MinGW and command line. Please find 
-commands to build release version:
- 	qmake PATH_TO_PRO_FILE -r -spec win32-g++
-	ming32-make in project folder
-
-See for help:
-http://www.developer.nokia.com/Community/Wiki/How_to_Compile_Qt(.cpp)_file_from_command_prompt
-http://qt-project.org/doc/qt-4.8/qmake-running.html
-
-
-2. Visual Studio 2010 ( not Visual Studio 2010 Express )
+2. Visual Studio 
 =========================================================
 
-Configuring Visual Studio Add-in
+Building using Visual Studio 2019
 ----------------------------------
-- download from http://qt-project.org/downloads and install
-  Visual Studio Add-in for Qt5 ( >= 1.2.1 )
-- open Visual Studio, find a Dropdown menu item 'Qt5' and 
-  select 'Qt Options' from a dropdown menu.
-	In opened dialog you should see a list of auto-detected Qt Versions installed.
-  	If the right Qt Version is not present, or there are none Qt Versions
-	detected, you should do it manually, by clicking 'Add' button.
-	Select a path of an installed Qt version. This should be something like
-	"C:\Qt\Qt[QTVERSION]\[QTVERSION]\msvc2010"
-	Here [QTVERSION] is a version of your Qt library and "C:\Qt\Qt[QTVERSION]" is an
-	install path for Qt Library
- 
-Building using Visual Studio 2010
-----------------------------------
-- open the solution file /proj/ONVIFPlayer-VS2010/ONVIFPlayer-VS2010.sln.
+- open the solution file /proj/ONVIFPlayer-VS2019/ONVIFPlayer-VS2019.sln.
 - ensure, that Qt version is set for a solution:
 	Right click the solution file and find a menu item 
 	'Change solution's Qt Version'
 	Ensure that the right Qt Version is selected
 	Click Ok
 - select a build configuration and press build.
- 
-
-3. Visual Studio 2012 ( not Visual Studio 2012 Express )
-=========================================================
-
-Configuring Visual Studio Add-in
-----------------------------------
-- download from http://qt-project.org/downloads and install
-  Visual Studio Add-in for Qt5 ( >= 1.2.2 )
-- open Visual Studio, find a Dropdown menu item 'Qt5' and select
- 'Qt Options' from a dropdown menu.
-	In opened dialog you should see a list of auto-detected Qt Versions installed.
-  	If the right Qt Version is not present, or there are none Qt Versions 
-	detected, you should do it manually, by clicking 'Add' button.
-	Select a path of an installed Qt version. This should be something like
-	"C:\Qt\Qt[QTVERSION]\[QTVERSION]\msvc2012"
-	Here [QTVERSION] is a version of your Qt library and "C:\Qt\Qt[QTVERSION]" is 
-	an install path for Qt Library
-
-Building using Visual Studio 2012
-----------------------------------
-- install Visual Studio Add-in for Qt5 ( >= 1.2.2 )
-- open the solution file /proj/ONVIFPlayer-VS2012/ONVIFPlayer-VS2012.sln.
-- ensure, that Qt version is set for a solution:
-	Right click the solution file and find a menu item 
-	'Change solution's Qt Version'
-	Ensure that the right Qt Version is selected
-	Click Ok
-- select a build configuration and press build.
-
-
 
 ******************************
 IV.  Run ONVIF Export Player  
@@ -354,40 +281,43 @@ or make sure path to the QT libraries is in system search path.
 
 The following Qt files are required:
 
-	for MinGW:
+	for Visual Studio release:
+		avcodec-58.dll   
+		avfilter-7.dll   
+		avformat-58.dll  
+		avdevice-58.dll  
+		avutil-56.dll    
+		swresample-3.dll
+		swscale-5.dll
+		postproc-55.dll    
+		portaudio_x64.dll  
+		Qt6Core.dll        
+		Qt6Gui.dll    
+		Qt6Multimedia.dll   
+		Qt6Network.dll      
+		Qt6Widgets.dll   
+		libeay32.dll     
+		ssleay32.dll
 		platforms\qwindows.dll
-		D3DCompiler_xx.dll
-		icudtxx.dll
-		icuinxx.dll
-		icuucxx.dll
-		libEGL.dll
-		libgcc_s_sjlj-1.dll
-		libGLESv2.dll
-		libstdc++-6.dll
-		libwinpthread-1.dll
-		Qt5Core.dll
-		Qt5Gui.dll
-		Qt5Multimedia.dll
-		Qt5Network.dll
-		Qt5Widgets.dll
-		Qt5Xml.dll
-	
-	for Visual Studio:
+
+	for Visual Studio Debug:
+		avcodec-58.dll   
+		avfilter-7.dll   
+		avformat-58.dll  
+		avdevice-58.dll  
+		avutil-56.dll    
+		swresample-3.dll
+		swscale-5.dll
+		postproc-55.dll    
+		portaudio_x64.dll  
+		Qt6Cored.dll        
+		Qt6Guid.dll    
+		Qt6Multimediad.dll   
+		Qt6Networkd.dll      
+		Qt6Widgetsd.dll   
+		libeay32.dll     
+		ssleay32.dll
 		platforms\qwindows.dll
-		icudtxx.dll
-		icuinxx.dll
-		icuucxx.dll
-		libEGL.dll
-		libGLESv2.dll
-		Qt5Core.dll
-		Qt5Gui.dll
-		Qt5Multimedia.dll
-		Qt5Network.dll
-		Qt5Widgets.dll
-		Qt5Xml.dll
-
-!Note. For Debug version you should place Qt .dll files which are ending with 'd' symbol. For example Qt5Cored.dll
-
 
 
 

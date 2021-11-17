@@ -106,7 +106,7 @@ private:
     void saveLastOpenedFolder(const QString& folder);
 
     //! Set streams menu.
-    void setStreamsMenu(QAction* action, int count, bool video);
+    void setStreamsMenu(QMenu* menu, int count, bool video);
 
 private slots:
     //! Process open file menu selection.

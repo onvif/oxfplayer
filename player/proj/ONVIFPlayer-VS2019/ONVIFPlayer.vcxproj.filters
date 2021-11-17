@@ -1,0 +1,640 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\qrc_resources.cpp" />
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="Debug\moc_audioPlayback.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_audioPlayback.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_basePlayback.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_basePlayback.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_boxFactory.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_boxFactory.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_certificateStorageDialog.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="release\moc_certificateStorageDialog.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_clickableSlider.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_clickableSlider.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_consistencyChecker.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_consistencyChecker.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_controller.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_controller.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_controlsWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_controlsWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_engine.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_engine.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_fragmentExtractor.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_fragmentExtractor.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_fragmentListWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_fragmentListWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_fullscreenPlayerWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_fullscreenPlayerWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_mediaParser.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_mediaParser.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_movingOutArea.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_movingOutArea.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_oxfverifier.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="release\moc_oxfverifier.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_parserWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_parserWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_playerWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_playerWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_portAudioPlayback.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_portAudioPlayback.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_portAudioThread.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_portAudioThread.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_signatureExtractor.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_signatureExtractor.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_validatorISO.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_validatorISO.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_validatorOXF.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_validatorOXF.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_validatorSurveillance.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_validatorSurveillance.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_verifyerdialog.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_verifyerdialog.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_videoFrameWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_videoFrameWidget.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_videoPlayback.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_videoPlayback.cpp">
+      <Filter>moc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\audioContext.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\audioPlayback.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\avFrameWrapper.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\controller.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\mainContext.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\nonqueuedAudioDecoder.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\nonqueuedVideoDecoder.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\portAudioPlayback.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\portAudioThread.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\queuedAudioDecoder.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\queuedVideoDecoder.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\syncThread.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\playerUI\videoFrameWidget.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\videoPlayback.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\basic\box.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\boxFactory.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\certificateStorage.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parserUI\certificateStorageDialog.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\consistencyChecker.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\fourcc.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\fragmentExtractor.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\fragmentInfo.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\playerUI\fragmentListWidget.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parserUI\parserWidget.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\playerUI\playerWidget.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\signatureExtractor.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\validatorISO.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\validatorOXF.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\validatorSurveillance.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parserUI\verifyerdialog.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\playerUI\clickableSlider.cpp">
+      <Filter>playerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\playerUI\controlsWidget.cpp">
+      <Filter>playerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\playerUI\fullscreenPlayerWidget.cpp">
+      <Filter>playerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\engine.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\basic\mandatoryBox.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\oxfverifier.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\basic\unknownBox.cpp">
+      <Filter>verifier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\player\videoContext.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\parser\mediaParser.cpp">
+      <Filter>playerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\playerUI\movingOutArea.cpp">
+      <Filter>playerUI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\parser\signatureConfigurationBox.hpp">
+      <Filter>boxes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\parser\additionalUserInformation.hpp">
+      <Filter>verifier</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\parser\correctstarttimebox.hpp">
+      <Filter>boxes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\src\common\defines.h" />
+    <CustomBuild Include="..\..\src\common\enums.h" />
+    <CustomBuild Include="..\..\src\common\ffmpeg.h" />
+    <CustomBuild Include="..\..\src\parser\helpers\optional.hpp" />
+    <CustomBuild Include="..\..\src\common\queue.h" />
+    <CustomBuild Include="..\..\src\common\types.h" />
+    <CustomBuild Include="..\..\src\resources\movie_frame.png" />
+    <CustomBuild Include="..\..\src\resources\resources.qrc" />
+    <CustomBuild Include="..\..\src\common\crosscompilation_cxx11.h" />
+    <CustomBuild Include="..\..\src\common\crosscompilation_inttypes.h" />
+    <CustomBuild Include="..\..\src\parser\afIdentificationBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\certificateBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\dataBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\editListBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\fileBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\fileTypeBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\movieExtendsHeaderBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\movieHeaderBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\sampleDependencyTypeBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\sampleSizeBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\signatureBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\superBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\superFullBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\surveillanceExportBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\surveillanceMetadataSampleConfigBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\surveillanceMetadataSampleEntryBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\templateContentBoxes.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\templateFullBoxes.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\templateSuperBoxes.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\templateSuperFullBoxes.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\templateTableBoxes.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\trackFragmentHeaderBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\trackFragmentRandomAccessBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\trackHeaderBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\trackRunBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\cameraMicrophoneIdentificationBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\audioContext.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\audioPlayback.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\avFrameWrapper.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\basePlayback.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\controller.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\decoder.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\mainContext.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\nonqueuedAudioDecoder.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\nonqueuedDecoder.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\nonqueuedVideoDecoder.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\portAudioPlayback.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\portAudioThread.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\queuedAudioDecoder.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\queuedDecoder.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\queuedVideoDecoder.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\syncThread.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\playerUI\videoFrameWidget.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\videoPlayback.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\box.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\boxFactory.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\certificateStorage.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parserUI\certificateStorageDialog.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parserUI\certificateStorageDialog.ui">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\mixin\children.hpp">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\consistencyChecker.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\fourcc.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\fragmentExtractor.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\common\fragmentInfo.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\playerUI\fragmentListWidget.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parserUI\parserWidget.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parserUI\parserWidget.ui">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\signatureExtractor.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\ui_parserWidget.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\validatorISO.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\validatorOXF.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\validatorSurveillance.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parserUI\verifyerdialog.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parserUI\verifyerdialog.ui">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\playerUI\clickableSlider.h">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\playerUI\controlsWidget.h">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\playerUI\controlsWidget.ui">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\playerUI\fullscreenPlayerWidget.h">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\resources\fullscreen.png">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\resources\media_next.png">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\resources\media_pause.png">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\resources\media_play.png">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\resources\media_prev.png">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\resources\media_stop.png">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\resources\mute.png">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\resources\Onvif.png">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\playerUI\playerWidget.h">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\playerUI\playerWidget.ui">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\playerUI\playerWidgetInterface.h">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\ui_controlsWidget.h">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\ui_playerWidget.h">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\resources\volume.png">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\compactSampleSizeBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\fullBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\mandatoryBox.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\common\ONVIFSignInfo.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\oxfverifier.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\common\signingInformation.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\unknownBox.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\videoContext.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\player\engine.h">
+      <Filter>player</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\helpers\property.hpp">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeneratedFiles\ui_verifyerdialog.h">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\contentBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\mediaHeaderBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\tableBox.hpp">
+      <Filter>boxes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\mediaParser.h">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\playerUI\movingOutArea.h">
+      <Filter>playerUI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\mixin\table.hpp">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\basic\mixin\data.hpp">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\helpers\endian.hpp">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\helpers\is_a.hpp">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\helpers\istream.hpp">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\helpers\uint24.hpp">
+      <Filter>verifier</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="boxes">
+      <UniqueIdentifier>{337c3bd0-db3f-48ce-b131-fbf2d02856a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="moc">
+      <UniqueIdentifier>{214c9c06-f690-4070-b237-01b6d65b4e6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="player">
+      <UniqueIdentifier>{44922091-bab4-4cb5-8d4c-3f073eb6f885}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="verifier">
+      <UniqueIdentifier>{582ab149-0d91-4373-8fff-3f406239bf38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="playerUI">
+      <UniqueIdentifier>{1d9cc09a-60a9-4599-bf5e-e7bea84b34e3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\src\resources\ONVIFPlayer.rc">
+      <Filter>playerUI</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

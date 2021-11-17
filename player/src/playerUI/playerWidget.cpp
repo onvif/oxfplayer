@@ -74,8 +74,8 @@ void PlayerWidget::removeControls()
 
 void PlayerWidget::setStreamsInfo(int video_streams_count, int audio_streams_count)
 {
-    setStreamsMenu(m_ui->actionVideo_streams, video_streams_count, true);
-    setStreamsMenu(m_ui->actionAudio_streams, audio_streams_count, false);
+    setStreamsMenu(m_ui->menuVideo_streams, video_streams_count, true);
+    setStreamsMenu(m_ui->menuAudio_streams, audio_streams_count, false);
 }
 
 PlayerWidget::~PlayerWidget()
@@ -111,27 +111,20 @@ void PlayerWidget::saveLastOpenedFolder(const QString& folder)
     settings.setValue("lastOpenedFolder", folder);
 }
 
-void PlayerWidget::setStreamsMenu(QAction* action, int count, bool video)
+void PlayerWidget::setStreamsMenu(QMenu* menu, int count, bool video)
 {
-    QMenu* old_menu = action->menu();
-    if(old_menu)
-    {
-        action->setMenu(0);
-        delete old_menu;
-    }
-    QMenu* new_menu = new QMenu();
+    menu->clear();
     for(int i = 0; i < count; ++i)
     {
-        QAction* new_action = new QAction("Stream " + QString::number(i), new_menu);
+        QAction* new_action = new QAction("Stream " + QString::number(i), menu);
         new_action->setCheckable(true);
         new_action->setChecked(i == 0);
         if(video)
             QObject::connect(new_action, SIGNAL(triggered()), this, SLOT(onVideoStreamSelected()));
         else
             QObject::connect(new_action, SIGNAL(triggered()), this, SLOT(onAudioStreamSelected()));
-        new_menu->addAction(new_action);
+        menu->addAction(new_action);
     }
-    action->setMenu(new_menu);
 }
 
 void PlayerWidget::onOpenFile()
@@ -158,10 +151,10 @@ void PlayerWidget::onOpenDir()
 void PlayerWidget::onVideoStreamSelected()
 {
     QAction* action = (QAction*)sender();
-    for(int i = 0; i < m_ui->actionVideo_streams->menu()->actions().size(); ++i)
+    for(int i = 0; i < m_ui->menuVideo_streams->actions().size(); ++i)
     {
-        bool checked = (m_ui->actionVideo_streams->menu()->actions().at(i) == action);
-        m_ui->actionVideo_streams->menu()->actions().at(i)->setChecked(checked);
+        bool checked = ( m_ui->menuVideo_streams->actions().at(i) == action);
+        m_ui->menuVideo_streams->actions().at(i)->setChecked(checked);
         if(checked)
             emit changeVideoStream(i);
     }
@@ -170,10 +163,10 @@ void PlayerWidget::onVideoStreamSelected()
 void PlayerWidget::onAudioStreamSelected()
 {
     QAction* action = (QAction*)sender();
-    for(int i = 0; i < m_ui->actionAudio_streams->menu()->actions().size(); ++i)
+    for(int i = 0; i < m_ui->menuAudio_streams->actions().size(); ++i)
     {
-        bool checked = (m_ui->actionAudio_streams->menu()->actions().at(i) == action);
-        m_ui->actionAudio_streams->menu()->actions().at(i)->setChecked(checked);
+        bool checked = (m_ui->menuAudio_streams->actions().at(i) == action);
+        m_ui->menuAudio_streams->actions().at(i)->setChecked(checked);
         if(checked)
             emit changeAudioStream(i);
     }

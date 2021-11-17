@@ -107,7 +107,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -138,8 +138,20 @@
     <property name="title">
      <string>Render</string>
     </property>
-    <addaction name="actionVideo_streams"/>
-    <addaction name="actionAudio_streams"/>
+    <widget class="QMenu" name="menuVideo_streams">
+     <property name="title">
+      <string>Video streams</string>
+     </property>
+     <addaction name="action1"/>
+    </widget>
+    <widget class="QMenu" name="menuAudio_streams">
+     <property name="title">
+      <string>Audio streams</string>
+     </property>
+     <addaction name="action1_2"/>
+    </widget>
+    <addaction name="menuVideo_streams"/>
+    <addaction name="menuAudio_streams"/>
     <addaction name="separator"/>
     <addaction name="actionLocalTime"/>
    </widget>
@@ -182,16 +194,6 @@
     <string>Memory</string>
    </property>
   </action>
-  <action name="actionVideo_streams">
-   <property name="text">
-    <string>Video streams</string>
-   </property>
-  </action>
-  <action name="actionAudio_streams">
-   <property name="text">
-    <string>Audio streams</string>
-   </property>
-  </action>
   <action name="actionCertificate_storage">
    <property name="text">
     <string>Certificate storage</string>
@@ -206,6 +208,21 @@
    </property>
    <property name="text">
     <string>Show local time</string>
+   </property>
+  </action>
+  <action name="actiontest">
+   <property name="text">
+    <string>test</string>
+   </property>
+  </action>
+  <action name="action1">
+   <property name="text">
+    <string>1</string>
+   </property>
+  </action>
+  <action name="action1_2">
+   <property name="text">
+    <string>1</string>
    </property>
   </action>
  </widget>

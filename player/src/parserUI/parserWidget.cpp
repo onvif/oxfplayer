@@ -95,6 +95,9 @@ void ParserWidget::showFilesetInformation(FilesetInformation fileset_information
             m_ui->boxTree->addTopLevelItem(item);
         }
         resizeTreeToContents(m_ui->boxTree);
+        if (fileset_information.size() == 1) {
+            m_ui->boxTree->expandToDepth(2);
+        }
     }
 }
 
@@ -108,7 +111,7 @@ void ParserWidget::clearContents()
 QTreeWidgetItem * ParserWidget::createBoxItem(Box * box, QTreeWidgetItem * parent)
 {
     QTreeWidgetItem * item = new QTreeWidgetItem(parent);
-    item->setData(0, Qt::UserRole, qVariantFromValue((void*)box));
+    item->setData(0, Qt::UserRole, QVariant::fromValue((void*)box));
     item->setText(0, (QString)box->getBoxFourCC());
     item->setText(1, box->getBoxDescription());
 

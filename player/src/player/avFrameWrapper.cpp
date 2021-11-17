@@ -28,12 +28,12 @@
 #include "avFrameWrapper.h"
 
 AVFrameWrapper::AVFrameWrapper() :
-    m_frame(avcodec_alloc_frame())
+    m_frame(av_frame_alloc())
 {
-    avcodec_get_frame_defaults(m_frame);
+    av_frame_unref(m_frame);
 }
 
 AVFrameWrapper::~AVFrameWrapper()
 {
-    avcodec_free_frame(&m_frame);
+    av_frame_free(&m_frame);
 }
