@@ -43,9 +43,7 @@ Engine::Engine() :
     m_is_initialized(false),
     m_player_state(Stopped),
     m_playing_time(0),
-    m_selected_video_stream_index(0),
-    m_selected_audio_stream_index(0)
-{
+    m_selected_video_stream_index(0){
     QObject::connect(&m_video_playback, SIGNAL(played(BasePlayback*)), this, SIGNAL(played(BasePlayback*)));
     QObject::connect(&m_video_playback, SIGNAL(playbackFinished()), this, SLOT(onFinished()));
     //direct connection used to prevent receiving messages from previously opened file
@@ -201,7 +199,6 @@ void Engine::clear()
     m_player_state = Stopped;
     m_playing_time = 0;
     m_selected_video_stream_index = 0;
-    m_selected_audio_stream_index = 0;
 }
 
 int Engine::getPlayingTime() const
@@ -258,12 +255,8 @@ void Engine::setAudioStreamIndex(int index)
        index >= m_audio_decoder->getStreamsCount())
         return;
     stop();
-    m_selected_audio_stream_index = index;
-    m_audio_context.clear();
-    m_audio_context.open(m_audio_decoder->getCodecContext(m_selected_audio_stream_index));
-    m_audio_decoder->setStream(m_audio_decoder->getStream(m_selected_audio_stream_index));
-    ((QueuedAudioDecoder*)m_audio_decoder)->setAudioPrams(m_audio_context.getAudioParams());
-    m_audio_playback.setAudioParams(m_audio_context.getAudioParams());
+    m_audio_decoder->setIndex(index);
+    m_audio_playback.setAudioParams(m_audio_decoder->getParams());
 }
 
 void Engine::setVolume(int volume)
@@ -300,8 +293,7 @@ bool Engine::initMainContext(const QString& file_name, FragmentInfo& fragment)
     res = res && m_audio_decoder->open(file_name, fragment.getValidMediaStreamIds());
     res = res && m_video_decoder->getStreamsCount();
 	res = res && m_video_context.open(m_video_decoder->getStream(m_selected_video_stream_index), fragment.getFpsFromSamples());
-    if(m_audio_decoder->getStreamsCount())
-        res = res && m_audio_context.open(m_audio_decoder->getCodecContext(m_selected_audio_stream_index));
+    if (m_audio_decoder->getStreamsCount()) m_audio_decoder->setIndex();
 
     return res;
 }
@@ -312,8 +304,7 @@ bool Engine::initDecoders()
 
     if(m_audio_decoder && m_audio_decoder->getStreamsCount())
     {
-        m_audio_decoder->setStream(m_audio_decoder->getStream(m_selected_audio_stream_index));
-        ((QueuedAudioDecoder*)m_audio_decoder)->setAudioPrams(m_audio_context.getAudioParams());
+        m_audio_decoder->setIndex();
     }
 
     return true;
@@ -342,7 +333,7 @@ void Engine::clearVideoPlayback()
 bool Engine::initAudioPlayback()
 {
 	m_audio_playback.setAudioDecoder(m_audio_decoder);
-    m_audio_playback.setAudioParams(m_audio_context. getAudioParams());
+    m_audio_playback.setAudioParams(m_audio_decoder->getParams());
 
     return true;
 }

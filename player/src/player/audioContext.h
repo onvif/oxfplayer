@@ -53,9 +53,6 @@ public:
     //! Clear parameters.
     void clear();
 
-    const AudioParams& getAudioParams() const { return m_audio_params; }
-
-private:
     //! Audio parameters used to convert file audio data to hardware audio format and to setup audio device.
     AudioParams     m_audio_params;
 };
