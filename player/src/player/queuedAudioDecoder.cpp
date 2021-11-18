@@ -33,7 +33,7 @@
 #include <QDebug>
 
 QueuedAudioDecoder::QueuedAudioDecoder() :
-    QueuedDecoder<AudioFrame>(),
+    QueuedDecoder<AudioFrame>(AVMEDIA_TYPE_AUDIO),
     m_swr_context(nullptr)
 {
 }

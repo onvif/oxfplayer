@@ -64,7 +64,7 @@ void MainContext::clear()
     }
 }
 
-AVStream* MainContext::getStream(int index)
+AVStream* MainContext::getStream(int index) const
 {
     if(index >= 0 &&
        index < m_streams.size())

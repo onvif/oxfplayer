@@ -38,8 +38,6 @@
 Engine::Engine() :
     BasePlayback(),
     m_video_widget(nullptr),
-    m_video_main_context(AVMEDIA_TYPE_VIDEO),
-    m_audio_main_context(AVMEDIA_TYPE_AUDIO),
     m_video_decoder(new QueuedVideoDecoder()),
     m_audio_decoder(new QueuedAudioDecoder()),
     m_is_initialized(false),
@@ -79,7 +77,7 @@ bool Engine::init(const QString& file_name, FragmentInfo& fragment)
     res = res && initDecoders();
     res = res && initVideoPlayback();
     res = res && initAudioPlayback();
-    res = res && m_video_main_context.getStreamsCount();
+    res = res && m_video_decoder->getStreamsCount();
 
     m_is_initialized = res;
 
@@ -92,8 +90,8 @@ void Engine::start()
        m_player_state != Stopped)
         return;
 
-    bool have_video = m_video_main_context.getStreamsCount();
-    bool have_audio = m_audio_main_context.getStreamsCount();
+    bool have_video = m_video_decoder->getStreamsCount();
+    bool have_audio = m_audio_decoder->getStreamsCount();
 
     if(!have_video)
         return;
@@ -122,7 +120,7 @@ void Engine::pause()
        m_player_state != Playing)
         return;
 
-    if(m_audio_main_context.getStreamsCount())
+    if(m_audio_decoder->getStreamsCount())
         m_audio_playback.pause();
     m_video_playback.pause();
 
@@ -135,7 +133,7 @@ void Engine::resume()
        m_player_state != Paused)
         return;
 
-    if(m_audio_main_context.getStreamsCount())
+    if(m_audio_decoder->getStreamsCount())
         m_audio_playback.resume();
     m_video_playback.resume();
 
@@ -162,8 +160,8 @@ void Engine::startAndPause()
        m_player_state != Stopped)
         return;
 
-    bool have_video = m_video_main_context.getStreamsCount();
-    bool have_audio = m_audio_main_context.getStreamsCount();
+    bool have_video = m_video_decoder->getStreamsCount();
+    bool have_audio = m_audio_decoder->getStreamsCount();
 
     if(!have_video)
         return;
@@ -200,7 +198,6 @@ void Engine::clear()
     clearDecoders();
     clearVideoPlayback();
     clearAudioPlayback();
-    clearMainContext();
     m_player_state = Stopped;
     m_playing_time = 0;
     m_selected_video_stream_index = 0;
@@ -246,25 +243,25 @@ void Engine::seek(int time_ms)
 void Engine::setVideoStreamIndex(int index)
 {
     if(index < 0 ||
-       index >= m_video_main_context.getStreamsCount())
+       index >= m_video_decoder->getStreamsCount())
         return;
     stop();
     m_selected_video_stream_index = index;
     m_video_context.clear();
-	m_video_context.open(m_video_main_context, m_selected_video_stream_index, m_currentFragment->getFpsFromSamples());
-    m_video_decoder->setStream(m_video_main_context.getStream(m_selected_video_stream_index));
+	m_video_context.open(m_video_decoder->getStream(m_selected_video_stream_index), m_currentFragment->getFpsFromSamples());
+    m_video_decoder->setStream(m_video_decoder->getStream(m_selected_video_stream_index));
 }
 
 void Engine::setAudioStreamIndex(int index)
 {
     if(index < 0 ||
-       index >= m_audio_main_context.getStreamsCount())
+       index >= m_audio_decoder->getStreamsCount())
         return;
     stop();
     m_selected_audio_stream_index = index;
     m_audio_context.clear();
-    m_audio_context.open(m_audio_main_context, m_selected_audio_stream_index);
-    m_audio_decoder->setStream(m_audio_main_context.getStream(m_selected_audio_stream_index));
+    m_audio_context.open(m_audio_decoder->getCodecContext(m_selected_audio_stream_index));
+    m_audio_decoder->setStream(m_audio_decoder->getStream(m_selected_audio_stream_index));
     ((QueuedAudioDecoder*)m_audio_decoder)->setAudioPrams(m_audio_context.getAudioParams());
     m_audio_playback.setAudioParams(m_audio_context.getAudioParams());
 }
@@ -281,7 +278,7 @@ void Engine::setVolume(int volume)
 
     double vol = (double)volume / 100.0;
 
-    if(m_audio_main_context.getStreamsCount())
+    if(m_audio_decoder->getStreamsCount())
         m_audio_playback.setVolume(vol);
 }
 
@@ -299,34 +296,23 @@ bool Engine::initMainContext(const QString& file_name, FragmentInfo& fragment)
 {
     bool res = true;
 
-    res = res && m_video_main_context.open(file_name, fragment.getValidMediaStreamIds());
-    res = res && m_audio_main_context.open(file_name, fragment.getValidMediaStreamIds());
-    res = res && m_video_main_context.getStreamsCount();
-	res = res && m_video_context.open(m_video_main_context, m_selected_video_stream_index, fragment.getFpsFromSamples());
-    if(m_audio_main_context.getStreamsCount())
-        res = res && m_audio_context.open(m_audio_main_context, m_selected_audio_stream_index);
+    res = res && m_video_decoder->open(file_name, fragment.getValidMediaStreamIds());
+    res = res && m_audio_decoder->open(file_name, fragment.getValidMediaStreamIds());
+    res = res && m_video_decoder->getStreamsCount();
+	res = res && m_video_context.open(m_video_decoder->getStream(m_selected_video_stream_index), fragment.getFpsFromSamples());
+    if(m_audio_decoder->getStreamsCount())
+        res = res && m_audio_context.open(m_audio_decoder->getCodecContext(m_selected_audio_stream_index));
 
     return res;
 }
 
-void Engine::clearMainContext()
-{
-    m_video_main_context.clear();
-    m_audio_main_context.clear();
-    m_video_context.clear();
-    m_audio_context.clear();
-    m_is_initialized = false;
-}
-
 bool Engine::initDecoders()
 {
-    m_video_decoder->setMainContext(&m_video_main_context);
-    m_video_decoder->setStream(m_video_main_context.getStream(m_selected_video_stream_index));
+    m_video_decoder->setStream(m_video_decoder->getStream(m_selected_video_stream_index));
 
-    if(m_audio_main_context.getStreamsCount())
+    if(m_audio_decoder && m_audio_decoder->getStreamsCount())
     {
-        m_audio_decoder->setMainContext(&m_audio_main_context);
-        m_audio_decoder->setStream(m_audio_main_context.getStream(m_selected_audio_stream_index));
+        m_audio_decoder->setStream(m_audio_decoder->getStream(m_selected_audio_stream_index));
         ((QueuedAudioDecoder*)m_audio_decoder)->setAudioPrams(m_audio_context.getAudioParams());
     }
 
@@ -368,7 +354,7 @@ void Engine::clearAudioPlayback()
 
 void Engine::stopPlayback()
 {
-    if(m_audio_main_context.getStreamsCount())
+    if(m_audio_decoder->getStreamsCount())
         m_audio_playback.stop();
     m_video_playback.stop();
 
@@ -387,13 +373,13 @@ void Engine::doSeek(int time_ms)
 {
     m_playing_time = time_ms;
 
-    bool have_audio = m_audio_main_context.getStreamsCount();
+    bool have_audio = m_audio_decoder->getStreamsCount();
 
     //seek video
     if(time_ms == 0)
     {
         //stop seek
-        m_video_main_context.seek(0);
+        m_video_decoder->seek(0);
     }
     else
     {
@@ -406,16 +392,15 @@ void Engine::doSeek(int time_ms)
             {
                 video_seek_time = 0;
                 //that's all - seek to start
-                m_video_main_context.seek(video_seek_time);
+                m_video_decoder->seek(video_seek_time);
                 break;
             }
 
-            m_video_main_context.seek(video_seek_time);
+            m_video_decoder->seek(video_seek_time);
 
             //test that seek enough
             QueuedVideoDecoder decoder;
-            decoder.setMainContext(&m_video_main_context);
-            decoder.setStream(m_video_main_context.getStream(m_selected_video_stream_index));
+            decoder.setStream(m_video_decoder->getStream(m_selected_video_stream_index));
             VideoFrame video_frame;
             if(decoder.getNextFrame(video_frame) &&
                video_frame.m_time <= time_ms)
@@ -425,12 +410,13 @@ void Engine::doSeek(int time_ms)
 
     //skip threshold
     QVector<int> pts_vector;
-    m_video_main_context.timeToPTS(time_ms, pts_vector);
-    m_video_decoder->setSkipThreshold(pts_vector[m_selected_video_stream_index]);
-
+    m_video_decoder->timeToPTS(time_ms, pts_vector);
+    if (pts_vector.size() > 0) {
+        m_video_decoder->setSkipThreshold(pts_vector[m_selected_video_stream_index]);
+    }
     //audio seek
     if(have_audio)
-        m_audio_main_context.seek(time_ms);
+        m_audio_decoder->seek(time_ms);
 
     //clear video context fps
     m_video_context.flushCurrentFps();

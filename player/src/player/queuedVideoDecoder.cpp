@@ -33,7 +33,7 @@
 #include <QDebug>
 
 QueuedVideoDecoder::QueuedVideoDecoder() :
-    QueuedDecoder<VideoFrame>(),
+    QueuedDecoder<VideoFrame>(AVMEDIA_TYPE_VIDEO),
     m_sws_context(0),
     m_frame_RGB(0),
     m_buffer_size(-1),

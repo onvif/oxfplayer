@@ -87,10 +87,10 @@ public:
     PlayerState getState() const { return m_player_state; }
 
     //! Get video streams count.
-    int getVideoStreamsCount() const { return m_video_main_context.getStreamsCount(); }
+    int getVideoStreamsCount() const { return m_video_decoder->getStreamsCount(); }
 
     //! Get audio streams count.
-    int getAudioStreamsCount() const { return m_audio_main_context.getStreamsCount(); }
+    int getAudioStreamsCount() const { return m_audio_decoder->getStreamsCount(); }
 
     //! Get current video stream index.
     int getCurrentVideoStreamIndex() const { return m_selected_video_stream_index; }
@@ -117,9 +117,6 @@ public:
 private:
     //! Init MainContext.
     bool initMainContext(const QString& file_name, FragmentInfo& fragment);
-
-    //! Clear MainContex;
-    void clearMainContext();
 
     //! Init decoders.
     bool initDecoders();
@@ -152,11 +149,6 @@ private:
 private:
     //! Widget to present video.
     VideoFrameWidget*   m_video_widget;
-
-    //! MainContext for video.
-    MainContext     m_video_main_context;
-    //! MainContext for audio.
-    MainContext     m_audio_main_context;
 
     //! Video context.
     VideoContext    m_video_context;

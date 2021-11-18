@@ -58,7 +58,7 @@ public:
     int getStreamsCount() const { return m_streams.size(); }
 
     //! Get stream by index.
-    AVStream* getStream(int index);
+    AVStream* getStream(int index) const;
 
     //! Get codec context by stream index.
     AVCodecContext* getCodecContext(int index);

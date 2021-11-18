@@ -35,12 +35,11 @@
 
 //! Base class for decoder.
 template<typename T>
-class Decoder
+class Decoder : public MainContext
 {
 public:
-    Decoder() :
-        m_main_context(nullptr),
-        m_skip_threshold(-1)
+    Decoder(AVMediaType type) : MainContext(type)
+        , m_skip_threshold(-1)
     {}
 
     virtual ~Decoder()
@@ -48,9 +47,6 @@ public:
         stop();
         clear();
     }
-
-    //! Set main context.
-    void setMainContext(MainContext* main_context) { m_main_context = main_context; }
 
     //! Set stream.
     void setStream(AVStream* stream) { m_stream = stream; }
@@ -82,16 +78,14 @@ public:
     //! Clear.
     virtual void clear()
     {
+        MainContext::clear();
         stop();
 
-        m_main_context = nullptr;
         m_stream = nullptr;
         m_skip_threshold = -1;
     }
 
 protected:
-    //! Main context to read from.
-    MainContext*    m_main_context;
     //! Stream to read from.
     AVStream*       m_stream;
     //! Skip threshols.
