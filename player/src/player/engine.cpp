@@ -30,15 +30,8 @@
 #include "defines.h"
 #include "engine.h"
 
-#ifdef DECODE_USING_QUEUE
 #include "queuedVideoDecoder.h"
 #include "queuedAudioDecoder.h"
-#endif //DECODE_USING_QUEUE
-#ifdef DECODE_WITHOUT_QUEUE
-#include "nonqueuedVideoDecoder.h"
-#include "nonqueuedAudioDecoder.h"
-#endif //DECODE_WITHOUT_QUEUE
-#include "nonqueuedVideoDecoder.h"
 
 #include <QDebug>
 
@@ -47,14 +40,8 @@ Engine::Engine() :
     m_video_widget(nullptr),
     m_video_main_context(AVMEDIA_TYPE_VIDEO),
     m_audio_main_context(AVMEDIA_TYPE_AUDIO),
-#ifdef DECODE_USING_QUEUE
     m_video_decoder(new QueuedVideoDecoder()),
     m_audio_decoder(new QueuedAudioDecoder()),
-#endif //DECODE_USING_QUEUE
-#ifdef DECODE_WITHOUT_QUEUE
-    m_video_decoder(new NonQueuedVideoDecoder()),
-    m_audio_decoder(new NonQueuedAudioDecoder()),
-#endif //DECODE_WITHOUT_QUEUE
     m_is_initialized(false),
     m_player_state(Stopped),
     m_playing_time(0),
@@ -278,12 +265,7 @@ void Engine::setAudioStreamIndex(int index)
     m_audio_context.clear();
     m_audio_context.open(m_audio_main_context, m_selected_audio_stream_index);
     m_audio_decoder->setStream(m_audio_main_context.getStream(m_selected_audio_stream_index));
-#ifdef DECODE_USING_QUEUE
     ((QueuedAudioDecoder*)m_audio_decoder)->setAudioPrams(m_audio_context.getAudioParams());
-#endif //DECODE_USING_QUEUE
-#ifdef DECODE_WITHOUT_QUEUE
-    ((NonQueuedAudioDecoder*)m_audio_decoder)->setAudioPrams(m_audio_context.getAudioParams());
-#endif //DECODE_WITHOUT_QUEUE
     m_audio_playback.setAudioParams(m_audio_context.getAudioParams());
 }
 
@@ -345,12 +327,7 @@ bool Engine::initDecoders()
     {
         m_audio_decoder->setMainContext(&m_audio_main_context);
         m_audio_decoder->setStream(m_audio_main_context.getStream(m_selected_audio_stream_index));
-#ifdef DECODE_USING_QUEUE
         ((QueuedAudioDecoder*)m_audio_decoder)->setAudioPrams(m_audio_context.getAudioParams());
-#endif //DECODE_USING_QUEUE
-#ifdef DECODE_WITHOUT_QUEUE
-        ((NonQueuedAudioDecoder*)m_audio_decoder)->setAudioPrams(m_audio_context.getAudioParams());
-#endif //DECODE_WITHOUT_QUEUE
     }
 
     return true;
@@ -436,7 +413,7 @@ void Engine::doSeek(int time_ms)
             m_video_main_context.seek(video_seek_time);
 
             //test that seek enough
-            NonQueuedVideoDecoder decoder;
+            QueuedVideoDecoder decoder;
             decoder.setMainContext(&m_video_main_context);
             decoder.setStream(m_video_main_context.getStream(m_selected_video_stream_index));
             VideoFrame video_frame;
