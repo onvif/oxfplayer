@@ -33,7 +33,7 @@
 #include <QDebug>
 
 QueuedVideoDecoder::QueuedVideoDecoder() :
-    QueuedDecoder<VideoFrame>(),
+    QueuedDecoder<VideoFrame>(AVMEDIA_TYPE_VIDEO),
     m_sws_context(0),
     m_frame_RGB(0),
     m_buffer_size(-1),
@@ -50,6 +50,16 @@ void QueuedVideoDecoder::clear()
 {
     QueuedDecoder<VideoFrame>::clear();
     clearSwsContext();
+}
+
+void QueuedVideoDecoder::setStream(int index, double fps)
+{
+    if (index >= getStreamsCount()) return;
+    if (index >= 0) m_streamIndex = index;
+    m_context.clear();
+    m_context.open(getStream(m_streamIndex), fps);
+    m_stream = getStream(m_streamIndex);
+
 }
 
 void QueuedVideoDecoder::processPacket(AVPacket* packet, int* readed_frames)

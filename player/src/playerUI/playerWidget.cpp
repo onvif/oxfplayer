@@ -49,7 +49,6 @@ PlayerWidget::PlayerWidget(QWidget* parent) :
     m_ui->video_layout->addWidget(&m_video_frame);
 
     QObject::connect(m_ui->actionOpen, SIGNAL(triggered()), this, SLOT(onOpenFile()));
-    QObject::connect(m_ui->actionOpen_directory, SIGNAL(triggered()), this, SLOT(onOpenDir()));
     QObject::connect(m_ui->actionFile_structure, SIGNAL(triggered()), this, SIGNAL(showFileStructure()));
     QObject::connect(m_ui->actionFile_signature, SIGNAL(triggered()), this, SIGNAL(verifyFileSignature()));
     QObject::connect(m_ui->actionCertificate_storage, SIGNAL(triggered()), this, SIGNAL(openCertificateStorage()));
@@ -135,16 +134,6 @@ void PlayerWidget::onOpenFile()
         QFileInfo file_info(file_name);
         saveLastOpenedFolder(file_info.absolutePath());
         emit openFile(file_name);
-    }
-}
-
-void PlayerWidget::onOpenDir()
-{
-    QString dir_name = QFileDialog::getExistingDirectory(this, "Open video", getLastOpenedFolder());
-    if(!dir_name.isEmpty())
-    {
-        saveLastOpenedFolder(dir_name);
-        emit openDir(dir_name);
     }
 }
 

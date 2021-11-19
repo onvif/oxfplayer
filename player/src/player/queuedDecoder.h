@@ -38,8 +38,8 @@ template<typename T>
 class QueuedDecoder : public Decoder<T>, public SyncThread
 {
 public:
-    QueuedDecoder() :
-        Decoder<T>(),
+    QueuedDecoder(AVMediaType type) :
+        Decoder<T>(type),
         SyncThread(DECODE_SLEEP_TIMEOUT, QThread::HighPriority)
     {}
 
@@ -64,8 +64,7 @@ public:
     virtual void start()
     {
         //do not start if no context set or no streams added
-        if(Decoder<T>::m_main_context == nullptr ||
-           Decoder<T>::m_stream == nullptr)
+        if(Decoder<T>::m_stream == nullptr)
             return;
 
         SyncThread::start();
@@ -110,7 +109,7 @@ protected:
             int readed_frames = 0;
             for(;readed_frames < FRAMES_TO_READ;)
             {
-                int read_result = av_read_frame(Decoder<T>::m_main_context->getFormatContext(), packet);
+                int read_result = av_read_frame(getFormatContext(), packet);
 
                 if(read_result == 0)
                 {

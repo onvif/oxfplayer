@@ -46,11 +46,11 @@ FragmentListWidget::~FragmentListWidget()
     clear();
 }
 
-void FragmentListWidget::setFragmentsList(const FragmentsList& fragments)
+void FragmentListWidget::setFragmentsList(const SegmentList& fragments)
 {
     clear();
     m_fragments = fragments;
-    for(FragmentsList::const_iterator cIter = m_fragments.constBegin(); cIter != m_fragments.constEnd(); ++cIter)
+    for(SegmentList::const_iterator cIter = m_fragments.constBegin(); cIter != m_fragments.constEnd(); ++cIter)
     {
         QListWidgetItem* item = new QListWidgetItem(QIcon(":/frame"), cIter->getName(), this);
         item->setData(Qt::UserRole, cIter - fragments.constBegin());
@@ -67,7 +67,7 @@ void FragmentListWidget::clear()
     m_fragments.clear();
 }
 
-void FragmentListWidget::selectFragment(const FragmentInfo& fragment_info)
+void FragmentListWidget::selectFragment(const SegmentInfo& fragment_info)
 {
     QObject::disconnect(this, SIGNAL(itemSelectionChanged()), this, SLOT(onSelectionChanged()));
     if(fragment_info.getFragmentNumber() < (uint32_t)m_fragments.size())

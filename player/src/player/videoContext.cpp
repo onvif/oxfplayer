@@ -25,7 +25,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#include "mainContext.h"
+#include "streamReader.h"
 
 #include "videoContext.h"
 
@@ -41,11 +41,11 @@ VideoContext::~VideoContext()
 
 }
 
-bool VideoContext::open(MainContext& mainContext, int videoStreamIndex, double fpsHint)
+bool VideoContext::open(AVStream* stream, double fpsHint)
 {
-    m_video_stream = mainContext.getStream(videoStreamIndex);
+    m_video_stream = stream;
     if(m_video_stream == nullptr) return false;
-	m_fps = fpsHint;
+	if (fpsHint != 0.0) m_fps = fpsHint;
 	if (m_video_stream->avg_frame_rate.num != 0) {
 	    m_fps = av_q2d(m_video_stream->avg_frame_rate);
 	}

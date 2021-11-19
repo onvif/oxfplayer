@@ -74,7 +74,7 @@ HEADERS  += \
     ../../src/common/defines.h \
     ../../src/common/enums.h \
     ../../src/common/ffmpeg.h \
-    ../../src/common/fragmentInfo.h \
+    ../../src/common/segmentInfo.h \
     ../../src/common/ONVIFSignInfo.h \
     ../../src/common/queue.h \
     ../../src/common/signingInformation.h \

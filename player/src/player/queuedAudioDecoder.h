@@ -29,6 +29,7 @@
 #define QUEUEDAUDIODECODER_H
 
 #include "queuedDecoder.h"
+#include "audioContext.h"
 
 #include "types.h"
 
@@ -39,9 +40,9 @@ public:
 
     ~QueuedAudioDecoder();
 
+    void setIndex(int index = -1);
     //! Set audio parameters used resample readed audio data.
-    void setAudioPrams(const AudioParams& audio_params) { m_audio_params = audio_params; }
-
+    const AudioParams &getParams() { return m_context.m_audio_params; }
     virtual void clear();
 
 protected:
@@ -55,8 +56,8 @@ private:
     void cleatSwrContext();
 
 private:
-    //! Resample parameters.
-    AudioParams m_audio_params;
+    //! Audio context.
+    AudioContext    m_context;
     //! Resampling context.
     SwrContext* m_swr_context;
 };

@@ -33,13 +33,15 @@
 
 #include "enums.h"
 #include "types.h"
-#include "mainContext.h"
+#include "streamReader.h"
 #include "videoContext.h"
 #include "audioContext.h"
 #include "decoder.h"
 #include "audioPlayback.h"
 #include "videoPlayback.h"
-#include "fragmentInfo.h"
+#include "segmentInfo.h"
+#include "queuedAudioDecoder.h"
+#include "queuedVideoDecoder.h"
 
 class VideoFrameWidget;
 
@@ -58,7 +60,7 @@ public:
     void setVideoWidget(VideoFrameWidget* video_widget);
 
     //! Init engine with some file.
-    bool init(const QString& file_name, FragmentInfo& fragment);
+    bool init(const QString& file_name, SegmentInfo& fragment);
 
     virtual void start();
 
@@ -86,20 +88,10 @@ public:
 	//! Get player state.
     PlayerState getState() const { return m_player_state; }
 
-    //! Get video streams count.
-    int getVideoStreamsCount() const { return m_video_main_context.getStreamsCount(); }
-
-    //! Get audio streams count.
-    int getAudioStreamsCount() const { return m_audio_main_context.getStreamsCount(); }
-
-    //! Get current video stream index.
-    int getCurrentVideoStreamIndex() const { return m_selected_video_stream_index; }
-
-    //! Get current audio stream index.
-    int getCurrentAudioStreamIndex() const { return m_selected_audio_stream_index; }
-
-    //! Set new stream index for video.
-    void setVideoStreamIndex(int index);
+    //! Video decoder.
+    QueuedVideoDecoder m_video_decoder;
+    //! Audio decoder.
+    QueuedAudioDecoder m_audio_decoder;
 
     //! Set new stream index for audio.
     void setAudioStreamIndex(int index);
@@ -116,28 +108,10 @@ public:
 
 private:
     //! Init MainContext.
-    bool initMainContext(const QString& file_name, FragmentInfo& fragment);
+    bool initDecoders(const QString& file_name, double fps);
 
-    //! Clear MainContex;
-    void clearMainContext();
-
-    //! Init decoders.
-    bool initDecoders();
-
-    //! Clear decoders.
-    void clearDecoders();
-
-    //! Init video playback.
-    bool initVideoPlayback();
-
-    //! Clear video playback.
-    void clearVideoPlayback();
-
-    //! Init audio playback.
-    bool initAudioPlayback();
-
-    //! Clear audio playback.
-    void clearAudioPlayback();
+    //! Init audio and video playback.
+    bool initPlayback();
 
     //! Private function that will stop playback.
     void stopPlayback();
@@ -153,21 +127,6 @@ private:
     //! Widget to present video.
     VideoFrameWidget*   m_video_widget;
 
-    //! MainContext for video.
-    MainContext     m_video_main_context;
-    //! MainContext for audio.
-    MainContext     m_audio_main_context;
-
-    //! Video context.
-    VideoContext    m_video_context;
-    //! Audio context.
-    AudioContext    m_audio_context;
-
-    //! Video decoder.
-    Decoder<VideoFrame>*    m_video_decoder;
-    //! Audio decoder.
-    Decoder<AudioFrame>*    m_audio_decoder;
-
     //! Video playback.
     VideoPlayback   m_video_playback;
     //! Audio playback.
@@ -180,14 +139,6 @@ private:
 
     //! Playing time.
     mutable int     m_playing_time;
-
-    //! Index of selected video stream.
-    int             m_selected_video_stream_index;
-
-    //! Index of selected audio stream.
-    int             m_selected_audio_stream_index;
-
-	FragmentInfo * m_currentFragment;
 };
 
 #endif //ENGINE_H

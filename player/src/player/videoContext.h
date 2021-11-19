@@ -28,7 +28,7 @@
 #ifndef VIDEOCONTEXT_H
 #define VIDEOCONTEXT_H
 
-class MainContext;
+class StreamReader;
 struct AVStream;
 class VideoDecodeThread;
 
@@ -47,7 +47,7 @@ public:
 	 * \param fpsHint Hint for frame per seconds to be used in cases duration is not set
      * \return
      */
-    bool open(MainContext& main_context, int video_stream_index, double fpsHint);
+    bool open(AVStream *stream, double fpsHint);
 
     //! Clear parameters.
     void clear();

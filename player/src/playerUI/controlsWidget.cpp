@@ -42,8 +42,8 @@ ControlsWidget::ControlsWidget(QWidget* parent) :
     QWidget(parent),
     m_ui(new Ui::ControlsWidget),
     m_player_state(Stopped),
-    m_playing_fragment_index(-1),
-    m_fragment_played(0),
+    m_current_segment(-1),
+    m_segment_position(0),
     m_mute(false),
     m_old_volume(0),
     m_fullscreen_mode(false),
@@ -73,7 +73,6 @@ ControlsWidget::ControlsWidget(QWidget* parent) :
     QObject::connect(m_ui->mute_btn, SIGNAL(clicked()), this, SLOT(onMute()));
     QObject::connect(m_ui->prev_btn, SIGNAL(clicked()), this, SIGNAL(prevFragment()));
     QObject::connect(m_ui->next_btn, SIGNAL(clicked()), this, SIGNAL(nextFragment()));
-    QObject::connect(m_ui->fragment_position, SIGNAL(newValue(int)), this, SLOT(onFragmentValue(int)));
     QObject::connect(m_ui->total_position, SIGNAL(newValue(int)), this, SLOT(onTotalValue(int)));
     QObject::connect(m_ui->fullscreen_btn, SIGNAL(clicked()), this, SIGNAL(fullscreen()));
 
@@ -87,12 +86,12 @@ ControlsWidget::~ControlsWidget()
     delete m_ui;
 }
 
-void ControlsWidget::setFragmentsList(const FragmentsList& fragments_list)
+void ControlsWidget::setFragmentsList(const SegmentList& segments)
 {
-    m_fragments_list = fragments_list;
-    m_playing_fragment_index = 0;
-    m_fragment_played = 0;
-    if(m_fragments_list.size() == 1)
+    m_segments = segments;
+    m_current_segment = 0;
+    m_segment_position = 0;
+    if(m_segments.size() == 1)
     {
         m_ui->prev_btn->setEnabled(false);
         m_ui->next_btn->setEnabled(false);
@@ -101,24 +100,23 @@ void ControlsWidget::setFragmentsList(const FragmentsList& fragments_list)
     {
         m_ui->prev_btn->setEnabled(false);
     }
-    m_ui->fragment_position->setFragmentsList(m_fragments_list, 0);
-    m_ui->total_position->setFragmentsList(m_fragments_list);
+    m_ui->total_position->setFragmentsList(m_segments);
 }
 
 void ControlsWidget::startFragment(int fragment_index)
 {
     if(fragment_index < 0 ||
-       fragment_index >= m_fragments_list.size())
+       fragment_index >= m_segments.size())
         return;
 
-    m_playing_fragment_index = fragment_index;
-    m_fragment_played = 0;
-    if(m_playing_fragment_index == 0)
+    m_current_segment = fragment_index;
+    m_segment_position = 0;
+    if(m_current_segment == 0)
     {
         m_ui->prev_btn->setEnabled(false);
         m_ui->next_btn->setEnabled(true);
     }
-    else if(m_playing_fragment_index == m_fragments_list.size() - 1)
+    else if(m_current_segment == m_segments.size() - 1)
     {
         m_ui->prev_btn->setEnabled(true);
         m_ui->next_btn->setEnabled(false);
@@ -128,20 +126,19 @@ void ControlsWidget::startFragment(int fragment_index)
         m_ui->prev_btn->setEnabled(true);
         m_ui->next_btn->setEnabled(true);
     }
-    m_ui->fragment_position->setFragmentsList(m_fragments_list, fragment_index);
 }
 
 void ControlsWidget::setPlayedTime(BasePlayback* playback)
 {
-    m_fragment_played = playback->getPlayingTime();
+    m_segment_position = playback->getPlayingTime();
 }
 
 void ControlsWidget::clear()
 {
     m_player_state = Stopped;
     setPlayBtnIcon();
-    m_fragments_list.clear();
-    m_playing_fragment_index = -1;
+    m_segments.clear();
+    m_current_segment = -1;
     m_mute = false;
     setMuteBtnIcon();
     m_old_volume = 0;
@@ -164,14 +161,13 @@ void ControlsWidget::stopPlayback()
 {
     m_player_state = Stopped;
     setPlayBtnIcon();
-    m_fragment_played = 0;
+    m_segment_position = 0;
 }
 
 void ControlsWidget::enableUI(bool enable)
 {
     m_ui->play_btn->setEnabled(enable);
     m_ui->stop_btn->setEnabled(enable);
-    m_ui->fragment_position->setEnabled(enable);
     m_ui->total_position->setEnabled(enable);
     m_ui->mute_btn->setEnabled(enable);
     m_ui->volume->setEnabled(enable);
@@ -264,41 +260,38 @@ void ControlsWidget::setMuteBtnIcon()
 int ControlsWidget::calcTotalMaximum()
 {
     int total_length = 0;
-    for(int i = 0; i < m_fragments_list.size(); ++i)
-        total_length += (int)m_fragments_list[i].getDuration();
+    for(int i = 0; i < m_segments.size(); ++i)
+        total_length += (int)m_segments[i].getDuration();
     return total_length;
 }
 
 int ControlsWidget::calcTotalCurrent()
 {
     int total_current = 0;
-    for(int i = 0; i < m_fragments_list.size(); ++i)
-        if(i < m_playing_fragment_index)
-            total_current += (int)m_fragments_list[i].getDuration();
-    total_current += m_fragment_played;
+    for(int i = 0; i < m_segments.size(); ++i)
+        if(i < m_current_segment)
+            total_current += (int)m_segments[i].getDuration();
+    total_current += m_segment_position;
     return total_current;
 }
 
 
 void ControlsWidget::setTimePositions()
 {
-    int fragment_length = m_fragments_list.size() ? (int)m_fragments_list[m_playing_fragment_index].getDuration() : 0;
-    m_ui->fragment_position->setMaximum(fragment_length);
-    m_ui->fragment_position->setValue(m_fragment_played);
     m_ui->total_position->setMaximum(calcTotalMaximum());
     m_ui->total_position->setValue(calcTotalCurrent());
 }
 
 void ControlsWidget::setTimeLabels()
 {
-    if(m_fragments_list.size() &&
-       m_fragments_list[0].getStartTime().isValid())
+    if(m_segments.size() &&
+       m_segments[0].getStartTime().isValid())
     {
         //use UTC time
         QString current_time   = "";
-        if(m_fragments_list.size())
+        if(m_segments.size())
         {
-            QDateTime cur_time = m_fragments_list[m_playing_fragment_index].getStartTime().addMSecs(m_fragment_played);
+            QDateTime cur_time = m_segments[m_current_segment].getStartTime().addMSecs(m_segment_position);
             if (m_showLocalTime) current_time = cur_time.toLocalTime().toString(DATETIME_CONVERSION_FORMAT);
 			else current_time = cur_time.toString("dd-MM-yyyy hh:mm:ss.zzz");
         }
@@ -309,7 +302,7 @@ void ControlsWidget::setTimeLabels()
         //use played time
         QTime cur_time;
         cur_time.setHMS(0, 0, 0);
-        cur_time = cur_time.addMSecs(m_fragment_played);
+        cur_time = cur_time.addMSecs(m_segment_position);
         m_ui->current_time->setText(cur_time.toString(DATETIME_SHORT_CONVERSION_FORMAT));
     }
 }
@@ -341,7 +334,7 @@ void ControlsWidget::onStopBtn()
 {
     m_player_state = Stopped;
     setPlayBtnIcon();
-    m_fragment_played = 0;
+    m_segment_position = 0;
     emit stopped();
 }
 
@@ -357,9 +350,9 @@ void ControlsWidget::onVolume(int value)
 
 void ControlsWidget::onFragmentValue(int value)
 {
-    int old_value = m_fragment_played;
-    m_fragment_played = value;
-    m_ui->total_position->setValue(m_ui->total_position->value() + m_fragment_played - old_value);
+    int old_value = m_segment_position;
+    m_segment_position = value;
+    m_ui->total_position->setValue(m_ui->total_position->value() + m_segment_position - old_value);
     emit fragment(value);
 }
 
@@ -369,20 +362,19 @@ void ControlsWidget::onTotalValue(int value)
     int fragment_index = -1;
     int ms = -1;
     int length = 0;
-    for(int i = 0; i < m_fragments_list.size(); ++i)
+    for(int i = 0; i < m_segments.size(); ++i)
     {
-        if(length + (int)m_fragments_list[i].getDuration() > value)
+        if(length + (int)m_segments[i].getDuration() > value)
         {
             fragment_index = i;
             ms = value - length;
             break;
         }
         else
-            length += (int)m_fragments_list[i].getDuration();
+            length += (int)m_segments[i].getDuration();
     }
-    m_fragment_played = ms;
-    m_ui->fragment_position->setValue(ms);
-    if(fragment_index == m_playing_fragment_index)
+    m_segment_position = ms;
+    if(fragment_index == m_current_segment)
         emit fragment(ms);
     else
         emit total(fragment_index, ms);

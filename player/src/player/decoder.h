@@ -29,18 +29,18 @@
 #define DECODER_H
 
 #include "ffmpeg.h"
-#include "mainContext.h"
+#include "streamReader.h"
 
 #include <QQueue>
 
 //! Base class for decoder.
 template<typename T>
-class Decoder
+class Decoder : public StreamReader
 {
 public:
-    Decoder() :
-        m_main_context(nullptr),
-        m_skip_threshold(-1)
+    Decoder(AVMediaType type) : StreamReader(type)
+        , m_skip_threshold(-1)
+        , m_streamIndex(0)
     {}
 
     virtual ~Decoder()
@@ -48,12 +48,6 @@ public:
         stop();
         clear();
     }
-
-    //! Set main context.
-    void setMainContext(MainContext* main_context) { m_main_context = main_context; }
-
-    //! Set stream.
-    void setStream(AVStream* stream) { m_stream = stream; }
 
     //! Set skip threshold.
     void setSkipThreshold(int skip_threshold) { m_skip_threshold = skip_threshold; }
@@ -82,20 +76,24 @@ public:
     //! Clear.
     virtual void clear()
     {
+        StreamReader::clear();
         stop();
 
-        m_main_context = nullptr;
         m_stream = nullptr;
         m_skip_threshold = -1;
+        m_streamIndex = 0;
     }
 
+    //! Get the zero based streaming index.
+    int getIndex() const { return m_streamIndex; }
+
+
 protected:
-    //! Main context to read from.
-    MainContext*    m_main_context;
     //! Stream to read from.
     AVStream*       m_stream;
     //! Skip threshols.
     int             m_skip_threshold;
+    int             m_streamIndex;
 };
 
 #endif // DECODER_H

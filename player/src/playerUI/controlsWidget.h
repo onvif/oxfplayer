@@ -33,7 +33,7 @@
 #include <QWidget>
 
 #include "enums.h"
-#include "fragmentInfo.h"
+#include "segmentInfo.h"
 #include "basePlayback.h"
 
 namespace Ui {
@@ -52,7 +52,7 @@ public:
     ~ControlsWidget();
 
     //! Setup fragments.
-    void setFragmentsList(const FragmentsList& fragments_list);
+    void setFragmentsList(const SegmentList& fragments_list);
 
     //! Start playback with selected length at some total position.
     void startFragment(int fragment_index);
@@ -87,7 +87,7 @@ public:
     void updateUI();
 
 	//! Set played time for fragment.
-	void setPlayedTime(int time) { m_fragment_played = time; }
+	void setPlayedTime(int time) { m_segment_position = time; }
 
 signals:
     //! Started.
@@ -108,7 +108,7 @@ signals:
     //! Volume level changed.
     void volume(int value);
 
-    //! Fragment scrolled to some position.
+    //! Segment scrolled to some position.
     void fragment(int ms);
 
     //! Total time scrolled to some position.
@@ -151,7 +151,7 @@ private slots:
     //! Volume changed.
     void onVolume(int value);
 
-    //! Fragment slider changed his value.
+    //! Segment slider changed his value.
     void onFragmentValue(int value);
 
     //! Total slider changed (seeking).
@@ -166,11 +166,11 @@ private:
     //! Player state.
     PlayerState         m_player_state;
     //! Fragments list.
-    FragmentsList       m_fragments_list;
+    SegmentList       m_segments;
     //! Currently playing fragment.
-    int                 m_playing_fragment_index;
+    int                 m_current_segment;
     //! Current position in fragment.
-    int                 m_fragment_played;
+    int                 m_segment_position;
     //! Is mute on.
     bool                m_mute;
     //! Old volume level for mute function.

@@ -67,9 +67,6 @@ signals:
     //! Some file selected in Open File dialog.
     void openFile(const QString& fileName);
 
-    //! Some directory selected in Open File dialog.
-    void openDir(const QString& dirName);
-
     //! Verify File structure item seleceted.
     void showFileStructure();
 
@@ -111,9 +108,6 @@ private:
 private slots:
     //! Process open file menu selection.
     void onOpenFile();
-
-    //! Process open directory menu selection.
-    void onOpenDir();
 
     //! Select video stream signal.
     void onVideoStreamSelected();

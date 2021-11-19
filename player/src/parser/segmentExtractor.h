@@ -25,67 +25,47 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#ifndef NONQUEUEDDECODER_H
-#define NONQUEUEDDECODER_H
+#ifndef FRAGMENTEXTRACTOR_H
+#define FRAGMENTEXTRACTOR_H
 
-#include "decoder.h"
+#include "crosscompilation_cxx11.h"
 
-template<typename T>
-class NonQueuedDecoder : public Decoder<T>
+#include <QObject>
+#include "basic/box.h"
+#include "../common/segmentInfo.h"
+
+/**
+ * Class performing the extraction of file segments.
+ * Segments are either ISO 23000-10 fragments or CMAF segments.
+ * CMAF support tbd.
+ */
+class SegmentExtractor : public QObject
 {
+    Q_OBJECT
 public:
-    NonQueuedDecoder() :
-        Decoder<T>()
-    {}
+    explicit SegmentExtractor(QObject *parent = nullptr);
 
-    virtual ~NonQueuedDecoder()
-    {}
+public:
+    //! Returns the Surveillance fragments list.
+    SegmentList getSegments();
 
-    virtual bool getNextFrame(T& decoded_frame, void* additional_data = 0)
-    {
-        decoded_frame.clear();
+signals:
 
-        if(!Decoder<T>::m_main_context ||
-           !Decoder<T>::m_stream)
-            return false;
+public slots:
+    //! This slot is called when the fileset information is cleared.
+    void onContentsCleared();
+    //! This slot is called when the file is being added to a fileset.
+    void onFileOpened(QString path);
+    //! This slot is called when the file parsing was finished.
+    void onFileClosed();
+    //! This slot is called when the box is created.
+    void onBoxCreated(Box *box);
 
-        bool ret = true;
-
-        AVPacket *packet = av_packet_alloc();
-
-        while(true)
-        {
-            int read_result = av_read_frame(Decoder<T>::m_main_context->getFormatContext(), packet);
-            if(read_result == 0)
-            {
-                //packet readed
-                if(packet->stream_index == Decoder<T>::m_stream->index)
-                {
-                    if (processPacket(packet, Decoder<T>::m_stream, decoded_frame, additional_data))
-                        break;
-                }
-            }
-            else
-            {
-                //file ended.
-                ret = false;
-                break;
-            }
-        }
-        av_packet_unref(packet);
-
-        return ret;
-    }
-
-protected:
-    //! Main method to decode video packet.
-    /*!
-     * \param packet packet to decode
-     * \param stream video stream where packet from
-     * \param frame frame where to place decoded data
-     * \param additional_data additional data used for/after decoding
-     */
-    virtual bool processPacket(AVPacket* packet, AVStream* stream, T& decoded_frame, void* additional_data = 0) = 0;
+private:
+    //! Flag indicating, that all fragments in the fileset are Surveillance files.
+    bool m_fragments_have_surveillance_boxes;
+    //! Surveillance fragments list for a fileset.
+    SegmentList m_segments;
 };
 
-#endif // NONQUEUEDDECODER_H
+#endif // FRAGMENTEXTRACTOR_H

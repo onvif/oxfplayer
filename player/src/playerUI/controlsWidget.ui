@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>877</width>
-    <height>121</height>
+    <height>124</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,25 +26,9 @@
    <item>
     <widget class="QWidget" name="widget" native="true">
      <layout class="QGridLayout" name="gridLayout">
-      <property name="margin">
-       <number>0</number>
-      </property>
       <property name="spacing">
        <number>3</number>
       </property>
-      <item row="0" column="0">
-       <spacer name="horizontalSpacer_4">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>10</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
       <item row="0" column="1">
        <widget class="QLabel" name="current_time">
         <property name="sizePolicy">
@@ -73,14 +57,20 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="ClickableSlider" name="fragment_position">
+      <item row="0" column="0">
+       <spacer name="horizontalSpacer_4">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-       </widget>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>10</height>
+         </size>
+        </property>
+       </spacer>
       </item>
-      <item row="2" column="0" colspan="2">
+      <item row="1" column="0" colspan="2">
        <widget class="ClickableSlider" name="total_position">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -93,7 +83,7 @@
    <item>
     <widget class="QWidget" name="widget_2" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="margin">
+      <property name="margin" stdset="0">
        <number>0</number>
       </property>
       <item>

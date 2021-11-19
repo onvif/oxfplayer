@@ -25,7 +25,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#include "mainContext.h"
+#include "streamReader.h"
 
 #include "audioContext.h"
 
@@ -42,9 +42,9 @@ AudioContext::~AudioContext()
     clear();
 }
 
-bool AudioContext::open(MainContext& main_context, int audio_stream_index)
+bool AudioContext::init(AVCodecContext* codecContext)
 {
-    AVCodecContext* audio_codec_context = main_context.getCodecContext(audio_stream_index);
+    AVCodecContext* audio_codec_context = codecContext;
     if(audio_codec_context == nullptr)
         return false;
 

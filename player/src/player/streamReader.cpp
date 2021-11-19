@@ -25,22 +25,22 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#include "mainContext.h"
+#include "streamReader.h"
 
 #include <QFile>
 
-MainContext::MainContext(AVMediaType stream_type) :
+StreamReader::StreamReader(AVMediaType stream_type) :
     m_stream_type(stream_type),
     m_format_context(nullptr)
 {
 }
 
-MainContext::~MainContext()
+StreamReader::~StreamReader()
 {
     clear();
 }
 
-bool MainContext::open(const QString& file_name, const QSet<int>& valid_streams)
+bool StreamReader::open(const QString& file_name, const QSet<int>& valid_streams)
 {
     clear();
     if(!init(file_name, valid_streams))
@@ -52,7 +52,7 @@ bool MainContext::open(const QString& file_name, const QSet<int>& valid_streams)
     return true;
 }
 
-void MainContext::clear()
+void StreamReader::clear()
 {
     if(m_format_context != nullptr)
     {
@@ -64,7 +64,7 @@ void MainContext::clear()
     }
 }
 
-AVStream* MainContext::getStream(int index)
+AVStream* StreamReader::getStream(int index) const
 {
     if(index >= 0 &&
        index < m_streams.size())
@@ -72,7 +72,7 @@ AVStream* MainContext::getStream(int index)
     return 0;
 }
 
-AVCodecContext* MainContext::getCodecContext(int index)
+AVCodecContext* StreamReader::getCodecContext(int index)
 {
     if(index >= 0 &&
        index < m_streams.size())
@@ -80,7 +80,7 @@ AVCodecContext* MainContext::getCodecContext(int index)
     return 0;
 }
 
-bool MainContext::seek(int timestamp_ms)
+bool StreamReader::seek(int timestamp_ms)
 {
     if(!m_format_context)
         return false;
@@ -97,14 +97,14 @@ bool MainContext::seek(int timestamp_ms)
     return true;
 }
 
-void MainContext::timeToPTS(int timestamp_ms, QVector<int>& pts_vector)
+void StreamReader::timeToPTS(int timestamp_ms, QVector<int>& pts_vector)
 {
     pts_vector.clear();
     for(QVector<StreamInfo>::const_iterator cIter = m_streams.constBegin(); cIter != m_streams.constEnd(); ++cIter)
         pts_vector.push_back(cIter->timeMsToPts(timestamp_ms));
 }
 
-bool MainContext::init(const QString& file_name, const QSet<int>& valid_streams)
+bool StreamReader::init(const QString& file_name, const QSet<int>& valid_streams)
 {
     if(file_name.isEmpty() ||
        !QFile::exists(file_name))
@@ -124,7 +124,6 @@ bool MainContext::init(const QString& file_name, const QSet<int>& valid_streams)
           )
             continue;
         StreamInfo si;
-        si.m_type = m_stream_type;
         si.m_index = index;
         if(openStream(index, si.m_stream, si.m_codec_context, si.m_codec))
             m_streams.push_back(si);
@@ -133,7 +132,7 @@ bool MainContext::init(const QString& file_name, const QSet<int>& valid_streams)
     return true;
 }
 
-bool MainContext::openStream(int index, AVStream*& stream, AVCodecContext*& codec_context, AVCodec*& codec)
+bool StreamReader::openStream(int index, AVStream*& stream, AVCodecContext*& codec_context, AVCodec*& codec)
 {
     stream = m_format_context->streams[index];
 
@@ -152,7 +151,7 @@ bool MainContext::openStream(int index, AVStream*& stream, AVCodecContext*& code
     return true;
 }
 
-int MainContext::StreamInfo::timeMsToPts(int timestamp_ms) const
+int StreamReader::StreamInfo::timeMsToPts(int timestamp_ms) const
 {
     return (int)(((double)timestamp_ms / av_q2d(m_stream->time_base)) / 1000.0);
 }

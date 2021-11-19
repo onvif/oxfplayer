@@ -32,7 +32,7 @@
 
 #include "types.h"
 
-class MainContext;
+class StreamReader;
 
 //! Class that contains and initialiaze main audio parameters.
 class AudioContext
@@ -48,14 +48,11 @@ public:
      * \param audio_stream_index index of audio stream in main context
      * \return
      */
-    bool open(MainContext& main_context, int audio_stream_index);
+    bool init(AVCodecContext *codecContext);
 
     //! Clear parameters.
     void clear();
 
-    const AudioParams& getAudioParams() const { return m_audio_params; }
-
-private:
     //! Audio parameters used to convert file audio data to hardware audio format and to setup audio device.
     AudioParams     m_audio_params;
 };

@@ -62,7 +62,7 @@ struct SurviellanceFileInformation
 
     SurviellanceFileInformation()
         : m_af_identification_box_count(0)
-        , m_fragment_type(Undefined)
+        , m_segment_type(Undefined)
     {
 
     }
@@ -70,22 +70,22 @@ struct SurviellanceFileInformation
     //! Checks if a file is treated as valid surviellance application file.
     bool isValid() const
     {
-        return (m_af_identification_box_count == 1) && (m_fragment_type != Undefined);
+        return (m_af_identification_box_count == 1) && (m_segment_type != Undefined);
     }
 
     //! 'sumi' box count. Should be exactly 1.
     ushort m_af_identification_box_count;
     /*!
-     * Fragment type.
+     * Segment type.
      * Should be either StartFragment or FinalFragment or MiddleFragment or StandaloneFragment.
      * The sequence should contain at least one StartFragment and one FinalFragment.
      * One file should be StandaloneFragment.
      */
-    FragmentType m_fragment_type;
+    FragmentType m_segment_type;
     //! UUID of predecessor fragment.
     QUuid m_predecessor_UUID;
     //! UUID of current fragment.
-    QUuid m_fragment_UUID;
+    QUuid m_segment_UUID;
     //! UUID of successor fragment.
     QUuid m_successor_UUID;
 };
