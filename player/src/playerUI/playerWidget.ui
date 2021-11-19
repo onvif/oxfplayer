@@ -115,7 +115,6 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen"/>
-    <addaction name="actionOpen_directory"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -164,14 +163,6 @@
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>
-   </property>
-  </action>
-  <action name="actionOpen_directory">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Open directory</string>
    </property>
   </action>
   <action name="actionExit">

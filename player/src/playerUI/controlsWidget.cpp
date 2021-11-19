@@ -73,7 +73,6 @@ ControlsWidget::ControlsWidget(QWidget* parent) :
     QObject::connect(m_ui->mute_btn, SIGNAL(clicked()), this, SLOT(onMute()));
     QObject::connect(m_ui->prev_btn, SIGNAL(clicked()), this, SIGNAL(prevFragment()));
     QObject::connect(m_ui->next_btn, SIGNAL(clicked()), this, SIGNAL(nextFragment()));
-    QObject::connect(m_ui->fragment_position, SIGNAL(newValue(int)), this, SLOT(onFragmentValue(int)));
     QObject::connect(m_ui->total_position, SIGNAL(newValue(int)), this, SLOT(onTotalValue(int)));
     QObject::connect(m_ui->fullscreen_btn, SIGNAL(clicked()), this, SIGNAL(fullscreen()));
 
@@ -101,7 +100,6 @@ void ControlsWidget::setFragmentsList(const FragmentsList& fragments_list)
     {
         m_ui->prev_btn->setEnabled(false);
     }
-    m_ui->fragment_position->setFragmentsList(m_fragments_list, 0);
     m_ui->total_position->setFragmentsList(m_fragments_list);
 }
 
@@ -128,7 +126,6 @@ void ControlsWidget::startFragment(int fragment_index)
         m_ui->prev_btn->setEnabled(true);
         m_ui->next_btn->setEnabled(true);
     }
-    m_ui->fragment_position->setFragmentsList(m_fragments_list, fragment_index);
 }
 
 void ControlsWidget::setPlayedTime(BasePlayback* playback)
@@ -171,7 +168,6 @@ void ControlsWidget::enableUI(bool enable)
 {
     m_ui->play_btn->setEnabled(enable);
     m_ui->stop_btn->setEnabled(enable);
-    m_ui->fragment_position->setEnabled(enable);
     m_ui->total_position->setEnabled(enable);
     m_ui->mute_btn->setEnabled(enable);
     m_ui->volume->setEnabled(enable);
@@ -282,9 +278,6 @@ int ControlsWidget::calcTotalCurrent()
 
 void ControlsWidget::setTimePositions()
 {
-    int fragment_length = m_fragments_list.size() ? (int)m_fragments_list[m_playing_fragment_index].getDuration() : 0;
-    m_ui->fragment_position->setMaximum(fragment_length);
-    m_ui->fragment_position->setValue(m_fragment_played);
     m_ui->total_position->setMaximum(calcTotalMaximum());
     m_ui->total_position->setValue(calcTotalCurrent());
 }
@@ -381,7 +374,6 @@ void ControlsWidget::onTotalValue(int value)
             length += (int)m_fragments_list[i].getDuration();
     }
     m_fragment_played = ms;
-    m_ui->fragment_position->setValue(ms);
     if(fragment_index == m_playing_fragment_index)
         emit fragment(ms);
     else

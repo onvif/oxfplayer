@@ -57,9 +57,6 @@ private slots:
     //! This slot will be called when new file is selected to be opened.
     void openFile(const QString& file_name);
 
-    //! This slot will be called when new folder is selected to be opened.
-    void openDir(const QString& dir_name);
-
     //! This slot will be called when file structure needs to be shown.
     void showFileStructure();
 

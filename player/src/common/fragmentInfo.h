@@ -47,7 +47,10 @@
 #include "helpers/optional.hpp"
 #include "templateTableBoxes.hpp"
 
-//! Class that descibes one frament in video.
+/** 
+ * Class that descibes one MP4 file. 
+ * The name is misleading, since it relates rather to a segment instead of fragment.
+ */
 class FragmentInfo
 {
 public:
