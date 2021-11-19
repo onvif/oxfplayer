@@ -88,14 +88,10 @@ public:
 	//! Get player state.
     PlayerState getState() const { return m_player_state; }
 
-    //! Get video streams count.
-    QueuedVideoDecoder* videoDecoder() const { return m_video_decoder; }
-
-    //! Access audio decoder
-    QueuedAudioDecoder *audioDecoder() const { return m_audio_decoder; }
-
-    //! Set new stream index for video.
-    void setVideoStreamIndex(int index);
+    //! Video decoder.
+    QueuedVideoDecoder m_video_decoder;
+    //! Audio decoder.
+    QueuedAudioDecoder m_audio_decoder;
 
     //! Set new stream index for audio.
     void setAudioStreamIndex(int index);
@@ -114,11 +110,8 @@ private:
     //! Init MainContext.
     bool initDecoders(const QString& file_name, double fps);
 
-    //! Init video playback.
-    bool initVideoPlayback();
-
-    //! Init audio playback.
-    bool initAudioPlayback();
+    //! Init audio and video playback.
+    bool initPlayback();
 
     //! Private function that will stop playback.
     void stopPlayback();
@@ -133,11 +126,6 @@ private:
 private:
     //! Widget to present video.
     VideoFrameWidget*   m_video_widget;
-
-    //! Video decoder.
-    QueuedVideoDecoder*    m_video_decoder;
-    //! Audio decoder.
-    QueuedAudioDecoder*    m_audio_decoder;
 
     //! Video playback.
     VideoPlayback   m_video_playback;

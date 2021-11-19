@@ -144,7 +144,7 @@ void Controller::openFile(const QString& file_name)
 
     m_playing_fragment_index = 0;
     m_player_widget.getFragmentList()->setFragmentsList(m_segments);
-    m_player_widget.setStreamsInfo(m_engine.videoDecoder()->getStreamsCount(), m_engine.audioDecoder()->getStreamsCount());
+    m_player_widget.setStreamsInfo(m_engine.m_video_decoder.getStreamsCount(), m_engine.m_audio_decoder.getStreamsCount());
     m_controls_widget.setFragmentsList(m_segments);
     m_controls_widget.startPlayback();
     m_controls_widget.updateUI();
@@ -234,7 +234,7 @@ void Controller::onSeek(int fragment_index, int time_ms)
     }
     m_playing_fragment_index = fragment_index;
     m_player_widget.getFragmentList()->selectFragment(fragment_info);
-    m_player_widget.setStreamsInfo(m_engine.videoDecoder()->getStreamsCount(), m_engine.audioDecoder()->getStreamsCount());
+    m_player_widget.setStreamsInfo(m_engine.m_video_decoder.getStreamsCount(), m_engine.m_audio_decoder.getStreamsCount());
     m_controls_widget.startFragment(fragment_index);
     m_engine.seek(time_ms);
     switch(old_engine_state)
@@ -256,14 +256,14 @@ void Controller::onSeek(int fragment_index, int time_ms)
 
 void Controller::onVideoStreamIndexChanged(int index)
 {
-    if(index == m_engine.videoDecoder()->getIndex())
+    if(index == m_engine.m_video_decoder.getIndex())
         return;
     changeStreamIndex(index, true);
 }
 
 void Controller::onAudioStreamIndexChanged(int index)
 {
-    if(index == m_engine.audioDecoder()->getIndex())
+    if(index == m_engine.m_audio_decoder.getIndex())
         return;
     changeStreamIndex(index, false);
 }
@@ -288,7 +288,7 @@ void Controller::onFragmentSelected(SegmentInfo fragment_info)
     }
     m_playing_fragment_index = fragment_info.getFragmentNumber();
     m_player_widget.getFragmentList()->selectFragment(fragment_info);
-    m_player_widget.setStreamsInfo(m_engine.videoDecoder()->getStreamsCount(), m_engine.audioDecoder()->getStreamsCount());
+    m_player_widget.setStreamsInfo(m_engine.m_video_decoder.getStreamsCount(), m_engine.m_audio_decoder.getStreamsCount());
     m_controls_widget.startFragment(fragment_info.getFragmentNumber());
     switch(old_engine_state)
     {
@@ -406,7 +406,7 @@ void Controller::changeStreamIndex(int index, bool video)
     int current_position_ms = m_engine.getPlayingTime();
     m_engine.stop();
     if(video)
-        m_engine.setVideoStreamIndex(index);
+        m_engine.m_video_decoder.setStream(index);
     else
         m_engine.setAudioStreamIndex(index);
     m_engine.seek(current_position_ms);

@@ -38,8 +38,6 @@
 Engine::Engine() :
     BasePlayback(),
     m_video_widget(nullptr),
-    m_video_decoder(new QueuedVideoDecoder()),
-    m_audio_decoder(new QueuedAudioDecoder()),
     m_is_initialized(false),
     m_player_state(Stopped),
     m_playing_time(0)
@@ -55,8 +53,6 @@ Engine::~Engine()
 {
     stop();
     clear();
-    delete m_video_decoder;
-    delete m_audio_decoder;
 }
 
 /*********************************************************************************************/
@@ -71,9 +67,8 @@ bool Engine::init(const QString& file_name, SegmentInfo& fragment)
 {
 	bool res = true;
 	res = res && initDecoders(file_name, fragment.getFpsFromSamples());
-    res = res && initVideoPlayback();
-    res = res && initAudioPlayback();
-    res = res && m_video_decoder->getStreamsCount();
+    res = res && initPlayback();
+    res = res && m_video_decoder.getStreamsCount();
 
     m_is_initialized = res;
 
@@ -86,8 +81,8 @@ void Engine::start()
        m_player_state != Stopped)
         return;
 
-    bool have_video = m_video_decoder->getStreamsCount();
-    bool have_audio = m_audio_decoder->getStreamsCount();
+    bool have_video = m_video_decoder.getStreamsCount();
+    bool have_audio = m_audio_decoder.getStreamsCount();
 
     if(!have_video)
         return;
@@ -95,14 +90,14 @@ void Engine::start()
     if(!have_audio)
     {
         //just video
-        m_video_decoder->start();
+        m_video_decoder.start();
         m_video_playback.start();
     }
     else
     {
         //video and audio - modify fps
-        m_video_decoder->start();
-        m_audio_decoder->start();
+        m_video_decoder.start();
+        m_audio_decoder.start();
         m_video_playback.start();
         m_audio_playback.start();
     }
@@ -116,7 +111,7 @@ void Engine::pause()
        m_player_state != Playing)
         return;
 
-    if(m_audio_decoder->getStreamsCount())
+    if(m_audio_decoder.getStreamsCount())
         m_audio_playback.pause();
     m_video_playback.pause();
 
@@ -129,7 +124,7 @@ void Engine::resume()
        m_player_state != Paused)
         return;
 
-    if(m_audio_decoder->getStreamsCount())
+    if(m_audio_decoder.getStreamsCount())
         m_audio_playback.resume();
     m_video_playback.resume();
 
@@ -156,8 +151,8 @@ void Engine::startAndPause()
        m_player_state != Stopped)
         return;
 
-    bool have_video = m_video_decoder->getStreamsCount();
-    bool have_audio = m_audio_decoder->getStreamsCount();
+    bool have_video = m_video_decoder.getStreamsCount();
+    bool have_audio = m_audio_decoder.getStreamsCount();
 
     if(!have_video)
         return;
@@ -165,13 +160,13 @@ void Engine::startAndPause()
     if(!have_audio)
     {
         //just video
-        m_video_decoder->start();
+        m_video_decoder.start();
         m_video_playback.startAndPause();
     }
     else
     {
         //video and audio
-        if(m_video_decoder->m_context.getTimerDelay() > AUDIO_NOTIFY_TIMEOUT)
+        if(m_video_decoder.m_context.getTimerDelay() > AUDIO_NOTIFY_TIMEOUT)
         {
             //vide fps is to low - connect video to audio by notify
             //TODO
@@ -179,8 +174,8 @@ void Engine::startAndPause()
         else
         {
             //video is faster then audio - modify fps
-            m_video_decoder->start();
-            m_audio_decoder->start();
+            m_video_decoder.start();
+            m_audio_decoder.start();
             m_video_playback.startAndPause();
             m_audio_playback.startAndPause();
         }
@@ -191,8 +186,8 @@ void Engine::startAndPause()
 
 void Engine::clear()
 {
-    m_video_decoder->clear();
-    m_audio_decoder->clear();
+    m_video_decoder.clear();
+    m_audio_decoder.clear();
     m_video_playback.clear();
     m_audio_playback.clear();
     m_player_state = Stopped;
@@ -235,15 +230,10 @@ void Engine::seek(int time_ms)
     }
 }
 
-void Engine::setVideoStreamIndex(int index)
-{
-    m_video_decoder->setStream(index);
-}
-
 void Engine::setAudioStreamIndex(int index)
 {
-    m_audio_decoder->setIndex(index);
-    m_audio_playback.setAudioParams(m_audio_decoder->getParams());
+    m_audio_decoder.setIndex(index);
+    m_audio_playback.setAudioParams(m_audio_decoder.getParams());
 }
 
 void Engine::setVolume(int volume)
@@ -258,15 +248,15 @@ void Engine::setVolume(int volume)
 
     double vol = (double)volume / 100.0;
 
-    if(m_audio_decoder->getStreamsCount())
+    if(m_audio_decoder.getStreamsCount())
         m_audio_playback.setVolume(vol);
 }
 
 #ifdef MEMORY_INFO
 void Engine::memoryInfo(int& video_memory, int& audio_memory) const
 {
-    video_memory = m_video_decoder->buffersSize();
-    audio_memory = m_audio_decoder->buffersSize();
+    video_memory = m_video_decoder.buffersSize();
+    audio_memory = m_audio_decoder.buffersSize();
 }
 #endif //MEMORY_INFO
 
@@ -276,43 +266,37 @@ bool Engine::initDecoders(const QString& file_name, double fps)
 {
     bool res = true;
 
-    res = res && m_video_decoder->open(file_name);
-    res = res && m_audio_decoder->open(file_name);
-    res = res && m_video_decoder->getStreamsCount();
-    m_video_decoder->setStream(0, fps);
-    m_audio_decoder->setIndex(0);
+    res = res && m_video_decoder.open(file_name);
+    res = res && m_audio_decoder.open(file_name);
+    res = res && m_video_decoder.getStreamsCount();
+    m_video_decoder.setStream(0, fps);
+    m_audio_decoder.setIndex(0);
 
     return res;
 }
 
-bool Engine::initVideoPlayback()
+bool Engine::initPlayback()
 {
-    m_video_playback.setVideoContext(&m_video_decoder->m_context);
-    m_video_playback.setVideoDecoder(m_video_decoder);
+    m_video_playback.setVideoContext(&m_video_decoder.m_context);
+    m_video_playback.setVideoDecoder(&m_video_decoder);
     m_video_playback.setVideoWidget(m_video_widget);
 
-    return true;
-}
-
-bool Engine::initAudioPlayback()
-{
-	m_audio_playback.setAudioDecoder(m_audio_decoder);
-    m_audio_playback.setAudioParams(m_audio_decoder->getParams());
-
+    m_audio_playback.setAudioDecoder(&m_audio_decoder);
+    m_audio_playback.setAudioParams(m_audio_decoder.getParams());
     return true;
 }
 
 void Engine::stopPlayback()
 {
-    if(m_audio_decoder->getStreamsCount())
+    if(m_audio_decoder.getStreamsCount())
         m_audio_playback.stop();
     m_video_playback.stop();
 
-    m_audio_decoder->stop();
-    m_video_decoder->stop();
+    m_audio_decoder.stop();
+    m_video_decoder.stop();
 
-    m_audio_decoder->clearBuffers();
-    m_video_decoder->clearBuffers();
+    m_audio_decoder.clearBuffers();
+    m_video_decoder.clearBuffers();
 
     m_playing_time = 0;
 
@@ -323,13 +307,13 @@ void Engine::doSeek(int time_ms)
 {
     m_playing_time = time_ms;
 
-    bool have_audio = m_audio_decoder->getStreamsCount();
+    bool have_audio = m_audio_decoder.getStreamsCount();
 
     //seek video
     if(time_ms == 0)
     {
         //stop seek
-        m_video_decoder->seek(0);
+        m_video_decoder.seek(0);
     }
     else
     {
@@ -342,32 +326,32 @@ void Engine::doSeek(int time_ms)
             {
                 video_seek_time = 0;
                 //that's all - seek to start
-                m_video_decoder->seek(video_seek_time);
+                m_video_decoder.seek(video_seek_time);
                 break;
             }
 
-            m_video_decoder->seek(video_seek_time);
+            m_video_decoder.seek(video_seek_time);
         }
     }
 
     //skip threshold
     QVector<int> pts_vector;
-    m_video_decoder->timeToPTS(time_ms, pts_vector);
+    m_video_decoder.timeToPTS(time_ms, pts_vector);
     if (pts_vector.size() > 0) {
-        m_video_decoder->setSkipThreshold(pts_vector[m_video_decoder->getIndex()]);
+        m_video_decoder.setSkipThreshold(pts_vector[m_video_decoder.getIndex()]);
     }
     //audio seek
     if(have_audio)
-        m_audio_decoder->seek(time_ms);
+        m_audio_decoder.seek(time_ms);
 
     //clear video context fps
-    m_video_decoder->m_context.flushCurrentFps();
+    m_video_decoder.m_context.flushCurrentFps();
 }
 
 int Engine::showNextFrame()
 {
 	VideoFrame video_frame;
-	m_video_decoder->getNextFrame(video_frame);
+	m_video_decoder.getNextFrame(video_frame);
 	m_video_widget->setDrawImage(video_frame.m_image);
 	return video_frame.m_time;
 }
