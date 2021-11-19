@@ -44,7 +44,7 @@ public:
 
     //! Video context.
     VideoContext    m_context;
-    void setStream(int index, double fps);
+    void setStream(int index, double fps = 0.0);
 
 protected:
     virtual void processPacket(AVPacket* packet, int* readed_frames);

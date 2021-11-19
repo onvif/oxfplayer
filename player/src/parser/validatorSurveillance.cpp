@@ -50,7 +50,7 @@ SurveillanceConformanceType ValidatorSurveillance::isValidFileset()
         SurviellanceFileInformation & info = m_fileset_information.begin().value();
         if(info.isValid())
         {
-            if(info.m_fragment_type == SurviellanceFileInformation::StandaloneFragment)
+            if(info.m_segment_type == SurviellanceFileInformation::StandaloneFragment)
                 return SurveillanceConformant;
             else
                 return IsNotSurveillanceFileset;
@@ -69,7 +69,7 @@ SurveillanceConformanceType ValidatorSurveillance::isValidFileset()
         {
             return IsNotSurveillanceFormat;
         }
-        switch(info.m_fragment_type)
+        switch(info.m_segment_type)
         {
         case SurviellanceFileInformation::StartFragment:
             {
@@ -126,38 +126,38 @@ void ValidatorSurveillance::onBoxCreated(Box *box)
             SurviellanceFileInformation & current_file_info = m_fileset_information[m_current_file];
 
             current_file_info.m_af_identification_box_count++;
-            current_file_info.m_fragment_type = SurviellanceFileInformation::FragmentType(current_file_info.m_fragment_type | SurviellanceFileInformation::IsSurveillance);
+            current_file_info.m_segment_type = SurviellanceFileInformation::FragmentType(current_file_info.m_segment_type | SurviellanceFileInformation::IsSurveillance);
 
             AFIdentificationBox * af_identification_box = dynamic_cast<AFIdentificationBox*>(box);
             current_file_info.m_predecessor_UUID = af_identification_box->getPredecessorUUID();
-            current_file_info.m_fragment_UUID = af_identification_box->getFragmentUUID();
+            current_file_info.m_segment_UUID = af_identification_box->getFragmentUUID();
             current_file_info.m_successor_UUID = af_identification_box->getSuccessorUUID();
 
-            if(current_file_info.m_predecessor_UUID == current_file_info.m_fragment_UUID)
+            if(current_file_info.m_predecessor_UUID == current_file_info.m_segment_UUID)
             {
-                current_file_info.m_fragment_type = SurviellanceFileInformation::FragmentType(current_file_info.m_fragment_type | SurviellanceFileInformation::IsStartFragment);
+                current_file_info.m_segment_type = SurviellanceFileInformation::FragmentType(current_file_info.m_segment_type | SurviellanceFileInformation::IsStartFragment);
             }
-            if(current_file_info.m_successor_UUID == current_file_info.m_fragment_UUID)
+            if(current_file_info.m_successor_UUID == current_file_info.m_segment_UUID)
             {
-                current_file_info.m_fragment_type = SurviellanceFileInformation::FragmentType(current_file_info.m_fragment_type | SurviellanceFileInformation::IsFinalFragment);
+                current_file_info.m_segment_type = SurviellanceFileInformation::FragmentType(current_file_info.m_segment_type | SurviellanceFileInformation::IsFinalFragment);
             }
 
             for(auto it = m_fileset_information.begin(), end = m_fileset_information.end(); it != end; ++it)
 			{
 				SurviellanceFileInformation & file_info = *it;
-                if(file_info.m_fragment_UUID != current_file_info.m_fragment_UUID)
+                if(file_info.m_segment_UUID != current_file_info.m_segment_UUID)
                 {
-                    if((file_info.m_successor_UUID == current_file_info.m_fragment_UUID)
-                            && (current_file_info.m_predecessor_UUID == file_info.m_fragment_UUID))
+                    if((file_info.m_successor_UUID == current_file_info.m_segment_UUID)
+                            && (current_file_info.m_predecessor_UUID == file_info.m_segment_UUID))
                     {
-                        file_info.m_fragment_type = SurviellanceFileInformation::FragmentType(file_info.m_fragment_type | SurviellanceFileInformation::HasSuccessor);
-                        current_file_info.m_fragment_type = SurviellanceFileInformation::FragmentType(current_file_info.m_fragment_type | SurviellanceFileInformation::HasPredecessor);
+                        file_info.m_segment_type = SurviellanceFileInformation::FragmentType(file_info.m_segment_type | SurviellanceFileInformation::HasSuccessor);
+                        current_file_info.m_segment_type = SurviellanceFileInformation::FragmentType(current_file_info.m_segment_type | SurviellanceFileInformation::HasPredecessor);
                     }
-                    if((file_info.m_predecessor_UUID == current_file_info.m_fragment_UUID)
-                            && (current_file_info.m_successor_UUID == file_info.m_fragment_UUID))
+                    if((file_info.m_predecessor_UUID == current_file_info.m_segment_UUID)
+                            && (current_file_info.m_successor_UUID == file_info.m_segment_UUID))
                     {
-                        file_info.m_fragment_type = SurviellanceFileInformation::FragmentType(file_info.m_fragment_type | SurviellanceFileInformation::HasPredecessor);
-                        current_file_info.m_fragment_type = SurviellanceFileInformation::FragmentType(current_file_info.m_fragment_type | SurviellanceFileInformation::HasSuccessor);
+                        file_info.m_segment_type = SurviellanceFileInformation::FragmentType(file_info.m_segment_type | SurviellanceFileInformation::HasPredecessor);
+                        current_file_info.m_segment_type = SurviellanceFileInformation::FragmentType(current_file_info.m_segment_type | SurviellanceFileInformation::HasSuccessor);
                     }
                 }
             }

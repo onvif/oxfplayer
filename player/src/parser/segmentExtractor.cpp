@@ -25,7 +25,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#include "fragmentExtractor.h"
+#include "segmentExtractor.h"
 
 #include "afIdentificationBox.hpp"
 #include "mediaHeaderBox.hpp"
@@ -34,82 +34,82 @@
 #include "trackFragmentHeaderBox.hpp"
 #include "correctstarttimebox.hpp"
 
-FragmentExtractor::FragmentExtractor(QObject *parent) :
+SegmentExtractor::SegmentExtractor(QObject *parent) :
     QObject(parent)
 {
 }
 
-FragmentsList FragmentExtractor::getFragmentsList()
+SegmentList SegmentExtractor::getSegments()
 {
     if(m_fragments_have_surveillance_boxes)
     {
         uint32_t fragment_number = 0;
-        auto beginning_fragment = std::find_if(m_fragments_list.begin(), m_fragments_list.end(), [] (FragmentInfo & fi) -> bool {return fi.isBeginning();});
-        if(beginning_fragment != m_fragments_list.end())
+        auto beginning_fragment = std::find_if(m_segments.begin(), m_segments.end(), [] (SegmentInfo & fi) -> bool {return fi.isBeginning();});
+        if(beginning_fragment != m_segments.end())
         {
             beginning_fragment->setFragmentNumber(fragment_number++);
-            m_fragments_list.move(beginning_fragment - m_fragments_list.begin(), 0);
+            m_segments.move(beginning_fragment - m_segments.begin(), 0);
         }
-        for(int i = 0; i < m_fragments_list.size() - 1; ++i)
+        for(int i = 0; i < m_segments.size() - 1; ++i)
         {
-            const FragmentInfo & current_fragment = m_fragments_list.at(i);
-            auto next_fragment = std::find_if(m_fragments_list.begin() + i + 1, m_fragments_list.end(), [&current_fragment] (FragmentInfo & fi) -> bool {return current_fragment.isSuccessor(fi);});
-            if(next_fragment != m_fragments_list.end())
+            const SegmentInfo & current_fragment = m_segments.at(i);
+            auto next_fragment = std::find_if(m_segments.begin() + i + 1, m_segments.end(), [&current_fragment] (SegmentInfo & fi) -> bool {return current_fragment.isSuccessor(fi);});
+            if(next_fragment != m_segments.end())
             {
                 next_fragment->setFragmentNumber(fragment_number++);
-                m_fragments_list.move(next_fragment - m_fragments_list.begin(), i + 1);
+                m_segments.move(next_fragment - m_segments.begin(), i + 1);
             }
         }
     }
-    return m_fragments_list;
+    return m_segments;
 }
 
-void FragmentExtractor::onContentsCleared()
+void SegmentExtractor::onContentsCleared()
 {
-    m_fragments_list.clear();
+    m_segments.clear();
     m_fragments_have_surveillance_boxes = true;
 }
 
-void FragmentExtractor::onFileOpened(QString path)
+void SegmentExtractor::onFileOpened(QString path)
 {
-    m_fragments_list.append(FragmentInfo(path));
+    m_segments.append(SegmentInfo(path));
 }
 
-void FragmentExtractor::onFileClosed()
+void SegmentExtractor::onFileClosed()
 {
     if(m_fragments_have_surveillance_boxes)
-        m_fragments_have_surveillance_boxes = m_fragments_list.back().isSurveillanceFragment();
+        m_fragments_have_surveillance_boxes = m_segments.back().isSurveillanceFragment();
 }
 
-void FragmentExtractor::onBoxCreated(Box *box)
+void SegmentExtractor::onBoxCreated(Box *box)
 {
 	switch((uint32_t)box->getBoxFourCC()) {
 	case 'mvhd':
-		m_fragments_list.back().readMovieHeaderBox(dynamic_cast<MovieHeaderBox *>(box));
+		m_segments.back().readMovieHeaderBox(dynamic_cast<MovieHeaderBox *>(box));
 		break;
 	case 'sumi':
-		m_fragments_list.back().readAfIdentificationBox(dynamic_cast<AFIdentificationBox *>(box));
+		m_segments.back().readAfIdentificationBox(dynamic_cast<AFIdentificationBox *>(box));
 		break;
 	case 'tkhd':
-		m_fragments_list.back().readTrackHeaderBox(dynamic_cast<TrackHeaderBox *>(box));
+		m_segments.back().readTrackHeaderBox(dynamic_cast<TrackHeaderBox *>(box));
 		break;
 	case 'cstb':
-		m_fragments_list.back().readCorrectionStartTimeBox(dynamic_cast<CorrectStartTimeBox *>(box));
+		m_segments.back().readCorrectionStartTimeBox(dynamic_cast<CorrectStartTimeBox *>(box));
 		break;
 	case 'stts':
-		m_fragments_list.back().read(dynamic_cast<TimeToSampleBox*>(box));
+		m_segments.back().read(dynamic_cast<TimeToSampleBox*>(box));
 		break;
 	case 'ctts':
-		m_fragments_list.back().read(dynamic_cast<CompositionOffsetBox*>(box));
+		m_segments.back().read(dynamic_cast<CompositionOffsetBox*>(box));
 		break;
 	case 'tfhd':
-		m_fragments_list.back().m_currentParserTrackId = dynamic_cast<TrackFragmentHeaderBox*>(box)->getTrackID();
+		m_segments.back().m_currentParserTrackId = dynamic_cast<TrackFragmentHeaderBox*>(box)->getTrackID();
 		break;
 	case 'trun':
-		m_fragments_list.back().read(dynamic_cast<TrackRunBox*>(box));
+		m_segments.back().read(dynamic_cast<TrackRunBox*>(box));
 		break;
 	case 'mdhd':
-		m_fragments_list.back().read(dynamic_cast<MediaHeaderBox*>(box));
+		m_segments.back().read(dynamic_cast<MediaHeaderBox*>(box));
 		break;
 	}
 }

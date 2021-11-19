@@ -32,7 +32,7 @@
 
 #include <QListWidget>
 
-#include "fragmentInfo.h"
+#include "segmentInfo.h"
 
 //! UI component to show fragments list.
 class FragmentListWidget : public QListWidget
@@ -46,17 +46,17 @@ public:
     ~FragmentListWidget();
 
     //! Show fragments list.
-    void setFragmentsList(const FragmentsList& fragments);
+    void setFragmentsList(const SegmentList& fragments);
 
     //! Clear UI.
     void clear();
 
     //! Set selection for fragment.
-    void selectFragment(const FragmentInfo& fragment_info);
+    void selectFragment(const SegmentInfo& fragment_info);
 
 signals:
     //! Emmited when fragment selected.
-    void fragmentSelected(FragmentInfo fragment);
+    void fragmentSelected(SegmentInfo fragment);
 
 private slots:
     //! On fragment selected.
@@ -64,7 +64,7 @@ private slots:
 
 private:
     //! List of fragments.
-    FragmentsList   m_fragments;
+    SegmentList   m_fragments;
 };
 
 #endif // FRAGMENTLISTWIDGET_H

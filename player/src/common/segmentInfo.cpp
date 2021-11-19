@@ -25,10 +25,10 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#include "fragmentInfo.h"
+#include "segmentInfo.h"
 
-FragmentInfo::FragmentInfo(QString file_name /*= QString()*/)
-    : m_fragment_number(0)
+SegmentInfo::SegmentInfo(QString file_name /*= QString()*/)
+    : m_segment_number(0)
     , m_file_name(file_name)
     , m_duration(0)
 	, m_samples(0)
@@ -39,45 +39,45 @@ FragmentInfo::FragmentInfo(QString file_name /*= QString()*/)
 {
 }
 
-FragmentInfo::~FragmentInfo()
+SegmentInfo::~SegmentInfo()
 {
 }
 
-void FragmentInfo::readMovieHeaderBox(MovieHeaderBox *box)
+void SegmentInfo::readMovieHeaderBox(MovieHeaderBox *box)
 {
     m_timescale = box->getTimeScale();
 	int64_t delta = box->getDuration() * 1000 / m_timescale;
-	m_fragment_start = box->getCreationTime().addMSecs(-delta);
+	m_segment_start = box->getCreationTime().addMSecs(-delta);
 }
 
-void FragmentInfo::read(MediaHeaderBox*box)
+void SegmentInfo::read(MediaHeaderBox*box)
 {
 	// assume that first track is Video
     if (m_videoTimescale == 0) m_videoTimescale = box->getTimeScale();
 }
 
-void FragmentInfo::readAfIdentificationBox(AFIdentificationBox *box)
+void SegmentInfo::readAfIdentificationBox(AFIdentificationBox *box)
 {
     m_duration = box->getDuration() / m_videoTimescale;
     m_predecessor_uuid = box->getPredecessorUUID().toString();
-    m_fragment_uuid = box->getFragmentUUID().toString();
+    m_segment_uuid = box->getFragmentUUID().toString();
     m_successor_uuid = box->getSuccessorUUID().toString();
-    m_fragment_start = box->getStartTime();
+    m_segment_start = box->getStartTime();
 }
 
-void FragmentInfo::readTrackHeaderBox(TrackHeaderBox *box)
+void SegmentInfo::readTrackHeaderBox(TrackHeaderBox *box)
 {
 	m_currentParserTrackId = box->getTrackID();
 	if (m_valid_stream_ids.count() == 0) m_firstTrackId = m_currentParserTrackId;
     m_valid_stream_ids << m_currentParserTrackId;
 }
 
-void FragmentInfo::readCorrectionStartTimeBox(CorrectStartTimeBox * box)
+void SegmentInfo::readCorrectionStartTimeBox(CorrectStartTimeBox * box)
 {
-    m_fragment_start = box->getStartTime();
+    m_segment_start = box->getStartTime();
 }
 
-void FragmentInfo::read(TimeToSampleBox* box)
+void SegmentInfo::read(TimeToSampleBox* box)
 {
 	if (m_currentParserTrackId != m_firstTrackId) return;		// only accumulate first track
 	QListIterator<TimeToSampleEntry> it(box->getTable());
@@ -88,7 +88,7 @@ void FragmentInfo::read(TimeToSampleBox* box)
 	}
 }
 
-void FragmentInfo::read(TrackRunBox* box)
+void SegmentInfo::read(TrackRunBox* box)
 {
 	if (m_currentParserTrackId != m_firstTrackId) return;		// only accumulate first track
 	QListIterator<TrackRunEntry> it(box->getTable());
@@ -101,7 +101,7 @@ void FragmentInfo::read(TrackRunBox* box)
 	}
 }
 
-double FragmentInfo::getFpsFromSamples() const
+double SegmentInfo::getFpsFromSamples() const
 {
 	if (m_samples == 0 || m_videoTimescale == 0) return 0.0;
 	double duration = (double)(m_accumulatedSampleDuration + m_lastSampleCompositionOffset - m_firstSampleCompositionOffset) / (double)m_videoTimescale;
@@ -109,7 +109,7 @@ double FragmentInfo::getFpsFromSamples() const
 }
 
 
-void FragmentInfo::read(CompositionOffsetBox* box)
+void SegmentInfo::read(CompositionOffsetBox* box)
 {
 	if (m_currentParserTrackId != m_firstTrackId) return;		// only accumulate first track
 	CompositionOffsetEntry last = box->getTable().last();
@@ -118,34 +118,34 @@ void FragmentInfo::read(CompositionOffsetBox* box)
 	m_firstSampleCompositionOffset = std::get<1>(first);
 }
 
-bool FragmentInfo::isSurveillanceFragment() const
+bool SegmentInfo::isSurveillanceFragment() const
 {
-    return !(m_predecessor_uuid.isEmpty() || m_fragment_uuid.isEmpty() || m_successor_uuid.isEmpty());
+    return !(m_predecessor_uuid.isEmpty() || m_segment_uuid.isEmpty() || m_successor_uuid.isEmpty());
 }
 
-QDateTime FragmentInfo::getStartTime() const
+QDateTime SegmentInfo::getStartTime() const
 {
-    return m_fragment_start.addMSecs(m_firstSampleCompositionOffset * 1000 / m_videoTimescale);
+    return m_segment_start.addMSecs(m_firstSampleCompositionOffset * 1000 / m_videoTimescale);
 }
 
-QDateTime FragmentInfo::getFinishTime() const
+QDateTime SegmentInfo::getFinishTime() const
 {
-    return m_fragment_start.addMSecs(getDuration());
+    return m_segment_start.addMSecs(getDuration());
 }
 
-QString FragmentInfo::getFileName() const
+QString SegmentInfo::getFileName() const
 {
     return m_file_name;
 }
 
-QString FragmentInfo::getName() const
+QString SegmentInfo::getName() const
 {
     if(m_name.isEmpty())
         createName();
     return m_name;
 }
 
-uint64_t FragmentInfo::getDuration() const
+uint64_t SegmentInfo::getDuration() const
 {
     // Will return 0 for non-surveillance files
     // In this case duration will be determined with the use of FFMpeg methods
@@ -154,7 +154,7 @@ uint64_t FragmentInfo::getDuration() const
 	return 0;
 }
 
-void FragmentInfo::setDuration(uint64_t duration)
+void SegmentInfo::setDuration(uint64_t duration)
 {
     if(!duration)
         return;
@@ -162,37 +162,37 @@ void FragmentInfo::setDuration(uint64_t duration)
     m_duration = duration * m_timescale / 1000;
 }
 
-bool FragmentInfo::isBeginning() const
+bool SegmentInfo::isBeginning() const
 {
-    return (m_predecessor_uuid == m_fragment_uuid);
+    return (m_predecessor_uuid == m_segment_uuid);
 }
 
-bool FragmentInfo::isEnd() const
+bool SegmentInfo::isEnd() const
 {
-    return (m_successor_uuid == m_fragment_uuid);
+    return (m_successor_uuid == m_segment_uuid);
 }
 
-bool FragmentInfo::isSuccessor(const FragmentInfo & right) const
+bool SegmentInfo::isSuccessor(const SegmentInfo & right) const
 {
-    return (m_successor_uuid == right.m_fragment_uuid);
+    return (m_successor_uuid == right.m_segment_uuid);
 }
 
-void FragmentInfo::setFragmentNumber(uint32_t fragment_number)
+void SegmentInfo::setFragmentNumber(uint32_t fragment_number)
 {
-    m_fragment_number = fragment_number;
+    m_segment_number = fragment_number;
 }
 
-uint32_t FragmentInfo::getFragmentNumber() const
+uint32_t SegmentInfo::getFragmentNumber() const
 {
-    return m_fragment_number;
+    return m_segment_number;
 }
 
-QSet<int> FragmentInfo::getValidMediaStreamIds() const
+QSet<int> SegmentInfo::getValidMediaStreamIds() const
 {
     return m_valid_stream_ids;
 }
 
-void FragmentInfo::createName() const
+void SegmentInfo::createName() const
 {
     if(isSurveillanceFragment())
         m_name = QString("%1\n%2\n%3").arg(QFileInfo(m_file_name).fileName()).arg(getStartTime().toString(DATETIME_CONVERSION_FORMAT)).arg(getFinishTime().toString(DATETIME_CONVERSION_FORMAT));

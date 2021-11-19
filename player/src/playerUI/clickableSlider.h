@@ -32,7 +32,7 @@
 
 #include <QSlider>
 
-#include "fragmentInfo.h"
+#include "segmentInfo.h"
 
 //! Custom slider that can send signal by mose click.
 class ClickableSlider : public QSlider
@@ -45,7 +45,7 @@ public:
 
     ~ClickableSlider();
 
-    void setFragmentsList(const FragmentsList& fragments_list, int fragment_index = -1);
+    void setFragmentsList(const SegmentList& fragments_list, int fragment_index = -1);
 
 signals:
     void newValue(int value);
@@ -62,9 +62,9 @@ private:
 
 private:
     //! List of fragments - used to define tooltip message.
-    FragmentsList   m_fragments_list;
+    SegmentList   m_segments;
     //! Index of fragment to use to define tooltip message.
-    int             m_fragment_index;
+    int             m_segment_index;
     //! Was mouse pressed or not.
     bool            m_mouse_pressed;
 };

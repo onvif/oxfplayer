@@ -32,18 +32,22 @@
 
 #include <QObject>
 #include "basic/box.h"
-#include "../common/fragmentInfo.h"
+#include "../common/segmentInfo.h"
 
-//! Class performing the extraction of the Surveillance fragments from the fileset during its parsing procedure.
-class FragmentExtractor : public QObject
+/**
+ * Class performing the extraction of file segments.
+ * Segments are either ISO 23000-10 fragments or CMAF segments.
+ * CMAF support tbd.
+ */
+class SegmentExtractor : public QObject
 {
     Q_OBJECT
 public:
-    explicit FragmentExtractor(QObject *parent = nullptr);
+    explicit SegmentExtractor(QObject *parent = nullptr);
 
 public:
     //! Returns the Surveillance fragments list.
-    FragmentsList getFragmentsList();
+    SegmentList getSegments();
 
 signals:
 
@@ -61,7 +65,7 @@ private:
     //! Flag indicating, that all fragments in the fileset are Surveillance files.
     bool m_fragments_have_surveillance_boxes;
     //! Surveillance fragments list for a fileset.
-    FragmentsList m_fragments_list;
+    SegmentList m_segments;
 };
 
 #endif // FRAGMENTEXTRACTOR_H

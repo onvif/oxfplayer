@@ -219,9 +219,6 @@
     <ClCompile Include="..\..\src\common\fragmentInfo.cpp">
       <Filter>verifier</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\playerUI\fragmentListWidget.cpp">
-      <Filter>verifier</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\parserUI\parserWidget.cpp">
       <Filter>verifier</Filter>
     </ClCompile>
@@ -271,6 +268,9 @@
       <Filter>playerUI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\playerUI\movingOutArea.cpp">
+      <Filter>playerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\playerUI\fragmentListWidget.cpp">
       <Filter>playerUI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -446,10 +446,7 @@
     <CustomBuild Include="..\..\src\parser\fragmentExtractor.h">
       <Filter>verifier</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\common\fragmentInfo.h">
-      <Filter>verifier</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\src\playerUI\fragmentListWidget.h">
+    <CustomBuild Include="..\..\src\common\segmentInfo.h">
       <Filter>verifier</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\parserUI\parserWidget.h">
@@ -598,6 +595,9 @@
     </CustomBuild>
     <CustomBuild Include="..\..\src\parser\helpers\uint24.hpp">
       <Filter>verifier</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\playerUI\fragmentListWidget.h">
+      <Filter>playerUI</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

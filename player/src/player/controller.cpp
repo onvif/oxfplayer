@@ -70,7 +70,7 @@ Controller::Controller(Engine& engine,
     QObject::connect(&m_controls_widget, SIGNAL(prevFragment()), this, SLOT(onPrevFragment()));
     QObject::connect(&m_controls_widget, SIGNAL(fullscreen()), this, SLOT(toFullScreenMode()));
 
-    QObject::connect(m_player_widget.getFragmentList(), SIGNAL(fragmentSelected(FragmentInfo)), this, SLOT(onFragmentSelected(FragmentInfo)));
+    QObject::connect(m_player_widget.getFragmentList(), SIGNAL(fragmentSelected(SegmentInfo)), this, SLOT(onFragmentSelected(SegmentInfo)));
 
     QObject::connect(m_player_widget.getVideoWidget(), SIGNAL(doubleClick()), this, SLOT(toFullScreenMode()));
     QObject::connect(m_fullscreen_player_widget.getVideoWidget(), SIGNAL(doubleClick()), this, SLOT(fromFullScreenMode()));
@@ -108,7 +108,7 @@ void Controller::openFile(const QString& file_name)
     m_parser_widget.clearContents();
     m_verifyer_dialog.clearContent();
     m_media_parser.clearContents();
-    m_fragments_list.clear();
+    m_segments.clear();
 
     m_media_parser.addFile(file_name);
 
@@ -124,10 +124,10 @@ void Controller::openFile(const QString& file_name)
         return;
     }
 
-    m_fragments_list = m_media_parser.getFragmentsList();
-    updateFragmentsList(m_fragments_list);
+    m_segments = m_media_parser.getSegments();
+    updateFragmentsList(m_segments);
 
-    if(!m_engine.init(file_name, m_fragments_list.front()))
+    if(!m_engine.init(file_name, m_segments.front()))
     {
         QMessageBox message_box(QMessageBox::Information,
                                m_player_widget.windowTitle(),
@@ -143,9 +143,9 @@ void Controller::openFile(const QString& file_name)
     m_verifyer_dialog.initialize(m_media_parser);
 
     m_playing_fragment_index = 0;
-    m_player_widget.getFragmentList()->setFragmentsList(m_fragments_list);
+    m_player_widget.getFragmentList()->setFragmentsList(m_segments);
     m_player_widget.setStreamsInfo(m_engine.videoDecoder()->getStreamsCount(), m_engine.audioDecoder()->getStreamsCount());
-    m_controls_widget.setFragmentsList(m_fragments_list);
+    m_controls_widget.setFragmentsList(m_segments);
     m_controls_widget.startPlayback();
     m_controls_widget.updateUI();
     m_engine.start();
@@ -219,7 +219,7 @@ void Controller::onSeek(int fragment_index, int time_ms)
     m_controls_widget.stopPlayback();
     m_engine.stop();
     m_engine.clear();
-    FragmentInfo fragment_info = m_fragments_list[fragment_index];
+    SegmentInfo fragment_info = m_segments[fragment_index];
     if(!m_engine.init(fragment_info.getFileName(), fragment_info))
     {
         m_controls_widget.updateUI();
@@ -268,7 +268,7 @@ void Controller::onAudioStreamIndexChanged(int index)
     changeStreamIndex(index, false);
 }
 
-void Controller::onFragmentSelected(FragmentInfo fragment_info)
+void Controller::onFragmentSelected(SegmentInfo fragment_info)
 {
     PlayerState old_engine_state = m_engine.getState();
     m_engine.stop();
@@ -308,24 +308,24 @@ void Controller::onFragmentSelected(FragmentInfo fragment_info)
 
 void Controller::onNextFragment()
 {
-	if (m_fragments_list.size() == 1 ||
-		m_playing_fragment_index == m_fragments_list.size() - 1) {
+	if (m_segments.size() == 1 ||
+		m_playing_fragment_index == m_segments.size() - 1) {
 		m_controls_widget.setPlayedTime(m_engine.showNextFrame());
 		m_controls_widget.setTimeLabels();
 		return;
 	}
 	else {
-		onFragmentSelected(m_fragments_list[m_playing_fragment_index + 1]);
+		onFragmentSelected(m_segments[m_playing_fragment_index + 1]);
 	}
 }
 
 void Controller::onPrevFragment()
 {
-    if(m_fragments_list.size() == 1 ||
+    if(m_segments.size() == 1 ||
        m_playing_fragment_index == 0)
         return;
 
-    onFragmentSelected(m_fragments_list[m_playing_fragment_index - 1]);
+    onFragmentSelected(m_segments[m_playing_fragment_index - 1]);
 }
 
 void Controller::toFullScreenMode()
@@ -372,9 +372,9 @@ void Controller::onshowLocalTimeChanged(bool on)
 
 void Controller::onPlaybackFinished()
 {
-    if(m_fragments_list.size() == 1 ||
-       (m_fragments_list.size() > 1 &&
-        m_playing_fragment_index == m_fragments_list.size() - 1))
+    if(m_segments.size() == 1 ||
+       (m_segments.size() > 1 &&
+        m_playing_fragment_index == m_segments.size() - 1))
     {
         m_controls_widget.pausePlayback();
         m_controls_widget.updateUI();
@@ -395,7 +395,7 @@ void Controller::showMemoryInfo()
 }
 #endif //MEMORY_INFO
 
-void Controller::updateFragmentsList(FragmentsList&)
+void Controller::updateFragmentsList(SegmentList&)
 {
 	// currently nothing tbd
 }

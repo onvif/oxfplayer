@@ -137,7 +137,7 @@ void  VerifyerDialog::initialize(MediaParser& parser)
         return;
     }
 
-    FragmentsList           fgList = parser.getFragmentsList();
+    SegmentList           fgList = parser.getSegments();
 
     for (int i = 0; i < fgList.count(); ++i)
     {

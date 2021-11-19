@@ -38,7 +38,7 @@
 #include "validatorISO.h"
 #include "validatorSurveillance.h"
 #include "validatorOXF.h"
-#include "fragmentExtractor.h"
+#include "segmentExtractor.h"
 #include "signatureExtractor.h"
 
 typedef QMap< QString, std::shared_ptr<FileBox> > FilesetInformation;
@@ -67,7 +67,7 @@ public:
     //! Returns if the fileset consists of a valid ISO base media files.
     bool isValidISOFileset();
     //! Returns the Surveillance fragments list.
-    FragmentsList getFragmentsList();
+    SegmentList getSegments();
     //! Returns the signature information for the fragment set.
     SigningInformationMap getSignaturesMap() const;
     //! Returns the fileset parsing result, e.g. for showing them in the UI.
@@ -95,7 +95,7 @@ private:
     //! Validator for Onvif export files.
     ValidatorOXF m_validator_oxf;
     //! Extractor of the Surveillance fragments list.
-    FragmentExtractor m_fragment_extractor;
+    SegmentExtractor m_segment_extractor;
     //! Extractor of the OXF signatures list.
     SignatureExtractor m_signature_extractor;
 };

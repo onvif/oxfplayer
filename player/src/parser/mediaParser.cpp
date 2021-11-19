@@ -59,10 +59,10 @@ MediaParser::MediaParser(QObject *parent) :
     QObject::connect(this, &MediaParser::contentsCleared, &m_validator_oxf, &ValidatorOXF::onContentsCleared);
     QObject::connect(&factory, &BoxFactory::boxCreated, &m_validator_oxf, &ValidatorOXF::onBoxCreated);
 
-    QObject::connect(this, &MediaParser::fileOpened, &m_fragment_extractor, &FragmentExtractor::onFileOpened);
-    QObject::connect(this, &MediaParser::fileClosed, &m_fragment_extractor, &FragmentExtractor::onFileClosed);
-    QObject::connect(this, &MediaParser::contentsCleared, &m_fragment_extractor, &FragmentExtractor::onContentsCleared);
-    QObject::connect(&factory, &BoxFactory::boxCreated, &m_fragment_extractor, &FragmentExtractor::onBoxCreated);
+    QObject::connect(this, &MediaParser::fileOpened, &m_segment_extractor, &SegmentExtractor::onFileOpened);
+    QObject::connect(this, &MediaParser::fileClosed, &m_segment_extractor, &SegmentExtractor::onFileClosed);
+    QObject::connect(this, &MediaParser::contentsCleared, &m_segment_extractor, &SegmentExtractor::onContentsCleared);
+    QObject::connect(&factory, &BoxFactory::boxCreated, &m_segment_extractor, &SegmentExtractor::onBoxCreated);
 
     QObject::connect(this, &MediaParser::fileOpened, &m_signature_extractor, &SignatureExtractor::onFileAdded);
     QObject::connect(this, &MediaParser::fileClosed, &m_signature_extractor, &SignatureExtractor::onFileClosed);
@@ -118,9 +118,9 @@ bool MediaParser::isValidISOFileset()
     return m_validator_iso.isValidFileset();
 }
 
-FragmentsList MediaParser::getFragmentsList()
+SegmentList MediaParser::getSegments()
 {
-    return m_fragment_extractor.getFragmentsList();
+    return m_segment_extractor.getSegments();
 }
 
 SigningInformationMap MediaParser::getSignaturesMap() const

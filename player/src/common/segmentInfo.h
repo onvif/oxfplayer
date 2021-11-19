@@ -49,14 +49,15 @@
 
 /** 
  * Class that descibes one MP4 file. 
- * The name is misleading, since it relates rather to a segment instead of fragment.
+ * Segments are either ISO 23000-10 fragments or CMAF segments.
+ * CMAF support tbd.
  */
-class FragmentInfo
+class SegmentInfo
 {
 public:
-    FragmentInfo(QString file_name = QString());
+    SegmentInfo(QString file_name = QString());
 
-    ~FragmentInfo();
+    ~SegmentInfo();
 
     //! Try to extract duration from movie header box
     void readMovieHeaderBox(MovieHeaderBox * box);
@@ -101,7 +102,7 @@ public:
     bool isEnd() const;
 
     //! Checks, if a fragment is a successor of a fragment. Valid only for Surveillance files.
-    bool isSuccessor(const FragmentInfo & right) const;
+    bool isSuccessor(const SegmentInfo & right) const;
 
     //! Sets the fragment number
     void setFragmentNumber(uint32_t fragment_number);
@@ -119,18 +120,18 @@ private:
     void createName() const;
 
 private:
-    //! Fragment number
-    uint32_t                        m_fragment_number;
+    //! Segment number
+    uint32_t                        m_segment_number;
     //! File name.
     QString                         m_file_name;
     //! Predecessor fragment UUID
     QString                         m_predecessor_uuid;
     //! Current fragment UUID
-    QString                         m_fragment_uuid;
+    QString                         m_segment_uuid;
     //! Successor fragment UUID
     QString                         m_successor_uuid;
-    //! Fragment start timestamp in UTC.
-    QDateTime                       m_fragment_start;
+    //! Segment start timestamp in UTC.
+    QDateTime                       m_segment_start;
     //! Set of known media stream ids.
     QSet<int>                       m_valid_stream_ids;
     //! Timescale of the fragment.
@@ -154,6 +155,6 @@ public:
 	uint32_t						m_currentParserTrackId;		///< track id currently beingparsed
 };
 
-typedef QList<FragmentInfo> FragmentsList;
+typedef QList<SegmentInfo> SegmentList;
 
 #endif // FRAGMENTINFO_H

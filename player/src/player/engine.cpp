@@ -67,11 +67,10 @@ void Engine::setVideoWidget(VideoFrameWidget* video_widget)
     m_video_playback.setVideoWidget(m_video_widget);
 }
 
-bool Engine::init(const QString& file_name, FragmentInfo& fragment)
+bool Engine::init(const QString& file_name, SegmentInfo& fragment)
 {
-	m_currentFragment = &fragment;
 	bool res = true;
-	res = res && initDecoders(file_name, fragment);
+	res = res && initDecoders(file_name, fragment.getFpsFromSamples());
     res = res && initVideoPlayback();
     res = res && initAudioPlayback();
     res = res && m_video_decoder->getStreamsCount();
@@ -238,7 +237,7 @@ void Engine::seek(int time_ms)
 
 void Engine::setVideoStreamIndex(int index)
 {
-    m_video_decoder->setStream(index, m_currentFragment->getFpsFromSamples());
+    m_video_decoder->setStream(index);
 }
 
 void Engine::setAudioStreamIndex(int index)
@@ -273,14 +272,14 @@ void Engine::memoryInfo(int& video_memory, int& audio_memory) const
 
 /*********************************************************************************************/
 
-bool Engine::initDecoders(const QString& file_name, FragmentInfo& fragment)
+bool Engine::initDecoders(const QString& file_name, double fps)
 {
     bool res = true;
 
-    res = res && m_video_decoder->open(file_name, fragment.getValidMediaStreamIds());
-    res = res && m_audio_decoder->open(file_name, fragment.getValidMediaStreamIds());
+    res = res && m_video_decoder->open(file_name);
+    res = res && m_audio_decoder->open(file_name);
     res = res && m_video_decoder->getStreamsCount();
-    m_video_decoder->setStream(0, m_currentFragment->getFpsFromSamples());
+    m_video_decoder->setStream(0, fps);
     m_audio_decoder->setIndex(0);
 
     return res;
@@ -348,14 +347,6 @@ void Engine::doSeek(int time_ms)
             }
 
             m_video_decoder->seek(video_seek_time);
-
-            //test that seek enough
-            QueuedVideoDecoder decoder;
-            decoder.setStream(-1, m_currentFragment->getFpsFromSamples());
-            VideoFrame video_frame;
-            if(decoder.getNextFrame(video_frame) &&
-               video_frame.m_time <= time_ms)
-                break;
         }
     }
 

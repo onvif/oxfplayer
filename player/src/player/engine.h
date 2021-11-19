@@ -39,7 +39,7 @@
 #include "decoder.h"
 #include "audioPlayback.h"
 #include "videoPlayback.h"
-#include "fragmentInfo.h"
+#include "segmentInfo.h"
 #include "queuedAudioDecoder.h"
 #include "queuedVideoDecoder.h"
 
@@ -60,7 +60,7 @@ public:
     void setVideoWidget(VideoFrameWidget* video_widget);
 
     //! Init engine with some file.
-    bool init(const QString& file_name, FragmentInfo& fragment);
+    bool init(const QString& file_name, SegmentInfo& fragment);
 
     virtual void start();
 
@@ -112,7 +112,7 @@ public:
 
 private:
     //! Init MainContext.
-    bool initDecoders(const QString& file_name, FragmentInfo& fragment);
+    bool initDecoders(const QString& file_name, double fps);
 
     //! Init video playback.
     bool initVideoPlayback();
@@ -151,8 +151,6 @@ private:
 
     //! Playing time.
     mutable int     m_playing_time;
-
-	FragmentInfo * m_currentFragment;
 };
 
 #endif //ENGINE_H

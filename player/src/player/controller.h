@@ -81,10 +81,10 @@ private slots:
 	//! Engine send new played time.
     void onPlayed(BasePlayback* playback);
 
-    //! Fragment slider released - seek to some position.
+    //! Segment slider released - seek to some position.
     void onSeek(int time_ms);
 
-    //! Fragment slider released - switch fragment and seek to some position.
+    //! Segment slider released - switch fragment and seek to some position.
     void onSeek(int fragment_index, int time_ms);
 
     //! Video stream index changed.
@@ -94,7 +94,7 @@ private slots:
     void onAudioStreamIndexChanged(int index);
 
     //! Switch to new selected fragment.
-    void onFragmentSelected(FragmentInfo fragment_info);
+    void onFragmentSelected(SegmentInfo fragment_info);
 
     //! Next fragment button pressed.
     void onNextFragment();
@@ -124,7 +124,7 @@ private slots:
 
 private:
     //! Update duration of fragments if it is unknown from SUMI box.
-    void updateFragmentsList(FragmentsList& fragments_list);
+    void updateFragmentsList(SegmentList& fragments_list);
 
     //! Change stream index of audio or video.
     void changeStreamIndex(int index, bool video);
@@ -145,7 +145,7 @@ private:
     //! Media parser to validate file.
     MediaParser&            m_media_parser;
     //! Fragments info of opened file/file set.
-    FragmentsList           m_fragments_list;
+    SegmentList           m_segments;
     //! Currently playing fragment.
     int                     m_playing_fragment_index;
 };

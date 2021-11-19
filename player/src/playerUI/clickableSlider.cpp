@@ -36,7 +36,7 @@
 
 ClickableSlider::ClickableSlider(QWidget* parent) :
     QSlider(parent),
-    m_fragment_index(-1),
+    m_segment_index(-1),
     m_mouse_pressed(false)
 {
     setMouseTracking(true);
@@ -47,10 +47,10 @@ ClickableSlider::~ClickableSlider()
 
 }
 
-void ClickableSlider::setFragmentsList(const FragmentsList& fragments_list, int fragment_index)
+void ClickableSlider::setFragmentsList(const SegmentList& fragments_list, int fragment_index)
 {
-    m_fragments_list = fragments_list;
-    m_fragment_index = fragment_index;
+    m_segments = fragments_list;
+    m_segment_index = fragment_index;
 }
 
 void ClickableSlider::mousePressEvent(QMouseEvent* event)
@@ -64,16 +64,16 @@ void ClickableSlider::mouseMoveEvent(QMouseEvent* event)
 {
     int value = calcValue(event);
 
-    if(m_fragments_list.size() &&
-       m_fragments_list[0].getStartTime().isValid())
+    if(m_segments.size() &&
+       m_segments[0].getStartTime().isValid())
     {
         //use UTC time for tooltip
         QDateTime time;
 
-        if(m_fragment_index != -1)
+        if(m_segment_index != -1)
         {
             //single fragment
-            time = m_fragments_list[m_fragment_index].getStartTime();
+            time = m_segments[m_segment_index].getStartTime();
             time = time.addMSecs(value);
         }
         else
@@ -82,20 +82,20 @@ void ClickableSlider::mouseMoveEvent(QMouseEvent* event)
             int fragment_index = -1;
             int ms = -1;
             int length = 0;
-            for(int i = 0; i < m_fragments_list.size(); ++i)
+            for(int i = 0; i < m_segments.size(); ++i)
             {
-                if(length + (int)m_fragments_list[i].getDuration() > value)
+                if(length + (int)m_segments[i].getDuration() > value)
                 {
                     fragment_index = i;
                     ms = value - length;
                     break;
                 }
                 else
-                    length += (int)m_fragments_list[i].getDuration();
+                    length += (int)m_segments[i].getDuration();
             }
             if(fragment_index == -1)
-                fragment_index = m_fragments_list.size() - 1;
-            time = m_fragments_list[fragment_index].getStartTime();
+                fragment_index = m_segments.size() - 1;
+            time = m_segments[fragment_index].getStartTime();
             time = time.addMSecs(ms);
         }
 
@@ -105,9 +105,9 @@ void ClickableSlider::mouseMoveEvent(QMouseEvent* event)
             QToolTip::showText(mapToGlobal(event->pos()), tool_tip_text, this, rect());
         }
     }
-    else if(m_fragments_list.size() == 0 ||
-            (m_fragments_list.size()  &&
-             !m_fragments_list[0].getStartTime().isValid()))
+    else if(m_segments.size() == 0 ||
+            (m_segments.size()  &&
+             !m_segments[0].getStartTime().isValid()))
     {
         //simple playing time
         QTime time;
