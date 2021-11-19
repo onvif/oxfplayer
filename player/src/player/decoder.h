@@ -40,6 +40,7 @@ class Decoder : public MainContext
 public:
     Decoder(AVMediaType type) : MainContext(type)
         , m_skip_threshold(-1)
+        , m_streamIndex(0)
     {}
 
     virtual ~Decoder()
@@ -83,13 +84,19 @@ public:
 
         m_stream = nullptr;
         m_skip_threshold = -1;
+        m_streamIndex = 0;
     }
+
+    //! Get the zero based streaming index.
+    int getIndex() const { return m_streamIndex; }
+
 
 protected:
     //! Stream to read from.
     AVStream*       m_stream;
     //! Skip threshols.
     int             m_skip_threshold;
+    int             m_streamIndex;
 };
 
 #endif // DECODER_H

@@ -35,7 +35,6 @@
 QueuedAudioDecoder::QueuedAudioDecoder() :
     QueuedDecoder<AudioFrame>(AVMEDIA_TYPE_AUDIO)
     , m_swr_context(nullptr)
-    , m_index(0)
 {
 }
 
@@ -51,7 +50,7 @@ void QueuedAudioDecoder::clear()
 
 void QueuedAudioDecoder::setIndex(int index)
 {
-    if (index < 0) index = m_index;
+    if (index < 0) index = m_streamIndex;
     m_context.clear();
     m_context.open(getCodecContext(index));
     setStream(getStream(index));

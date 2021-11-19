@@ -29,6 +29,7 @@
 #define QUEUEDVIDEODECODER_H
 
 #include "queuedDecoder.h"
+#include "videoContext.h"
 
 #include "types.h"
 
@@ -40,6 +41,10 @@ public:
     ~QueuedVideoDecoder();
 
     virtual void clear();
+
+    //! Video context.
+    VideoContext    m_context;
+    void setStream(int index, double fps);
 
 protected:
     virtual void processPacket(AVPacket* packet, int* readed_frames);

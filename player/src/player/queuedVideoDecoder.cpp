@@ -52,6 +52,15 @@ void QueuedVideoDecoder::clear()
     clearSwsContext();
 }
 
+void QueuedVideoDecoder::setStream(int index, double fps)
+{
+    if (index >= 0) m_streamIndex = index;
+    m_context.clear();
+    m_context.open(getStream(m_streamIndex), fps);
+    m_stream = getStream(m_streamIndex);
+
+}
+
 void QueuedVideoDecoder::processPacket(AVPacket* packet, int* readed_frames)
 {
     AVFrame* frame = av_frame_alloc();

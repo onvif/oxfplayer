@@ -42,8 +42,8 @@ Engine::Engine() :
     m_audio_decoder(new QueuedAudioDecoder()),
     m_is_initialized(false),
     m_player_state(Stopped),
-    m_playing_time(0),
-    m_selected_video_stream_index(0){
+    m_playing_time(0)
+{
     QObject::connect(&m_video_playback, SIGNAL(played(BasePlayback*)), this, SIGNAL(played(BasePlayback*)));
     QObject::connect(&m_video_playback, SIGNAL(playbackFinished()), this, SLOT(onFinished()));
     //direct connection used to prevent receiving messages from previously opened file
@@ -173,7 +173,7 @@ void Engine::startAndPause()
     else
     {
         //video and audio
-        if(m_video_context.getTimerDelay() > AUDIO_NOTIFY_TIMEOUT)
+        if(m_video_decoder->m_context.getTimerDelay() > AUDIO_NOTIFY_TIMEOUT)
         {
             //vide fps is to low - connect video to audio by notify
             //TODO
@@ -198,7 +198,6 @@ void Engine::clear()
     clearAudioPlayback();
     m_player_state = Stopped;
     m_playing_time = 0;
-    m_selected_video_stream_index = 0;
 }
 
 int Engine::getPlayingTime() const
@@ -243,10 +242,7 @@ void Engine::setVideoStreamIndex(int index)
        index >= m_video_decoder->getStreamsCount())
         return;
     stop();
-    m_selected_video_stream_index = index;
-    m_video_context.clear();
-	m_video_context.open(m_video_decoder->getStream(m_selected_video_stream_index), m_currentFragment->getFpsFromSamples());
-    m_video_decoder->setStream(m_video_decoder->getStream(m_selected_video_stream_index));
+    m_video_decoder->setStream(index, m_currentFragment->getFpsFromSamples());
 }
 
 void Engine::setAudioStreamIndex(int index)
@@ -292,7 +288,6 @@ bool Engine::initMainContext(const QString& file_name, FragmentInfo& fragment)
     res = res && m_video_decoder->open(file_name, fragment.getValidMediaStreamIds());
     res = res && m_audio_decoder->open(file_name, fragment.getValidMediaStreamIds());
     res = res && m_video_decoder->getStreamsCount();
-	res = res && m_video_context.open(m_video_decoder->getStream(m_selected_video_stream_index), fragment.getFpsFromSamples());
     if (m_audio_decoder->getStreamsCount()) m_audio_decoder->setIndex();
 
     return res;
@@ -300,7 +295,7 @@ bool Engine::initMainContext(const QString& file_name, FragmentInfo& fragment)
 
 bool Engine::initDecoders()
 {
-    m_video_decoder->setStream(m_video_decoder->getStream(m_selected_video_stream_index));
+    m_video_decoder->setStream(-1, m_currentFragment->getFpsFromSamples());
 
     if(m_audio_decoder && m_audio_decoder->getStreamsCount())
     {
@@ -318,7 +313,7 @@ void Engine::clearDecoders()
 
 bool Engine::initVideoPlayback()
 {
-    m_video_playback.setVideoContext(&m_video_context);
+    m_video_playback.setVideoContext(&m_video_decoder->m_context);
     m_video_playback.setVideoDecoder(m_video_decoder);
     m_video_playback.setVideoWidget(m_video_widget);
 
@@ -391,7 +386,7 @@ void Engine::doSeek(int time_ms)
 
             //test that seek enough
             QueuedVideoDecoder decoder;
-            decoder.setStream(m_video_decoder->getStream(m_selected_video_stream_index));
+            decoder.setStream(-1, m_currentFragment->getFpsFromSamples());
             VideoFrame video_frame;
             if(decoder.getNextFrame(video_frame) &&
                video_frame.m_time <= time_ms)
@@ -403,14 +398,14 @@ void Engine::doSeek(int time_ms)
     QVector<int> pts_vector;
     m_video_decoder->timeToPTS(time_ms, pts_vector);
     if (pts_vector.size() > 0) {
-        m_video_decoder->setSkipThreshold(pts_vector[m_selected_video_stream_index]);
+        m_video_decoder->setSkipThreshold(pts_vector[m_video_decoder->getIndex()]);
     }
     //audio seek
     if(have_audio)
         m_audio_decoder->seek(time_ms);
 
     //clear video context fps
-    m_video_context.flushCurrentFps();
+    m_video_decoder->m_context.flushCurrentFps();
 }
 
 int Engine::showNextFrame()

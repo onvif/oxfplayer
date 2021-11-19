@@ -45,8 +45,6 @@ public:
     const AudioParams &getParams() { return m_context.m_audio_params; }
     virtual void clear();
 
-    int getIndex() const { return m_index; }
-
 protected:
     virtual void processPacket(AVPacket* packet, int* readed_frames);
 
@@ -62,7 +60,6 @@ private:
     AudioContext    m_context;
     //! Resampling context.
     SwrContext* m_swr_context;
-    int m_index;
 };
 
 #endif // QUEUEDAUDIODECODER_H

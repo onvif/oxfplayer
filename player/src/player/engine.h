@@ -41,6 +41,7 @@
 #include "videoPlayback.h"
 #include "fragmentInfo.h"
 #include "queuedAudioDecoder.h"
+#include "queuedVideoDecoder.h"
 
 class VideoFrameWidget;
 
@@ -88,13 +89,10 @@ public:
     PlayerState getState() const { return m_player_state; }
 
     //! Get video streams count.
-    int getVideoStreamsCount() const { return m_video_decoder->getStreamsCount(); }
+    QueuedVideoDecoder* videoDecoder() const { return m_video_decoder; }
 
     //! Access audio decoder
     QueuedAudioDecoder *audioDecoder() const { return m_audio_decoder; }
-
-    //! Get current video stream index.
-    int getCurrentVideoStreamIndex() const { return m_selected_video_stream_index; }
 
     //! Set new stream index for video.
     void setVideoStreamIndex(int index);
@@ -148,11 +146,8 @@ private:
     //! Widget to present video.
     VideoFrameWidget*   m_video_widget;
 
-    //! Video context.
-    VideoContext    m_video_context;
-
     //! Video decoder.
-    Decoder<VideoFrame>*    m_video_decoder;
+    QueuedVideoDecoder*    m_video_decoder;
     //! Audio decoder.
     QueuedAudioDecoder*    m_audio_decoder;
 
@@ -168,9 +163,6 @@ private:
 
     //! Playing time.
     mutable int     m_playing_time;
-
-    //! Index of selected video stream.
-    int             m_selected_video_stream_index;
 
 	FragmentInfo * m_currentFragment;
 };
