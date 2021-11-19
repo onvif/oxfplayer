@@ -112,25 +112,13 @@ public:
 
 private:
     //! Init MainContext.
-    bool initMainContext(const QString& file_name, FragmentInfo& fragment);
-
-    //! Init decoders.
-    bool initDecoders();
-
-    //! Clear decoders.
-    void clearDecoders();
+    bool initDecoders(const QString& file_name, FragmentInfo& fragment);
 
     //! Init video playback.
     bool initVideoPlayback();
 
-    //! Clear video playback.
-    void clearVideoPlayback();
-
     //! Init audio playback.
     bool initAudioPlayback();
-
-    //! Clear audio playback.
-    void clearAudioPlayback();
 
     //! Private function that will stop playback.
     void stopPlayback();

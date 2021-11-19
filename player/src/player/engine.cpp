@@ -71,8 +71,7 @@ bool Engine::init(const QString& file_name, FragmentInfo& fragment)
 {
 	m_currentFragment = &fragment;
 	bool res = true;
-	res = res && initMainContext(file_name, fragment);
-    res = res && initDecoders();
+	res = res && initDecoders(file_name, fragment);
     res = res && initVideoPlayback();
     res = res && initAudioPlayback();
     res = res && m_video_decoder->getStreamsCount();
@@ -193,9 +192,10 @@ void Engine::startAndPause()
 
 void Engine::clear()
 {
-    clearDecoders();
-    clearVideoPlayback();
-    clearAudioPlayback();
+    m_video_decoder->clear();
+    m_audio_decoder->clear();
+    m_video_playback.clear();
+    m_audio_playback.clear();
     m_player_state = Stopped;
     m_playing_time = 0;
 }
@@ -273,30 +273,17 @@ void Engine::memoryInfo(int& video_memory, int& audio_memory) const
 
 /*********************************************************************************************/
 
-bool Engine::initMainContext(const QString& file_name, FragmentInfo& fragment)
+bool Engine::initDecoders(const QString& file_name, FragmentInfo& fragment)
 {
     bool res = true;
 
     res = res && m_video_decoder->open(file_name, fragment.getValidMediaStreamIds());
     res = res && m_audio_decoder->open(file_name, fragment.getValidMediaStreamIds());
     res = res && m_video_decoder->getStreamsCount();
+    m_video_decoder->setStream(0, m_currentFragment->getFpsFromSamples());
     m_audio_decoder->setIndex(0);
 
     return res;
-}
-
-bool Engine::initDecoders()
-{
-    m_video_decoder->setStream(0, m_currentFragment->getFpsFromSamples());
-    m_audio_decoder->setIndex();
-
-    return true;
-}
-
-void Engine::clearDecoders()
-{
-    m_video_decoder->clear();
-    m_audio_decoder->clear();
 }
 
 bool Engine::initVideoPlayback()
@@ -308,22 +295,12 @@ bool Engine::initVideoPlayback()
     return true;
 }
 
-void Engine::clearVideoPlayback()
-{
-    m_video_playback.clear();
-}
-
 bool Engine::initAudioPlayback()
 {
 	m_audio_playback.setAudioDecoder(m_audio_decoder);
     m_audio_playback.setAudioParams(m_audio_decoder->getParams());
 
     return true;
-}
-
-void Engine::clearAudioPlayback()
-{
-    m_audio_playback.clear();
 }
 
 void Engine::stopPlayback()
