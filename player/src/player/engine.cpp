@@ -191,6 +191,7 @@ void Engine::clear()
 {
     m_video_decoder.clear();
     m_audio_decoder.clear();
+    m_metadata_decoder.clear();
     m_video_playback.clear();
     m_audio_playback.clear();
     m_player_state = Stopped;
@@ -302,6 +303,7 @@ void Engine::stopPlayback()
 
     m_audio_decoder.clearBuffers();
     m_video_decoder.clearBuffers();
+    m_metadata_decoder.clearBuffers();
 
     m_playing_time = 0;
 
