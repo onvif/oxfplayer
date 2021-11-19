@@ -238,19 +238,11 @@ void Engine::seek(int time_ms)
 
 void Engine::setVideoStreamIndex(int index)
 {
-    if(index < 0 ||
-       index >= m_video_decoder->getStreamsCount())
-        return;
-    stop();
     m_video_decoder->setStream(index, m_currentFragment->getFpsFromSamples());
 }
 
 void Engine::setAudioStreamIndex(int index)
 {
-    if(index < 0 ||
-       index >= m_audio_decoder->getStreamsCount())
-        return;
-    stop();
     m_audio_decoder->setIndex(index);
     m_audio_playback.setAudioParams(m_audio_decoder->getParams());
 }
@@ -288,19 +280,15 @@ bool Engine::initMainContext(const QString& file_name, FragmentInfo& fragment)
     res = res && m_video_decoder->open(file_name, fragment.getValidMediaStreamIds());
     res = res && m_audio_decoder->open(file_name, fragment.getValidMediaStreamIds());
     res = res && m_video_decoder->getStreamsCount();
-    if (m_audio_decoder->getStreamsCount()) m_audio_decoder->setIndex();
+    m_audio_decoder->setIndex(0);
 
     return res;
 }
 
 bool Engine::initDecoders()
 {
-    m_video_decoder->setStream(-1, m_currentFragment->getFpsFromSamples());
-
-    if(m_audio_decoder && m_audio_decoder->getStreamsCount())
-    {
-        m_audio_decoder->setIndex();
-    }
+    m_video_decoder->setStream(0, m_currentFragment->getFpsFromSamples());
+    m_audio_decoder->setIndex();
 
     return true;
 }

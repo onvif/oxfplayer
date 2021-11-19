@@ -49,9 +49,6 @@ public:
         clear();
     }
 
-    //! Set stream.
-    void setStream(AVStream* stream) { m_stream = stream; }
-
     //! Set skip threshold.
     void setSkipThreshold(int skip_threshold) { m_skip_threshold = skip_threshold; }
 

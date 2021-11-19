@@ -54,6 +54,7 @@ void QueuedVideoDecoder::clear()
 
 void QueuedVideoDecoder::setStream(int index, double fps)
 {
+    if (index >= getStreamsCount()) return;
     if (index >= 0) m_streamIndex = index;
     m_context.clear();
     m_context.open(getStream(m_streamIndex), fps);

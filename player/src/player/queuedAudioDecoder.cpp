@@ -50,10 +50,13 @@ void QueuedAudioDecoder::clear()
 
 void QueuedAudioDecoder::setIndex(int index)
 {
+    if (index >= getStreamsCount()) return;
     if (index < 0) index = m_streamIndex;
     m_context.clear();
-    m_context.open(getCodecContext(index));
-    setStream(getStream(index));
+    if (m_streamIndex >= 0) {
+        m_context.init(getCodecContext(m_streamIndex));
+        m_stream = getStream(m_streamIndex);
+    }
 }
 
 void QueuedAudioDecoder::processPacket(AVPacket* packet, int* readed_frames)

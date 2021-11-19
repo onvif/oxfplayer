@@ -48,7 +48,7 @@ public:
      * \param audio_stream_index index of audio stream in main context
      * \return
      */
-    bool open(AVCodecContext *codecContext);
+    bool init(AVCodecContext *codecContext);
 
     //! Clear parameters.
     void clear();
