@@ -171,7 +171,7 @@
     <ClCompile Include="..\..\src\player\controller.cpp">
       <Filter>player</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\player\mainContext.cpp">
+    <ClCompile Include="..\..\src\player\streamReader.cpp">
       <Filter>player</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\player\portAudioPlayback.cpp">
@@ -392,7 +392,7 @@
     <CustomBuild Include="..\..\src\player\decoder.h">
       <Filter>player</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\player\mainContext.h">
+    <CustomBuild Include="..\..\src\player\streamReader.h">
       <Filter>player</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\player\portAudioPlayback.h">

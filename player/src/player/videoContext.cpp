@@ -25,7 +25,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#include "mainContext.h"
+#include "streamReader.h"
 
 #include "videoContext.h"
 

@@ -29,16 +29,16 @@
 #define DECODER_H
 
 #include "ffmpeg.h"
-#include "mainContext.h"
+#include "streamReader.h"
 
 #include <QQueue>
 
 //! Base class for decoder.
 template<typename T>
-class Decoder : public MainContext
+class Decoder : public StreamReader
 {
 public:
-    Decoder(AVMediaType type) : MainContext(type)
+    Decoder(AVMediaType type) : StreamReader(type)
         , m_skip_threshold(-1)
         , m_streamIndex(0)
     {}
@@ -79,7 +79,7 @@ public:
     //! Clear.
     virtual void clear()
     {
-        MainContext::clear();
+        StreamReader::clear();
         stop();
 
         m_stream = nullptr;

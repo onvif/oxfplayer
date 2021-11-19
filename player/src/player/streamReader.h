@@ -36,21 +36,24 @@
 #include <QSet>
 #include <QVector>
 
-//! Class that contains main information about file in terms of ffmpeg. Contains information only about 1 type of stream.
-class MainContext
+/**
+ * Class that contains main information about file in terms of ffmpeg. 
+ * Each instance contains information about one type of stream (Video, Audio, Metadata).
+ * If multiple streams per type are available these can be selected by zero based instance
+ * which is internally translated to the track ID.
+ */
+class StreamReader
 {
 public:
-    MainContext(AVMediaType stream_type);
+    StreamReader(AVMediaType stream_type);
 
-    ~MainContext();
+    ~StreamReader();
 
     //! Init MainContext with file.
     bool open(const QString& file_name, const QSet<int>& valid_streams = QSet<int>());
 
     //! Clear MainContext;
     void clear();
-
-    AVMediaType getType() const { return m_stream_type; }
 
     AVFormatContext* getFormatContext() { return m_format_context; }
 
@@ -81,11 +84,9 @@ private:
     bool openStream(int index, AVStream*& stream, AVCodecContext*& codec_context, AVCodec*& codec);
 
 private:
-    //! Structure that describes onew stream in video file.
+    //! Structure that describes one stream in video file.
     struct StreamInfo
     {
-        //! Stream type.
-        AVMediaType     m_type;
         //! Stream index.
         int             m_index;
         //! Stream.
@@ -96,7 +97,6 @@ private:
         AVCodec*        m_codec;
 
         StreamInfo() :
-            m_type(AVMEDIA_TYPE_UNKNOWN),
             m_index(-1),
             m_stream(nullptr),
             m_codec_context(nullptr),

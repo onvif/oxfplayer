@@ -242,7 +242,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\src\main.cpp" />
-    <ClCompile Include="..\..\src\player\mainContext.cpp" />
+    <ClCompile Include="..\..\src\player\streamReader.cpp" />
     <ClCompile Include="..\..\src\parser\basic\mandatoryBox.cpp" />
     <ClCompile Include="..\..\src\parser\mediaParser.cpp" />
     <ClCompile Include="..\..\src\playerUI\movingOutArea.cpp" />
@@ -838,7 +838,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </AdditionalInputs>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\player\mainContext.h">
+    <CustomBuild Include="..\..\src\player\streamReader.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing Custom Build Tools</Message>

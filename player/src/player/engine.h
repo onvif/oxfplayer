@@ -33,7 +33,7 @@
 
 #include "enums.h"
 #include "types.h"
-#include "mainContext.h"
+#include "streamReader.h"
 #include "videoContext.h"
 #include "audioContext.h"
 #include "decoder.h"

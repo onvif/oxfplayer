@@ -32,7 +32,7 @@
 
 #include "types.h"
 
-class MainContext;
+class StreamReader;
 
 //! Class that contains and initialiaze main audio parameters.
 class AudioContext

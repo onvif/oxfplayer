@@ -28,7 +28,7 @@
 #ifndef VIDEOCONTEXT_H
 #define VIDEOCONTEXT_H
 
-class MainContext;
+class StreamReader;
 struct AVStream;
 class VideoDecodeThread;
 
