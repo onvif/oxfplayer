@@ -42,6 +42,7 @@
 #include "segmentInfo.h"
 #include "queuedAudioDecoder.h"
 #include "queuedVideoDecoder.h"
+#include "queuedMetadataDecoder.h"
 
 class VideoFrameWidget;
 
@@ -92,6 +93,8 @@ public:
     QueuedVideoDecoder m_video_decoder;
     //! Audio decoder.
     QueuedAudioDecoder m_audio_decoder;
+    //! Metadata decoder.
+    MetadataDecoder m_metadata_decoder;
 
     //! Set new stream index for audio.
     void setAudioStreamIndex(int index);

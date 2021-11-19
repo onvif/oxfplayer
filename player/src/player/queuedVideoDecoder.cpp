@@ -32,8 +32,8 @@
 
 #include <QDebug>
 
-QueuedVideoDecoder::QueuedVideoDecoder() :
-    QueuedDecoder<VideoFrame>(AVMEDIA_TYPE_VIDEO),
+QueuedVideoDecoder::QueuedVideoDecoder(AVMediaType type) :
+    QueuedDecoder<VideoFrame>(type),
     m_sws_context(0),
     m_frame_RGB(0),
     m_buffer_size(-1),
@@ -116,6 +116,8 @@ void QueuedVideoDecoder::initSwsContext(AVFrame* frame)
 
     //create RGB frame
     m_frame_RGB = av_frame_alloc();
+    m_frame_width = frame->width;
+    m_frame_height = frame->height;
 
     //allocate buffer for RGBFrame
     m_buffer_size = avpicture_get_size(AV_PIX_FMT_RGB32, frame->width, frame->height);

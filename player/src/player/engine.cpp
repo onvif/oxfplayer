@@ -37,6 +37,7 @@
 
 Engine::Engine() :
     BasePlayback(),
+    m_metadata_decoder(&m_video_decoder),
     m_video_widget(nullptr),
     m_is_initialized(false),
     m_player_state(Stopped),
@@ -92,6 +93,7 @@ void Engine::start()
         //just video
         m_video_decoder.start();
         m_video_playback.start();
+        m_metadata_decoder.start();
     }
     else
     {
@@ -100,6 +102,7 @@ void Engine::start()
         m_audio_decoder.start();
         m_video_playback.start();
         m_audio_playback.start();
+        m_metadata_decoder.start();
     }
 
     m_player_state = Playing;
@@ -268,8 +271,10 @@ bool Engine::initDecoders(const QString& file_name, double fps)
 
     res = res && m_video_decoder.open(file_name);
     res = res && m_audio_decoder.open(file_name);
+    res = res && m_metadata_decoder.open(file_name);
     res = res && m_video_decoder.getStreamsCount();
     m_video_decoder.setStream(0, fps);
+    m_metadata_decoder.setStream(0);
     m_audio_decoder.setIndex(0);
 
     return res;
@@ -278,7 +283,7 @@ bool Engine::initDecoders(const QString& file_name, double fps)
 bool Engine::initPlayback()
 {
     m_video_playback.setVideoContext(&m_video_decoder.m_context);
-    m_video_playback.setVideoDecoder(&m_video_decoder);
+    m_video_playback.setVideoDecoder(&m_video_decoder, &m_metadata_decoder);
     m_video_playback.setVideoWidget(m_video_widget);
 
     m_audio_playback.setAudioDecoder(&m_audio_decoder);
@@ -343,6 +348,7 @@ void Engine::doSeek(int time_ms)
     //audio seek
     if(have_audio)
         m_audio_decoder.seek(time_ms);
+    m_metadata_decoder.seek(time_ms);
 
     //clear video context fps
     m_video_decoder.m_context.flushCurrentFps();

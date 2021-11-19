@@ -1,5 +1,5 @@
 /************************************************************************************
-* Copyright (c) 2013 ONVIF.
+* Copyright (c) 2021 ONVIF.
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -25,51 +25,25 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#ifndef QUEUEDVIDEODECODER_H
-#define QUEUEDVIDEODECODER_H
+#ifndef QUEUEDMETADATADECODER_H
+#define QUEUEDMETADATADECODER_H
 
-#include "queuedDecoder.h"
+#include "queuedVideoDecoder.h"
 #include "videoContext.h"
 
 #include "types.h"
 
-class QueuedVideoDecoder : public QueuedDecoder<VideoFrame>
+class MetadataDecoder : public QueuedVideoDecoder
 {
 public:
-    QueuedVideoDecoder(AVMediaType type = AVMEDIA_TYPE_VIDEO);
-
-    ~QueuedVideoDecoder();
-
-    virtual void clear();
-
-    //! Video context.
-    VideoContext    m_context;
-    void setStream(int index, double fps = 0.0);
-
-    int frameWidth() const { return m_frame_width; }
-    int frameHeight() const { return m_frame_height; }
-
+    MetadataDecoder(QueuedVideoDecoder* vc) : QueuedVideoDecoder(AVMEDIA_TYPE_DATA) { m_decoder = vc; }
 protected:
     virtual void processPacket(AVPacket* packet, int* readed_frames);
 
 private:
-    //! Init scale context.
-    void initSwsContext(AVFrame* frame);
-
-    //! Clear scale context.
-    void clearSwsContext();
-
-protected:
-    //! Scale context.
-    SwsContext* m_sws_context;
-    //! RGB frame used for conversion.
-    AVFrame*    m_frame_RGB;
-    //! Temp buffer size.
-    int         m_buffer_size;
-    //! Temp buffer for conversion.
-    uint8_t*    m_buffer;
-    int         m_frame_width, m_frame_height;
-
+    //! Try to parse metadata
+    QImage parseMetadata(const unsigned char* buffer, size_t bytes);
+    QueuedVideoDecoder* m_decoder;
 };
 
-#endif // QUEUEDVIDEODECODER_H
+#endif // QUEUEDMETADATADECODER_H

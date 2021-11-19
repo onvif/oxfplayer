@@ -139,6 +139,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ext\pugixml\src\pugixml.cpp" />
     <ClCompile Include="..\..\src\parserUI\certificateStorageDialog.cpp" />
     <ClCompile Include="..\..\src\parser\certificateStorage.cpp" />
     <ClCompile Include="..\..\src\parser\oxfverifier.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="..\..\src\common\segmentInfo.cpp" />
     <ClCompile Include="..\..\src\playerUI\fragmentListWidget.cpp" />
     <ClCompile Include="..\..\src\playerUI\fullscreenPlayerWidget.cpp" />
+    <ClCompile Include="..\..\src\player\queuedMetadataDecoder.cpp" />
     <ClCompile Include="Debug\moc_audioPlayback.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -1967,9 +1969,12 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ext\pugixml\src\pugiconfig.hpp" />
+    <ClInclude Include="..\..\ext\pugixml\src\pugixml.hpp" />
     <ClInclude Include="..\..\src\parser\additionalUserInformation.hpp" />
     <ClInclude Include="..\..\src\parser\correctstarttimebox.hpp" />
     <ClInclude Include="..\..\src\parser\signatureConfigurationBox.hpp" />
+    <ClInclude Include="..\..\src\player\queuedMetadataDecoder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

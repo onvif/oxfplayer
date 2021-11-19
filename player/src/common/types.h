@@ -118,6 +118,10 @@ struct VideoFrame : public DecodedFrame
         DecodedFrame::clear();
         m_image = QImage();
     }
+
+    operator bool() {
+        return m_image.width() > 0;
+    }
 };
 
 //! Structure that describes one decoded audio frame.
