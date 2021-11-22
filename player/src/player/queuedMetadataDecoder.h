@@ -27,22 +27,44 @@
 
 #ifndef QUEUEDMETADATADECODER_H
 #define QUEUEDMETADATADECODER_H
+#include <QTreeWidgetItem>
 
 #include "queuedVideoDecoder.h"
 #include "videoContext.h"
 
 #include "types.h"
 
+class EventItem : public QTreeWidgetItem
+{
+public:
+    EventItem(int t, size_t ha) : hash(ha) {
+        m_time = t;
+    }
+    int m_time;
+    size_t hash;
+};
+struct EventInfo
+{
+    EventInfo() : EventInfo(0) {}
+    EventInfo(int t) :
+    m_time(t),
+    item(0) {}
+    int m_time;
+    EventItem *item;
+};
+
 class MetadataDecoder : public QueuedVideoDecoder
 {
 public:
     MetadataDecoder(QueuedVideoDecoder* vc) : QueuedVideoDecoder(AVMEDIA_TYPE_DATA) { m_decoder = vc; }
+
+    Queue<EventInfo> m_eventQueue;
 protected:
     virtual void processPacket(AVPacket* packet, int* readed_frames);
 
 private:
     //! Try to parse metadata
-    QImage parseMetadata(const unsigned char* buffer, size_t bytes);
+    QImage parseMetadata(const unsigned char* buffer, size_t bytes, int time);
     QueuedVideoDecoder* m_decoder;
 };
 

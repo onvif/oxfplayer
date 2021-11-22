@@ -109,7 +109,10 @@ protected:
             int readed_frames = 0;
             for(;readed_frames < FRAMES_TO_READ;)
             {
-                int read_result = av_read_frame(getFormatContext(), packet);
+                auto ctx = getFormatContext();
+                if (ctx == 0) return false;
+
+                int read_result = av_read_frame(ctx, packet);
 
                 if(read_result == 0)
                 {

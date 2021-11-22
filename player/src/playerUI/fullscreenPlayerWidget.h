@@ -33,7 +33,6 @@
 #include <QWidget>
 #include "playerWidgetInterface.h"
 
-#include "fragmentListWidget.h"
 #include "controlsWidget.h"
 #include "videoFrameWidget.h"
 #include "movingOutArea.h"

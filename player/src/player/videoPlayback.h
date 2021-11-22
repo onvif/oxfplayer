@@ -61,7 +61,7 @@ public:
     }
 
     //! Set widget to draw on.
-    void setVideoWidget(VideoFrameWidget* video_widget);
+    void setVideoWidget(VideoFrameWidget* video_widget, QTreeWidget* event_widget);
 
     virtual void start();
 
@@ -97,6 +97,8 @@ private:
     MetadataDecoder*        m_metadata_decoder;
     //! Widget to draw on.
     VideoFrameWidget*       m_video_widget;
+    //! Widget to display events
+    QTreeWidget*            m_event_widget;
     //! Timer till next frame drawing.
     int                     m_timer;
     //! Currently drawing frame.

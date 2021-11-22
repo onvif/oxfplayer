@@ -93,8 +93,11 @@ private slots:
     //! Audio stream index changed.
     void onAudioStreamIndexChanged(int index);
 
-    //! Switch to new selected fragment.
-    void onFragmentSelected(SegmentInfo fragment_info);
+    //! Switch selected event.
+    void onEventSelected();
+
+    //! User clicked on event
+    void onEventExpanded(QTreeWidgetItem* item);
 
     //! Next fragment button pressed.
     void onNextFragment();

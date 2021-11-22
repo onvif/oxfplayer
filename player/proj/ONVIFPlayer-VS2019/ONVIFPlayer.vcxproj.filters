@@ -57,12 +57,6 @@
     <ClCompile Include="Debug\moc_engine.cpp">
       <Filter>moc</Filter>
     </ClCompile>
-    <ClCompile Include="Release\moc_fragmentListWidget.cpp">
-      <Filter>moc</Filter>
-    </ClCompile>
-    <ClCompile Include="Debug\moc_fragmentListWidget.cpp">
-      <Filter>moc</Filter>
-    </ClCompile>
     <ClCompile Include="Debug\moc_fullscreenPlayerWidget.cpp">
       <Filter>moc</Filter>
     </ClCompile>
@@ -256,9 +250,6 @@
       <Filter>playerUI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\playerUI\movingOutArea.cpp">
-      <Filter>playerUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\playerUI\fragmentListWidget.cpp">
       <Filter>playerUI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\parser\segmentExtractor.cpp" />
@@ -599,9 +590,6 @@
     </CustomBuild>
     <CustomBuild Include="..\..\src\parser\helpers\uint24.hpp">
       <Filter>verifier</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\src\playerUI\fragmentListWidget.h">
-      <Filter>playerUI</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\parser\segmentExtractor.h" />
   </ItemGroup>

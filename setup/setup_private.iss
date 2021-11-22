@@ -31,7 +31,7 @@
 
 [Setup]
 AppName = ONVIFPlayer
-AppVersion = 1.0
+AppVersion = 2.0 beta
 DefaultDirName = {pf}\ONVIF\ONVIFPlayer
 DefaultGroupName = ONVIFPlayer
 LicenseFile = license.txt

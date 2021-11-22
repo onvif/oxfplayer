@@ -31,9 +31,9 @@
 #include "crosscompilation_cxx11.h"
 
 #include <QMainWindow>
+#include <qtreewidget.h>
 #include "playerWidgetInterface.h"
 
-#include "fragmentListWidget.h"
 #include "controlsWidget.h"
 #include "videoFrameWidget.h"
 
@@ -52,7 +52,7 @@ public:
 
     ~PlayerWidget();
 
-    virtual FragmentListWidget* getFragmentList() { return &m_fragments; }
+    virtual QTreeWidget* getEventWidget() { return &m_events; }
 
     virtual VideoFrameWidget* getVideoWidget() { return &m_video_frame; }
 
@@ -121,8 +121,8 @@ private slots:
 private:
     //! UI.
     Ui::PlayerWidget*   m_ui;
-    //! Fragments UI.
-    FragmentListWidget  m_fragments;
+    //! Event view UI.
+    QTreeWidget  m_events;
     //! Video view UI.
     VideoFrameWidget    m_video_frame;
 };

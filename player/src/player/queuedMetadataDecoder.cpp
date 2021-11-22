@@ -29,6 +29,9 @@
 
 #include "ffmpeg.h"
 #include "avFrameWrapper.h"
+#include <string>
+#include <sstream>
+#include <unordered_map>
 
 #include "../../ext/pugixml/src/pugixml.hpp"
 
@@ -52,6 +55,37 @@ static pugi::xml_node read(pugi::xml_node& node, const char* localname) {
     node = node.next_sibling();
     return ret;
 }
+/**
+ * Recursive method for building widget tree from XML.
+ * Special handling for simple and element item to nicely display.
+ */
+static void addChildren(pugi::xml_node& node, QTreeWidgetItem *parent)
+{
+    for (auto attr = node.first_attribute(); attr; attr = attr.next_attribute()) {
+        auto item = new QTreeWidgetItem(parent);
+        item->setText(0, attr.name());
+        item->setText(1, attr.value());
+    }
+    for (auto child = node.first_child(); child; child = child.next_sibling()) {
+        const char* name = strchr(child.name(), ':');
+        name = name ? name + 1 : child.name();          // skip prefix if present
+        if (!strcmp(name, "SimpleItem")) {
+            auto item = new QTreeWidgetItem(parent);
+            for (auto attr = child.first_attribute(); attr; attr = attr.next_attribute()) {
+                item->setText(attr.name()[0] == 'V' ? 1 : 0, attr.value());
+            }
+        }
+        else if (!strcmp(name, "ElementItem")) {
+            addChildren(child, parent);
+        }
+        else {
+            auto item = new QTreeWidgetItem(parent);
+            item->setText(0, name);
+            if (child.first_child()) addChildren(child, item);
+            item->setText(1, child.value());
+        }
+    }
+}
 
 void MetadataDecoder::processPacket(AVPacket* packet, int* readed_frames)
 {
@@ -63,14 +97,14 @@ void MetadataDecoder::processPacket(AVPacket* packet, int* readed_frames)
     if (m_decoder) {
         m_frame_height = m_decoder->frameHeight();
         m_frame_width = m_decoder->frameWidth();
-        QImage image = parseMetadata(packet->buf->data, packet->buf->size);
+        QImage image = parseMetadata(packet->buf->data, packet->buf->size, packet->pts);
         video_frame.m_image = image;
         m_queue.push(video_frame);
         (*readed_frames)++;
     }
 }
 
-QImage MetadataDecoder::parseMetadata(const unsigned char* buffer, size_t bytes)
+QImage MetadataDecoder::parseMetadata(const unsigned char* buffer, size_t bytes, int time)
 {
     QImage image(m_frame_width, m_frame_height, QImage::Format_RGB32);
     image.fill(Qt::black);
@@ -107,6 +141,28 @@ QImage MetadataDecoder::parseMetadata(const unsigned char* buffer, size_t bytes)
                             if (bounds && right > left) {
                                 painter.drawRect(left, top, right - left, bottom - top);
                             }
+                        }
+                    }
+                }
+            }
+            else if (hasLocalname(n, "Event")) {
+                for (pugi::xml_node m = n.first_child(); m; m = m.next_sibling()) {
+                    if (hasLocalname(m, "NotificationMessage")) {
+                        auto mc = m.first_child();
+                        auto ref = read(mc, "SubscriptionReference");
+                        auto topic = read(mc, "Topic");
+                        auto msg = read(mc, "Message");
+                        if (msg && topic) {
+                            std::stringstream ss;
+                            m.print(ss);
+                            std::hash<std::string> hasher;
+                            auto test = ss.str();
+                            EventInfo ei(time);
+                            ei.item = new EventItem(time, hasher(ss.str()));
+                            ei.item->setText(0, "Event");
+                            ei.item->setText(1, topic.first_child().value());
+                            addChildren(msg.first_child(), ei.item);
+                            m_eventQueue.push(ei);
                         }
                     }
                 }

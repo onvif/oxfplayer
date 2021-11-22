@@ -47,9 +47,10 @@ VideoPlayback::~VideoPlayback()
     clear();
 }
 
-void VideoPlayback::setVideoWidget(VideoFrameWidget* video_widget)
+void VideoPlayback::setVideoWidget(VideoFrameWidget* video_widget, QTreeWidget* event_widget)
 {
     m_video_widget = video_widget;
+    m_event_widget = event_widget;
     if(m_video_widget != nullptr)
         m_video_widget->setDrawImage(m_current_frame.m_image);
 }
@@ -233,13 +234,32 @@ void VideoPlayback::timerEvent(QTimerEvent* event)
 
 void VideoPlayback::showFrame(bool single_frame)
 {
+    //
+    // Update events
+    //
+    while (!m_metadata_decoder->m_eventQueue.empty() && m_metadata_decoder->m_eventQueue.headTime() < m_current_frame.m_time) {
+        auto event = m_metadata_decoder->m_eventQueue.pop();
+        for (int i = 0; i < m_event_widget->invisibleRootItem()->childCount(); i++) {
+            auto ev = (EventItem*)m_event_widget->invisibleRootItem()->child(i);
+            if (ev->hash == event.item->hash) {     // skip duplicates
+                delete event.item; 
+                event.item = 0;
+                break;
+            }
+        }
+        if (event.item) m_event_widget->addTopLevelItem(event.item);
+        else break;
+    }
+    //
+    // Show video frame optionally with overlay
+    //
     QSize widget_size = m_video_widget->size();
     VideoFrame frame;
     m_current_frame.clear();
     if (m_video_decoder->getNextFrame(frame, &widget_size))
     {
         m_current_frame = frame;
-        MetadataDecoder* mc = (MetadataDecoder*)m_metadata_decoder;
+        MetadataDecoder* mc = m_metadata_decoder;
         while (!mc->m_queue.empty() && mc->m_queue.headTime() < m_current_frame.m_time + 50) {
             m_overlay = mc->m_queue.pop();
         }

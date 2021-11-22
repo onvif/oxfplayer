@@ -58,10 +58,11 @@ Engine::~Engine()
 
 /*********************************************************************************************/
 
-void Engine::setVideoWidget(VideoFrameWidget* video_widget)
+void Engine::setVideoWidget(VideoFrameWidget* video_widget, QTreeWidget* event_widget)
 {
     m_video_widget = video_widget;
-    m_video_playback.setVideoWidget(m_video_widget);
+    m_event_widget = event_widget;
+    m_video_playback.setVideoWidget(m_video_widget, event_widget);
 }
 
 bool Engine::init(const QString& file_name, SegmentInfo& fragment)
@@ -164,6 +165,7 @@ void Engine::startAndPause()
     {
         //just video
         m_video_decoder.start();
+        m_metadata_decoder.start();
         m_video_playback.startAndPause();
     }
     else
@@ -179,6 +181,7 @@ void Engine::startAndPause()
             //video is faster then audio - modify fps
             m_video_decoder.start();
             m_audio_decoder.start();
+            m_metadata_decoder.start();
             m_video_playback.startAndPause();
             m_audio_playback.startAndPause();
         }
@@ -285,7 +288,7 @@ bool Engine::initPlayback()
 {
     m_video_playback.setVideoContext(&m_video_decoder.m_context);
     m_video_playback.setVideoDecoder(&m_video_decoder, &m_metadata_decoder);
-    m_video_playback.setVideoWidget(m_video_widget);
+    m_video_playback.setVideoWidget(m_video_widget, m_event_widget);
 
     m_audio_playback.setAudioDecoder(&m_audio_decoder);
     m_audio_playback.setAudioParams(m_audio_decoder.getParams());
@@ -300,6 +303,7 @@ void Engine::stopPlayback()
 
     m_audio_decoder.stop();
     m_video_decoder.stop();
+    m_metadata_decoder.stop();
 
     m_audio_decoder.clearBuffers();
     m_video_decoder.clearBuffers();
