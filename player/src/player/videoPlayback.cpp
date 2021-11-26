@@ -237,7 +237,7 @@ void VideoPlayback::showFrame(bool single_frame)
     //
     // Update events
     //
-    while (!m_metadata_decoder->m_eventQueue.empty() && m_metadata_decoder->m_eventQueue.headTime() < m_current_frame.m_time) {
+    while (!m_metadata_decoder->m_eventQueue.empty()) {
         auto event = m_metadata_decoder->m_eventQueue.pop();
         for (int i = 0; i < m_event_widget->invisibleRootItem()->childCount(); i++) {
             auto ev = (EventItem*)m_event_widget->invisibleRootItem()->child(i);
@@ -258,12 +258,21 @@ void VideoPlayback::showFrame(bool single_frame)
     m_current_frame.clear();
     if (m_video_decoder->getNextFrame(frame, &widget_size))
     {
+        //
+        // Advance to nearest overlay
+        //
         m_current_frame = frame;
-        MetadataDecoder* mc = m_metadata_decoder;
-        while (!mc->m_queue.empty() && mc->m_queue.headTime() < m_current_frame.m_time + 50) {
-            m_overlay = mc->m_queue.pop();
+        int delta = abs(m_overlay.m_time - m_current_frame.m_time);
+        while (!m_metadata_decoder->m_queue.empty()) {
+            int d = abs(m_metadata_decoder->m_queue.headTime() - m_current_frame.m_time);
+            if (d > delta) break;
+            m_overlay = m_metadata_decoder->m_queue.pop();
+            delta = d;
         }
-        if (m_overlay) {
+        //
+        // Show overlay if within 500 milliseconds
+        //
+        if (delta < 500 && m_overlay) {
             int height = m_current_frame.m_image.height(), width = m_current_frame.m_image.width();
             for (int y = 0; y < height; y++)
             {
