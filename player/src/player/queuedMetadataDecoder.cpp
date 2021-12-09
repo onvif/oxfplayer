@@ -62,13 +62,20 @@ static bool hasLocalname(pugi::xml_node node, const char* name) {
     }
     return strcmp(n, name) == 0;
 }
-
+/**
+ * Read next node with given local name. Advances if name matches.
+ * @return Node or empty node if not present
+ */
 static pugi::xml_node read(pugi::xml_node& node, const char* localname) {
     if (!hasLocalname(node, localname)) return pugi::xml_node();
     pugi::xml_node ret = node;
     node = node.next_sibling();
     return ret;
 }
+
+/**
+ * Convert an xml node of type tt:Point to QPoint
+ */
 static QPoint toPoint(pugi::xml_node& point, const Transform& trans) {
     QPoint p;
     for (auto attr : point.attributes()) {
