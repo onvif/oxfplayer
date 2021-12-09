@@ -38,6 +38,20 @@
 #include <QDebug>
 #include <qpainter.h>
 
+class Transform
+{
+public:
+    Transform(int frameWidth, int frameHeight) {
+        fx = frameWidth / 2.0;
+        fy = frameHeight / 2.0;
+    }
+    int x(const char* val) const { return (int)((strtod(val, 0) + 1.0) * fx + 0.5); }
+    int y(const char* val) const { return (int)((-strtod(val, 0) + 1.0) * fy + 0.5); }
+private:
+    double fx;
+    double fy;
+};
+
 static bool hasLocalname(pugi::xml_node node, const char* name) {
     const char* n = node.name();
     for (int i = 0; i < 6 && n[i]; i++) {
@@ -54,6 +68,14 @@ static pugi::xml_node read(pugi::xml_node& node, const char* localname) {
     pugi::xml_node ret = node;
     node = node.next_sibling();
     return ret;
+}
+static QPoint toPoint(pugi::xml_node& point, const Transform& trans) {
+    QPoint p;
+    for (auto attr : point.attributes()) {
+        if (attr.name()[0] == 'x') p.setX(trans.x(attr.value()));
+        else p.setY(trans.y(attr.value()));
+    }
+    return p;
 }
 /**
  * Recursive method for building widget tree from XML.
@@ -112,8 +134,7 @@ QImage MetadataDecoder::parseMetadata(const unsigned char* buffer, size_t bytes,
     QPen redpen(Qt::red, 5
     );
     painter.setPen(redpen);
-    double fx = m_frame_width / 2.0;
-    double fy = m_frame_height / 2.0;
+    Transform trans(m_frame_width, m_frame_height);
 
     pugi::xml_document doc;
     if (doc.load_buffer(buffer, bytes, pugi::encoding_utf8).status == 0) {
@@ -129,16 +150,27 @@ QImage MetadataDecoder::parseMetadata(const unsigned char* buffer, size_t bytes,
                             auto trans2 = read(appearance, "Transformation");
                             auto shape = read(appearance, "Shape").first_child();
                             auto bounds = read(shape, "BoundingBox");
+                            auto center = read(shape, "CenterOfGravity");
+                            auto polygon = read(shape, "Polygon").first_child();
                             double top = 0, left = 0, right = 0, bottom = 0;
-                            for (auto attr = bounds.attributes_begin(); attr != bounds.attributes_end(); attr++) {
-                                switch (attr->name()[0]) {
-                                case 't': top = (-strtod(attr->value(), 0) + 1.0) * fy; break;
-                                case 'l': left = (strtod(attr->value(), 0) + 1.0) * fx; break;
-                                case 'r': right = (strtod(attr->value(), 0) + 1.0) * fx; break;
-                                case 'b': bottom = (-strtod(attr->value(), 0) + 1.0) * fy; break;
+                            for (auto attr : bounds.attributes()) {
+                                switch (attr.name()[0]) {
+                                case 't': top = trans.y(attr.value()); break;
+                                case 'l': left = trans.x(attr.value()); break;
+                                case 'r': right = trans.x(attr.value()); break;
+                                case 'b': bottom = trans.y(attr.value()); break;
                                 }
                             }
-                            if (bounds && right > left) {
+                            if (polygon) {
+                                QPoint p0 = toPoint(polygon, trans), pFirst = p0;
+                                while (auto point = read(polygon, "Point")) {
+                                    QPoint p1 = toPoint(point, trans);
+                                    painter.drawLine(p0, p1);
+                                    p0 = p1;
+                                }
+                                painter.drawLine(p0, pFirst);       // close polygon
+                            }
+                            else if (bounds && right > left) {
                                 painter.drawRect(left, top, right - left, bottom - top);
                             }
                         }
