@@ -170,8 +170,8 @@ QImage MetadataDecoder::parseMetadata(const unsigned char* buffer, size_t bytes,
                             }
                             if (polygon) {
                                 QPoint p0 = toPoint(polygon, trans), pFirst = p0;
-                                while (auto point = read(polygon, "Point")) {
-                                    QPoint p1 = toPoint(point, trans);
+                                for (polygon = polygon.next_sibling(); polygon; polygon = polygon.next_sibling()) {
+                                    QPoint p1 = toPoint(polygon, trans);
                                     painter.drawLine(p0, p1);
                                     p0 = p1;
                                 }
