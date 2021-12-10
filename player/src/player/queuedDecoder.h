@@ -64,11 +64,12 @@ public:
     virtual void start()
     {
         //do not start if no context set or no streams added
-        if(Decoder<T>::m_stream == nullptr)
+        if (Decoder<T>::m_stream == nullptr)
             return;
 
         SyncThread::start();
-
+    }
+    void wait() {
         while(isRunning() &&
               m_queue.size() < MINIMUM_FRAMES_IN_QUEUE_TO_START)
             msleep(WAIT_TREAD);

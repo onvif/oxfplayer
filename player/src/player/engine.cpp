@@ -93,17 +93,23 @@ void Engine::start()
     {
         //just video
         m_video_decoder.start();
-        m_video_playback.start();
         m_metadata_decoder.start();
+        m_video_decoder.wait();
+        m_metadata_decoder.wait();
+        m_video_playback.start();
     }
     else
     {
         //video and audio - modify fps
         m_video_decoder.start();
         m_audio_decoder.start();
+        m_metadata_decoder.start();
+        m_video_decoder.wait();
+        m_audio_decoder.wait();
+        m_metadata_decoder.wait();
+
         m_video_playback.start();
         m_audio_playback.start();
-        m_metadata_decoder.start();
     }
 
     m_player_state = Playing;
@@ -166,6 +172,8 @@ void Engine::startAndPause()
         //just video
         m_video_decoder.start();
         m_metadata_decoder.start();
+        m_video_decoder.wait();
+        m_metadata_decoder.wait();
         m_video_playback.startAndPause();
     }
     else
@@ -182,6 +190,9 @@ void Engine::startAndPause()
             m_video_decoder.start();
             m_audio_decoder.start();
             m_metadata_decoder.start();
+            m_video_decoder.wait();
+            m_metadata_decoder.wait();
+            m_audio_decoder.wait();
             m_video_playback.startAndPause();
             m_audio_playback.startAndPause();
         }
@@ -318,42 +329,14 @@ void Engine::doSeek(int time_ms)
 {
     m_playing_time = time_ms;
 
-    bool have_audio = m_audio_decoder.getStreamsCount();
-
-    //seek video
-    if(time_ms == 0)
-    {
-        //stop seek
-        m_video_decoder.seek(0);
-    }
-    else
-    {
-        //step by step seek
-        for(int step = 100; step <= SEEK_BACKSTEP; step *= 2)
-        {
-            int video_seek_time = time_ms - step;
-
-            if(video_seek_time < 0)
-            {
-                video_seek_time = 0;
-                //that's all - seek to start
-                m_video_decoder.seek(video_seek_time);
-                break;
-            }
-
-            m_video_decoder.seek(video_seek_time);
-        }
-    }
-
+    m_video_decoder.seek(time_ms);
     //skip threshold
     QVector<int> pts_vector;
     m_video_decoder.timeToPTS(time_ms, pts_vector);
     if (pts_vector.size() > 0) {
         m_video_decoder.setSkipThreshold(pts_vector[m_video_decoder.getIndex()]);
     }
-    //audio seek
-    if(have_audio)
-        m_audio_decoder.seek(time_ms);
+    m_audio_decoder.seek(time_ms);
     m_metadata_decoder.seek(time_ms);
 
     //clear video context fps

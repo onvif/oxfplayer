@@ -46,7 +46,7 @@ PlayerWidget::PlayerWidget(QWidget* parent) :
 #endif //MEMORY_INFO
     m_ui->splitter->setSizes({ 150, 500 });
     m_events.setColumnCount(2);
-    m_events.setHeaderHidden(true);
+    m_events.setHeaderLabels({ "", "" });
     m_ui->frames_list_layout->addWidget(&m_events);
     m_ui->video_layout->addWidget(&m_video_frame);
 

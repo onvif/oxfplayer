@@ -91,7 +91,7 @@ bool StreamReader::seek(int timestamp_ms)
         pos = cIter->timeMsToPts(timestamp_ms);
         res = avformat_seek_file(m_format_context, cIter->m_stream->index, 0, pos, pos, 0);
         if(res < 0)
-            res = avformat_seek_file(m_format_context, cIter->m_stream->index, 0, pos, pos, AVSEEK_FLAG_ANY);
+            res = avformat_seek_file(m_format_context, cIter->m_stream->index, 0, pos, pos, 0);
         if (cIter->m_codec) avcodec_flush_buffers(cIter->m_codec_context);
     }
     return true;
