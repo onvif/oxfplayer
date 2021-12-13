@@ -55,6 +55,7 @@ public:
     virtual QTreeWidget* getEventWidget() { return &m_events; }
 
     virtual VideoFrameWidget* getVideoWidget() { return &m_video_frame; }
+    virtual QTreeWidget* getEventTreeWidget() { return &m_events; }
 
     virtual void setControls(ControlsWidget* controls);
 

@@ -31,7 +31,8 @@
 
 StreamReader::StreamReader(AVMediaType stream_type) :
     m_stream_type(stream_type),
-    m_format_context(nullptr)
+    m_format_context(nullptr),
+    m_lastSeekTime(0)
 {
 }
 
@@ -85,6 +86,7 @@ bool StreamReader::seek(int timestamp_ms)
     if(!m_format_context)
         return false;
 
+    m_lastSeekTime = timestamp_ms;
     int pos = 0, res = 0;
     for(QVector<StreamInfo>::const_iterator cIter = m_streams.constBegin(); cIter != m_streams.constEnd(); ++cIter)
     {
@@ -95,13 +97,6 @@ bool StreamReader::seek(int timestamp_ms)
         if (cIter->m_codec) avcodec_flush_buffers(cIter->m_codec_context);
     }
     return true;
-}
-
-void StreamReader::timeToPTS(int timestamp_ms, QVector<int>& pts_vector)
-{
-    pts_vector.clear();
-    for(QVector<StreamInfo>::const_iterator cIter = m_streams.constBegin(); cIter != m_streams.constEnd(); ++cIter)
-        pts_vector.push_back(cIter->timeMsToPts(timestamp_ms));
 }
 
 bool StreamReader::init(const QString& file_name, const QSet<int>& valid_streams)

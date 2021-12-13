@@ -116,12 +116,9 @@ static void addChildren(pugi::xml_node& node, QTreeWidgetItem *parent)
     }
 }
 
-void MetadataDecoder::processPacket(AVPacket* packet, int* readed_frames)
+void MetadataDecoder::processPacket(AVPacket* packet, int timestamp_ms)
 {
-    //create frame
-    VideoFrame video_frame;
-    video_frame.calcTime(packet->pts, m_stream->time_base);
-
+    VideoFrame video_frame(timestamp_ms);
     video_frame.m_isOverlay = true;
     if (m_decoder) {
         m_frame_height = m_decoder->frameHeight();
@@ -129,7 +126,6 @@ void MetadataDecoder::processPacket(AVPacket* packet, int* readed_frames)
         QImage image = parseMetadata(packet->buf->data, packet->buf->size, packet->pts);
         video_frame.m_image = image;
         m_queue.push(video_frame);
-        (*readed_frames)++;
     }
 }
 

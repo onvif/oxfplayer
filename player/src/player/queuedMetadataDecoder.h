@@ -60,7 +60,7 @@ public:
 
     Queue<EventInfo> m_eventQueue;
 protected:
-    virtual void processPacket(AVPacket* packet, int* readed_frames);
+    virtual void processPacket(AVPacket* packet, int timestamp_ms);
 
 private:
     //! Try to parse metadata

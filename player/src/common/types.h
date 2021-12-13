@@ -63,9 +63,8 @@ struct AudioParams
 //! Base structure for decoded data.
 struct DecodedFrame
 {
-    DecodedFrame() :
-        m_time(0),
-        m_selected_pts(0)
+    DecodedFrame(int time_ms = 0) :
+        m_time(time_ms)
     {}
 
     virtual ~DecodedFrame()
@@ -74,18 +73,6 @@ struct DecodedFrame
     //! Present time.
     int         m_time;
 
-    //! Selected pts. Calculated used pkt_pts or pkt_dts.
-    int64_t     m_selected_pts;
-
-    //! Calculate presentation time.
-    void calcTime(int64_t pkt_pts, AVRational time_base)
-    {
-        m_selected_pts = pkt_pts;
-        if(m_selected_pts == AV_NOPTS_VALUE)
-            m_selected_pts = 0;
-        m_time = (int)((double)m_selected_pts * av_q2d(time_base) * 1000.0);
-    }
-
     //! Get occupied memory.
     virtual size_t size() const = 0;
 
@@ -93,7 +80,6 @@ struct DecodedFrame
     virtual void clear()
     {
         m_time = 0;
-        m_selected_pts = 0;
     }
 };
 
@@ -104,8 +90,8 @@ struct VideoFrame : public DecodedFrame
     QImage      m_image;
     bool        m_isOverlay;
 
-    VideoFrame() :
-        DecodedFrame(), m_isOverlay(false)
+    VideoFrame(int time_ms = 0) :
+        DecodedFrame(time_ms), m_isOverlay(false)
     {}
 
     virtual size_t size() const
@@ -130,8 +116,8 @@ struct AudioFrame : public DecodedFrame
     //! Decoded data.
     QByteArray  m_data;
 
-    AudioFrame() :
-        DecodedFrame()
+    AudioFrame(int time_ms = 0) :
+        DecodedFrame(time_ms)
     {}
 
     size_t size() const

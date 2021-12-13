@@ -72,9 +72,10 @@ public:
      * \return
      */
     bool seek(int timestamp_ms);
-
-    //! Conver time in ms to pts for supported streams.
-    void timeToPTS(int timestamp_ms, QVector<int>& pts_vector);
+    /**
+     * Get time of last seek to e.g. skip outdated content
+     */
+    int lastSeekTime() const { return m_lastSeekTime; }
 
 private:
     //! Init with file.
@@ -120,6 +121,8 @@ private:
     AVFormatContext*    m_format_context;
     //! QVector of streams.
     QVector<StreamInfo> m_streams;
+    /// Time of last seek in ms
+    int m_lastSeekTime;
 };
 
 #endif // MAINCONTEXT_H

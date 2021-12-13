@@ -50,7 +50,7 @@ public:
     int frameHeight() const { return m_frame_height; }
 
 protected:
-    virtual void processPacket(AVPacket* packet, int* readed_frames);
+    virtual void processPacket(AVPacket* packet, int timestamp_ms);
 
 private:
     //! Init scale context.

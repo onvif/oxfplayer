@@ -106,6 +106,7 @@ void Controller::openFile(const QString& file_name)
     m_engine.clear();
     m_player_widget.getEventWidget()->clear();
     m_player_widget.getVideoWidget()->clear();
+    m_player_widget.getEventTreeWidget()->clear();
     m_controls_widget.enableUI(true);
     m_parser_widget.clearContents();
     m_verifyer_dialog.clearContent();

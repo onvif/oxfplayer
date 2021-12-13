@@ -39,7 +39,6 @@ class Decoder : public StreamReader
 {
 public:
     Decoder(AVMediaType type) : StreamReader(type)
-        , m_skip_threshold(-1)
         , m_streamIndex(0)
     {}
 
@@ -48,9 +47,6 @@ public:
         stop();
         clear();
     }
-
-    //! Set skip threshold.
-    void setSkipThreshold(int skip_threshold) { m_skip_threshold = skip_threshold; }
 
     //! Start decoder.
     virtual void start()
@@ -80,7 +76,6 @@ public:
         stop();
 
         m_stream = nullptr;
-        m_skip_threshold = -1;
         m_streamIndex = 0;
     }
 
@@ -92,7 +87,6 @@ protected:
     //! Stream to read from.
     AVStream*       m_stream;
     //! Skip threshols.
-    int             m_skip_threshold;
     int             m_streamIndex;
 };
 

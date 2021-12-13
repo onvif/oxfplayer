@@ -83,34 +83,21 @@ void Engine::start()
        m_player_state != Stopped)
         return;
 
-    bool have_video = m_video_decoder.getStreamsCount();
-    bool have_audio = m_audio_decoder.getStreamsCount();
+    bool video = m_video_decoder.getStreamsCount();
+    bool audio = m_audio_decoder.getStreamsCount();
 
-    if(!have_video)
+    if(!video)
         return;
 
-    if(!have_audio)
-    {
-        //just video
-        m_video_decoder.start();
-        m_metadata_decoder.start();
-        m_video_decoder.wait();
-        m_metadata_decoder.wait();
-        m_video_playback.start();
-    }
-    else
-    {
-        //video and audio - modify fps
-        m_video_decoder.start();
-        m_audio_decoder.start();
-        m_metadata_decoder.start();
-        m_video_decoder.wait();
-        m_audio_decoder.wait();
-        m_metadata_decoder.wait();
+    m_video_decoder.start();
+    m_audio_decoder.start();
+    m_metadata_decoder.start();
+    m_video_decoder.wait();
+    if (audio) m_audio_decoder.wait();
+    m_metadata_decoder.wait();
 
-        m_video_playback.start();
-        m_audio_playback.start();
-    }
+    m_video_playback.start();
+    if (audio) m_audio_playback.start();
 
     m_player_state = Playing;
 }
@@ -161,42 +148,20 @@ void Engine::startAndPause()
        m_player_state != Stopped)
         return;
 
-    bool have_video = m_video_decoder.getStreamsCount();
-    bool have_audio = m_audio_decoder.getStreamsCount();
+    bool video = m_video_decoder.getStreamsCount();
+    bool audio = m_audio_decoder.getStreamsCount();
 
-    if(!have_video)
+    if(!video)
         return;
 
-    if(!have_audio)
-    {
-        //just video
-        m_video_decoder.start();
-        m_metadata_decoder.start();
-        m_video_decoder.wait();
-        m_metadata_decoder.wait();
-        m_video_playback.startAndPause();
-    }
-    else
-    {
-        //video and audio
-        if(m_video_decoder.m_context.getTimerDelay() > AUDIO_NOTIFY_TIMEOUT)
-        {
-            //vide fps is to low - connect video to audio by notify
-            //TODO
-        }
-        else
-        {
-            //video is faster then audio - modify fps
-            m_video_decoder.start();
-            m_audio_decoder.start();
-            m_metadata_decoder.start();
-            m_video_decoder.wait();
-            m_metadata_decoder.wait();
-            m_audio_decoder.wait();
-            m_video_playback.startAndPause();
-            m_audio_playback.startAndPause();
-        }
-    }
+    m_video_decoder.start();
+    m_audio_decoder.start();
+    m_metadata_decoder.start();
+    m_video_decoder.wait(true);
+    m_metadata_decoder.wait(true);
+    if (audio) m_audio_decoder.wait(true);
+    m_video_playback.startAndPause();
+    if (audio) m_audio_playback.startAndPause();
 
     m_player_state = Paused;
 }
@@ -331,11 +296,6 @@ void Engine::doSeek(int time_ms)
 
     m_video_decoder.seek(time_ms);
     //skip threshold
-    QVector<int> pts_vector;
-    m_video_decoder.timeToPTS(time_ms, pts_vector);
-    if (pts_vector.size() > 0) {
-        m_video_decoder.setSkipThreshold(pts_vector[m_video_decoder.getIndex()]);
-    }
     m_audio_decoder.seek(time_ms);
     m_metadata_decoder.seek(time_ms);
 

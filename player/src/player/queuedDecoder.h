@@ -40,7 +40,8 @@ class QueuedDecoder : public Decoder<T>, public SyncThread
 public:
     QueuedDecoder(AVMediaType type) :
         Decoder<T>(type),
-        SyncThread(DECODE_SLEEP_TIMEOUT, QThread::HighPriority)
+        SyncThread(DECODE_SLEEP_TIMEOUT, QThread::HighPriority),
+        m_pause(false)
     {}
 
     virtual ~QueuedDecoder()
@@ -69,17 +70,17 @@ public:
 
         SyncThread::start();
     }
-    void wait() {
+    void wait(bool pause = false) {
+        m_pause = pause;
+        int min = pause ? 1 : MINIMUM_FRAMES_IN_QUEUE_TO_START;
         while(isRunning() &&
-              m_queue.size() < MINIMUM_FRAMES_IN_QUEUE_TO_START)
+              m_queue.size() < min)
             msleep(WAIT_TREAD);
     }
 
     virtual void stop()
     {
         SyncThread::stop();
-
-        Decoder<T>::m_skip_threshold = -1;
     }
 
     virtual void clearBuffers()
@@ -96,19 +97,22 @@ public:
 
 protected:
     //!  Process function. Decode here.
-    virtual void processPacket(AVPacket* packet, int* readed_frames) = 0;
+    virtual void processPacket(AVPacket* packet, int timestamp_ms) = 0;
 
-    //! Thread body.
+    /** Check whether buffer needs to be filled.
+     * Try to fill at least half the buffer.
+     */
     virtual bool threadBody()
     {
         //check do we need to decode some more frames
-        if(m_queue.size() < MINIMUM_FRAMES_IN_QUEUE)
+        if (m_queue.size() < MINIMUM_FRAMES_IN_QUEUE)
         {
             //read another frame
             //exit if file ended
             AVPacket *packet = av_packet_alloc();
-            int readed_frames = 0;
-            for(;readed_frames < FRAMES_TO_READ;)
+            // On first load only two to speed-up seek.
+            int targetSize = (m_queue.empty() && m_pause) ? 2 : m_queue.size() + MINIMUM_FRAMES_IN_QUEUE / 2;
+            while (m_queue.size() < targetSize)
             {
                 auto ctx = getFormatContext();
                 if (ctx == 0) return false;
@@ -120,7 +124,8 @@ protected:
                     //packet read normally
                     if(packet->stream_index == Decoder<T>::m_stream->index)
                     {
-                        processPacket(packet, &readed_frames);
+                        int time = (int)((double)packet->pts * av_q2d(m_stream->time_base) * 1000.0);
+                        processPacket(packet, time);
                     }
                 }
                 else
@@ -138,6 +143,8 @@ protected:
 public:
     //! Queue with decoded frames.
     Queue<T>        m_queue;
+    //! Mode play/pause
+    bool            m_pause;
 };
 
 #endif // QUEUEDDECODER_H
