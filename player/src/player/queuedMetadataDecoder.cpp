@@ -186,6 +186,7 @@ QImage MetadataDecoder::parseMetadata(const unsigned char* buffer, size_t bytes,
                         auto mc = m.first_child();
                         auto ref = read(mc, "SubscriptionReference");
                         auto topic = read(mc, "Topic");
+                        auto prod = read(mc, "ProducerReference");
                         auto msg = read(mc, "Message");
                         if (msg && topic) {
                             std::stringstream ss;
