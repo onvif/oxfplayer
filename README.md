@@ -2,7 +2,7 @@
 
 Reference player for signed ONVIF export files
 
-![Screenshot](https://developer.onvif.org/pub/export/Player.jpg)
+![Screenshot](http://developer.onvif.org/pub/export/Player.jpg)
 
 ## Overview
 The reference player is provided by ONVIF as open source to ease third party verification of the cryptographic mechanism. 
