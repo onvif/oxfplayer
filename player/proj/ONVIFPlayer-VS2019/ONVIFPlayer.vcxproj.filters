@@ -57,18 +57,6 @@
     <ClCompile Include="Debug\moc_engine.cpp">
       <Filter>moc</Filter>
     </ClCompile>
-    <ClCompile Include="Debug\moc_fragmentExtractor.cpp">
-      <Filter>moc</Filter>
-    </ClCompile>
-    <ClCompile Include="Release\moc_fragmentExtractor.cpp">
-      <Filter>moc</Filter>
-    </ClCompile>
-    <ClCompile Include="Release\moc_fragmentListWidget.cpp">
-      <Filter>moc</Filter>
-    </ClCompile>
-    <ClCompile Include="Debug\moc_fragmentListWidget.cpp">
-      <Filter>moc</Filter>
-    </ClCompile>
     <ClCompile Include="Debug\moc_fullscreenPlayerWidget.cpp">
       <Filter>moc</Filter>
     </ClCompile>
@@ -213,12 +201,6 @@
     <ClCompile Include="..\..\src\parser\fourcc.cpp">
       <Filter>verifier</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\parser\fragmentExtractor.cpp">
-      <Filter>verifier</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\common\fragmentInfo.cpp">
-      <Filter>verifier</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\parserUI\parserWidget.cpp">
       <Filter>verifier</Filter>
     </ClCompile>
@@ -270,8 +252,15 @@
     <ClCompile Include="..\..\src\playerUI\movingOutArea.cpp">
       <Filter>playerUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\playerUI\fragmentListWidget.cpp">
-      <Filter>playerUI</Filter>
+    <ClCompile Include="..\..\src\parser\segmentExtractor.cpp" />
+    <ClCompile Include="..\..\src\common\segmentInfo.cpp" />
+    <ClCompile Include="Debug\moc_segmentExtractor.cpp" />
+    <ClCompile Include="Release\moc_segmentExtractor.cpp" />
+    <ClCompile Include="..\..\src\player\queuedMetadataDecoder.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ext\pugixml\src\pugixml.cpp">
+      <Filter>external</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -283,6 +272,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\parser\correctstarttimebox.hpp">
       <Filter>boxes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\player\queuedMetadataDecoder.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ext\pugixml\src\pugiconfig.hpp">
+      <Filter>external</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ext\pugixml\src\pugixml.hpp">
+      <Filter>external</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -443,9 +441,6 @@
     <CustomBuild Include="..\..\src\parser\fourcc.h">
       <Filter>verifier</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\parser\fragmentExtractor.h">
-      <Filter>verifier</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\..\src\common\segmentInfo.h">
       <Filter>verifier</Filter>
     </CustomBuild>
@@ -596,9 +591,7 @@
     <CustomBuild Include="..\..\src\parser\helpers\uint24.hpp">
       <Filter>verifier</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\playerUI\fragmentListWidget.h">
-      <Filter>playerUI</Filter>
-    </CustomBuild>
+    <CustomBuild Include="..\..\src\parser\segmentExtractor.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="boxes">
@@ -615,6 +608,9 @@
     </Filter>
     <Filter Include="playerUI">
       <UniqueIdentifier>{1d9cc09a-60a9-4599-bf5e-e7bea84b34e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external">
+      <UniqueIdentifier>{d535be34-6621-49dd-8f6a-eba94deb9298}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

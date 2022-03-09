@@ -46,7 +46,7 @@ public:
     virtual void clear();
 
 protected:
-    virtual void processPacket(AVPacket* packet, int* readed_frames);
+    virtual void processPacket(AVPacket* packet, int timestamp_ms);
 
 private:
     //! Init resample context.

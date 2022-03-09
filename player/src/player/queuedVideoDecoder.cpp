@@ -31,9 +31,10 @@
 #include "avFrameWrapper.h"
 
 #include <QDebug>
+#include <qdatetime.h>
 
-QueuedVideoDecoder::QueuedVideoDecoder() :
-    QueuedDecoder<VideoFrame>(AVMEDIA_TYPE_VIDEO),
+QueuedVideoDecoder::QueuedVideoDecoder(AVMediaType type) :
+    QueuedDecoder<VideoFrame>(type),
     m_sws_context(0),
     m_frame_RGB(0),
     m_buffer_size(-1),
@@ -62,7 +63,7 @@ void QueuedVideoDecoder::setStream(int index, double fps)
 
 }
 
-void QueuedVideoDecoder::processPacket(AVPacket* packet, int* readed_frames)
+void QueuedVideoDecoder::processPacket(AVPacket* packet, int timestamp_ms)
 {
     AVFrame* frame = av_frame_alloc();
 
@@ -70,13 +71,7 @@ void QueuedVideoDecoder::processPacket(AVPacket* packet, int* readed_frames)
 
     if (avcodec_receive_frame(m_stream->codec, frame) == 0)
     {
-        //create frame
-        VideoFrame video_frame;
-        video_frame.calcTime(packet->pts, m_stream->time_base);
-
-        //do we need to skip or not?
-        if(m_skip_threshold == -1 ||
-           video_frame.m_selected_pts >= m_skip_threshold)
+        if (timestamp_ms >= lastSeekTime())       // Seek always seeks to I-Frame. Ignore frames before target frame.
         {
             //conver frame to RGB frame and create image
             if(m_sws_context == nullptr)
@@ -93,15 +88,17 @@ void QueuedVideoDecoder::processPacket(AVPacket* packet, int* readed_frames)
                     memcpy(image.scanLine(y), m_frame_RGB->data[0] + y * m_frame_RGB->linesize[0], frame->width * 4);
 
                 //fill other fields
+                VideoFrame video_frame(timestamp_ms);
                 video_frame.m_image = image;
 
                 //put into queue
                 m_queue.push(video_frame);
-                ++(*readed_frames);
             }
         }
-        else
-            qDebug() << "Skipping due to threshold";
+        else {
+            QTime now;
+            qDebug() << "Skipping " << timestamp_ms << " due to threshold " << now.currentTime();
+        }
     }
     av_frame_unref(frame);
 }
@@ -116,6 +113,8 @@ void QueuedVideoDecoder::initSwsContext(AVFrame* frame)
 
     //create RGB frame
     m_frame_RGB = av_frame_alloc();
+    m_frame_width = frame->width;
+    m_frame_height = frame->height;
 
     //allocate buffer for RGBFrame
     m_buffer_size = avpicture_get_size(AV_PIX_FMT_RGB32, frame->width, frame->height);

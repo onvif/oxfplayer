@@ -47,9 +47,10 @@ VideoPlayback::~VideoPlayback()
     clear();
 }
 
-void VideoPlayback::setVideoWidget(VideoFrameWidget* video_widget)
+void VideoPlayback::setVideoWidget(VideoFrameWidget* video_widget, QTreeWidget* event_widget)
 {
     m_video_widget = video_widget;
+    m_event_widget = event_widget;
     if(m_video_widget != nullptr)
         m_video_widget->setDrawImage(m_current_frame.m_image);
 }
@@ -65,6 +66,7 @@ void VideoPlayback::start()
     showFrame();
     m_current_delay = m_video_context->getTimerDelay();
     m_timer = startTimer(m_current_delay ,Qt::PreciseTimer);
+    m_overlay.clear();
 
     m_is_playing = true;
 }
@@ -114,6 +116,7 @@ void VideoPlayback::stop()
     }
 
     m_current_frame = VideoFrame();
+    m_overlay = VideoFrame();
     m_current_delay = -1;
     m_is_playing = false;
 
@@ -146,6 +149,7 @@ void VideoPlayback::clear()
         m_timer = -1;
     }
     m_current_frame = VideoFrame();
+    m_overlay.clear();
     m_current_delay = -1;
     m_is_playing = false;
 }
@@ -230,9 +234,56 @@ void VideoPlayback::timerEvent(QTimerEvent* event)
 
 void VideoPlayback::showFrame(bool single_frame)
 {
+    //
+    // Update events
+    //
+    while (!m_metadata_decoder->m_eventQueue.empty()) {
+        auto event = m_metadata_decoder->m_eventQueue.pop();
+        for (int i = 0; i < m_event_widget->invisibleRootItem()->childCount(); i++) {
+            auto ev = (EventItem*)m_event_widget->invisibleRootItem()->child(i);
+            if (ev->hash == event.item->hash) {     // skip duplicates
+                delete event.item; 
+                event.item = 0;
+                break;
+            }
+        }
+        if (event.item) m_event_widget->addTopLevelItem(event.item);
+        else break;
+    }
+    //
+    // Show video frame optionally with overlay
+    //
     QSize widget_size = m_video_widget->size();
-    if(m_video_decoder->getNextFrame(m_current_frame, &widget_size))
+    VideoFrame frame;
+    m_current_frame.clear();
+    if (m_video_decoder->getNextFrame(frame, &widget_size))
     {
+        //
+        // Advance to nearest overlay
+        //
+        m_current_frame = frame;
+        int delta = abs(m_overlay.m_time - m_current_frame.m_time);
+        while (!m_metadata_decoder->m_queue.empty()) {
+            int d = abs(m_metadata_decoder->m_queue.headTime() - m_current_frame.m_time);
+            if (d > delta) break;
+            m_overlay = m_metadata_decoder->m_queue.pop();
+            delta = d;
+        }
+        //
+        // Show overlay if within 500 milliseconds
+        //
+        if (delta < 500 && m_overlay) {
+            int height = m_current_frame.m_image.height(), width = m_current_frame.m_image.width();
+            for (int y = 0; y < height; y++)
+            {
+                uint* lmeta = (uint*)m_overlay.m_image.scanLine(y);
+                uint* lvideo = (uint*)m_current_frame.m_image.scanLine(y);
+                for (int x = 0; x < width; x++)
+                {
+                    if (lmeta[x] & 0xffffff) lvideo[x] = lmeta[x];
+                }
+            }
+        }
         m_video_widget->setDrawImage(m_current_frame.m_image);
 
         emit played(this);
@@ -259,4 +310,3 @@ void VideoPlayback::showFrame(bool single_frame)
         emit playbackFinished();
     }
 }
-

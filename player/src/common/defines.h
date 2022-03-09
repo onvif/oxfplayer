@@ -36,9 +36,6 @@
 //! DecodeThread will try to keep query size in this value.
 #define MINIMUM_FRAMES_IN_QUEUE 30
 
-//! DecodeThread will read such count of frames per one round.
-#define FRAMES_TO_READ 10
-
 //! Sleep timeout for DecodeThread.
 #define DECODE_SLEEP_TIMEOUT 50
 

@@ -51,11 +51,9 @@ void SyncThread::start()
     if(m_is_running)
         return;
     m_quit = false;
+    m_is_running = true;
     m_is_finished = false;
     QThread::start(c_priority);
-    while(!m_is_running &&
-          !m_is_finished)
-        msleep(WAIT_TREAD);
 }
 
 void SyncThread::stop()
@@ -70,7 +68,6 @@ void SyncThread::stop()
 
 void SyncThread::run()
 {
-    m_is_running = true;
 
     threadStarted();
 

@@ -139,6 +139,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ext\pugixml\src\pugixml.cpp" />
     <ClCompile Include="..\..\src\parserUI\certificateStorageDialog.cpp" />
     <ClCompile Include="..\..\src\parser\certificateStorage.cpp" />
     <ClCompile Include="..\..\src\parser\oxfverifier.cpp" />
@@ -155,8 +156,8 @@
     <ClCompile Include="..\..\src\parser\fourcc.cpp" />
     <ClCompile Include="..\..\src\parser\segmentExtractor.cpp" />
     <ClCompile Include="..\..\src\common\segmentInfo.cpp" />
-    <ClCompile Include="..\..\src\playerUI\fragmentListWidget.cpp" />
     <ClCompile Include="..\..\src\playerUI\fullscreenPlayerWidget.cpp" />
+    <ClCompile Include="..\..\src\player\queuedMetadataDecoder.cpp" />
     <ClCompile Include="Debug\moc_audioPlayback.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -185,9 +186,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Debug\moc_segmentExtractor.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Debug\moc_fragmentListWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Debug\moc_fullscreenPlayerWidget.cpp">
@@ -769,16 +767,6 @@
       </Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\src\playerUI\fragmentListWidget.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQT_NO_DEBUG -DQT_MULTIMEDIA_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_OPENGL_ES_2 -DNDEBUG  "-I.\..\..\src" "-I.\..\..\src\common" "-I.\..\..\src\player" "-I.\..\..\src\playerUI" "-I.\..\..\src\parser" "-I.\..\..\src\parserUI" "-I.\..\..\ext\FFMPEG-4.4\include" "-I.\..\..\ext\PortAudio\include" "-I.\..\..\ext\OpenSSL-1.0.1\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtMultimedia" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-I.\release" "-I." "-I$(QTDIR)\mkspecs\win32-msvc2012" "-I.\GeneratedFiles"</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing fragmentListWidget.h...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQT_MULTIMEDIA_LIB -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_OPENGL_ES_2  "-I.\..\..\src" "-I.\..\..\src\common" "-I.\..\..\src\player" "-I.\..\..\src\playerUI" "-I.\..\..\src\parser" "-I.\..\..\src\parserUI" "-I.\..\..\ext\FFMPEG-4.4\include" "-I.\..\..\ext\PortAudio\include" "-I.\..\..\ext\OpenSSL-1.0.1\include" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtMultimedia" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-I.\debug" "-I." "-I$(QTDIR)\mkspecs\win32-msvc2012" "-I.\GeneratedFiles"</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing fragmentListWidget.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
     </CustomBuild>
     <CustomBuild Include="..\..\src\parser\basic\fullBox.hpp">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -1592,9 +1580,6 @@
     <ClCompile Include="Release\moc_segmentExtractor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Release\moc_fragmentListWidget.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Release\moc_fullscreenPlayerWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -1967,9 +1952,12 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ext\pugixml\src\pugiconfig.hpp" />
+    <ClInclude Include="..\..\ext\pugixml\src\pugixml.hpp" />
     <ClInclude Include="..\..\src\parser\additionalUserInformation.hpp" />
     <ClInclude Include="..\..\src\parser\correctstarttimebox.hpp" />
     <ClInclude Include="..\..\src\parser\signatureConfigurationBox.hpp" />
+    <ClInclude Include="..\..\src\player\queuedMetadataDecoder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

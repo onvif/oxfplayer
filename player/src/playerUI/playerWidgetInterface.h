@@ -28,7 +28,6 @@
 #ifndef PLAYERWIDGETINTERFACE_H
 #define PLAYERWIDGETINTERFACE_H
 
-class FragmentListWidget;
 class ControlsWidget;
 class VideoFrameWidget;
 
@@ -41,7 +40,7 @@ public:
 
     virtual ~PlayerWidgetInterface() {}
 
-    virtual FragmentListWidget* getFragmentList() { return 0; }
+    virtual class QTreeWidget* getEventTreeWidget() { return 0; }
 
     virtual VideoFrameWidget* getVideoWidget() { return 0; }
 

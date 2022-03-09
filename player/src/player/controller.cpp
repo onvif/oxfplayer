@@ -34,6 +34,7 @@
 
 #include "certificateStorage.h"
 #include "certificateStorageDialog.h"
+#include "queuedMetadataDecoder.h"
 
 Controller::Controller(Engine& engine,
                        PlayerWidget& player_widget, FullscreenPlayerWidget& fullscreen_player_widget, ControlsWidget& controls_widget,
@@ -70,7 +71,8 @@ Controller::Controller(Engine& engine,
     QObject::connect(&m_controls_widget, SIGNAL(prevFragment()), this, SLOT(onPrevFragment()));
     QObject::connect(&m_controls_widget, SIGNAL(fullscreen()), this, SLOT(toFullScreenMode()));
 
-    QObject::connect(m_player_widget.getFragmentList(), SIGNAL(fragmentSelected(SegmentInfo)), this, SLOT(onFragmentSelected(SegmentInfo)));
+    QObject::connect(m_player_widget.getEventWidget(), SIGNAL(itemSelectionChanged()), this, SLOT(onEventSelected()));
+    QObject::connect(m_player_widget.getEventWidget(), SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(onEventExpanded(QTreeWidgetItem*)));
 
     QObject::connect(m_player_widget.getVideoWidget(), SIGNAL(doubleClick()), this, SLOT(toFullScreenMode()));
     QObject::connect(m_fullscreen_player_widget.getVideoWidget(), SIGNAL(doubleClick()), this, SLOT(fromFullScreenMode()));
@@ -89,7 +91,7 @@ Controller::Controller(Engine& engine,
 
     m_player_widget.setControls(&m_controls_widget);
 
-    engine.setVideoWidget(m_player_widget.getVideoWidget());
+    engine.setVideoWidget(m_player_widget.getVideoWidget(), m_player_widget.getEventWidget());
 }
 
 Controller::~Controller()
@@ -102,8 +104,9 @@ void Controller::openFile(const QString& file_name)
 {
     m_engine.stop();
     m_engine.clear();
-    m_player_widget.getFragmentList()->clear();
+    m_player_widget.getEventWidget()->clear();
     m_player_widget.getVideoWidget()->clear();
+    m_player_widget.getEventTreeWidget()->clear();
     m_controls_widget.enableUI(true);
     m_parser_widget.clearContents();
     m_verifyer_dialog.clearContent();
@@ -143,7 +146,6 @@ void Controller::openFile(const QString& file_name)
     m_verifyer_dialog.initialize(m_media_parser);
 
     m_playing_fragment_index = 0;
-    m_player_widget.getFragmentList()->setFragmentsList(m_segments);
     m_player_widget.setStreamsInfo(m_engine.m_video_decoder.getStreamsCount(), m_engine.m_audio_decoder.getStreamsCount());
     m_controls_widget.setFragmentsList(m_segments);
     m_controls_widget.startPlayback();
@@ -233,7 +235,6 @@ void Controller::onSeek(int fragment_index, int time_ms)
         return;
     }
     m_playing_fragment_index = fragment_index;
-    m_player_widget.getFragmentList()->selectFragment(fragment_info);
     m_player_widget.setStreamsInfo(m_engine.m_video_decoder.getStreamsCount(), m_engine.m_audio_decoder.getStreamsCount());
     m_controls_widget.startFragment(fragment_index);
     m_engine.seek(time_ms);
@@ -268,42 +269,20 @@ void Controller::onAudioStreamIndexChanged(int index)
     changeStreamIndex(index, false);
 }
 
-void Controller::onFragmentSelected(SegmentInfo fragment_info)
+void Controller::onEventSelected()
 {
-    PlayerState old_engine_state = m_engine.getState();
-    m_engine.stop();
-    m_engine.clear();
-    m_controls_widget.stopPlayback();
-    if(!m_engine.init(fragment_info.getFileName(), fragment_info))
-    {
-        m_controls_widget.updateUI();
-        //TODO - common function for this message
-        QMessageBox message_box(QMessageBox::Information,
-                               m_player_widget.windowTitle(),
-                               QString("Error to open this file using FFMPEG"),
-                               QMessageBox::Ok,
-                               &m_player_widget);
-        message_box.exec();
-        return;
+    auto items = m_player_widget.getEventWidget()->selectedItems();
+    if (items.count()) {
+        auto ev = dynamic_cast<EventItem*>(items[0]);
+        if (ev) m_engine.seek(ev->m_time);
     }
-    m_playing_fragment_index = fragment_info.getFragmentNumber();
-    m_player_widget.getFragmentList()->selectFragment(fragment_info);
-    m_player_widget.setStreamsInfo(m_engine.m_video_decoder.getStreamsCount(), m_engine.m_audio_decoder.getStreamsCount());
-    m_controls_widget.startFragment(fragment_info.getFragmentNumber());
-    switch(old_engine_state)
-    {
-    case Stopped:
-    case Playing:
-        m_engine.start();
-        m_controls_widget.startPlayback();
-        break;
-    case Paused:
-        m_engine.startAndPause();
-        m_controls_widget.pausePlayback();
-        break;
+}
+
+void Controller::onEventExpanded(QTreeWidgetItem* item)
+{
+    if (dynamic_cast<EventItem*>(item)) {
+        for (int i = 0; i < item->childCount(); i++) item->child(i)->setExpanded(true);
     }
-    m_controls_widget.setPlayedTime(&m_engine);
-    m_controls_widget.updateUI();
 }
 
 void Controller::onNextFragment()
@@ -315,24 +294,20 @@ void Controller::onNextFragment()
 		return;
 	}
 	else {
-		onFragmentSelected(m_segments[m_playing_fragment_index + 1]);
-	}
+        assert(false);
+    }
 }
 
 void Controller::onPrevFragment()
 {
-    if(m_segments.size() == 1 ||
-       m_playing_fragment_index == 0)
-        return;
-
-    onFragmentSelected(m_segments[m_playing_fragment_index - 1]);
+    assert(false);
 }
 
 void Controller::toFullScreenMode()
 {
     m_player_widget.hide();
     m_player_widget.removeControls();
-    m_engine.setVideoWidget(m_fullscreen_player_widget.getVideoWidget());
+    m_engine.setVideoWidget(m_fullscreen_player_widget.getVideoWidget(), m_player_widget.getEventWidget());
     m_controls_widget.fullscreenMode(true);
     m_fullscreen_player_widget.setControls(&m_controls_widget);
     m_fullscreen_player_widget.showFullScreen();
@@ -343,7 +318,7 @@ void Controller::fromFullScreenMode()
 {
     m_fullscreen_player_widget.hide();
     m_fullscreen_player_widget.removeControls();
-    m_engine.setVideoWidget(m_player_widget.getVideoWidget());
+    m_engine.setVideoWidget(m_player_widget.getVideoWidget(), m_player_widget.getEventWidget());
     m_controls_widget.fullscreenMode(false);
     m_player_widget.setControls(&m_controls_widget);
     m_player_widget.show();

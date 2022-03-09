@@ -36,7 +36,7 @@
 class QueuedVideoDecoder : public QueuedDecoder<VideoFrame>
 {
 public:
-    QueuedVideoDecoder();
+    QueuedVideoDecoder(AVMediaType type = AVMEDIA_TYPE_VIDEO);
 
     ~QueuedVideoDecoder();
 
@@ -46,8 +46,11 @@ public:
     VideoContext    m_context;
     void setStream(int index, double fps = 0.0);
 
+    int frameWidth() const { return m_frame_width; }
+    int frameHeight() const { return m_frame_height; }
+
 protected:
-    virtual void processPacket(AVPacket* packet, int* readed_frames);
+    virtual void processPacket(AVPacket* packet, int timestamp_ms);
 
 private:
     //! Init scale context.
@@ -56,7 +59,7 @@ private:
     //! Clear scale context.
     void clearSwsContext();
 
-private:
+protected:
     //! Scale context.
     SwsContext* m_sws_context;
     //! RGB frame used for conversion.
@@ -65,6 +68,8 @@ private:
     int         m_buffer_size;
     //! Temp buffer for conversion.
     uint8_t*    m_buffer;
+    int         m_frame_width, m_frame_height;
+
 };
 
 #endif // QUEUEDVIDEODECODER_H

@@ -35,6 +35,7 @@
 #include "videoContext.h"
 #include "decoder.h"
 #include "videoFrameWidget.h"
+#include "queuedMetadataDecoder.h"
 
 //! Main video system.
 /*!
@@ -54,10 +55,13 @@ public:
     void setVideoContext(VideoContext* video_context) { m_video_context = video_context; }
 
     //! Set decoder to read from.
-    void setVideoDecoder(Decoder<VideoFrame>* video_decoder) { m_video_decoder = video_decoder; }
+    void setVideoDecoder(Decoder<VideoFrame>* video_decoder, MetadataDecoder* meta_decoder) { 
+        m_video_decoder = video_decoder; 
+        m_metadata_decoder = meta_decoder;
+    }
 
     //! Set widget to draw on.
-    void setVideoWidget(VideoFrameWidget* video_widget);
+    void setVideoWidget(VideoFrameWidget* video_widget, QTreeWidget* event_widget);
 
     virtual void start();
 
@@ -90,14 +94,19 @@ private:
     VideoContext*           m_video_context;
     //! Decoder that provides data.
     Decoder<VideoFrame>*    m_video_decoder;
+    MetadataDecoder*        m_metadata_decoder;
     //! Widget to draw on.
     VideoFrameWidget*       m_video_widget;
+    //! Widget to display events
+    QTreeWidget*            m_event_widget;
     //! Timer till next frame drawing.
     int                     m_timer;
     //! Currently drawing frame.
     VideoFrame              m_current_frame;
     //! Current delay till next frame.
     int                     m_current_delay;
+    //! Image with metadata overlay information
+    VideoFrame              m_overlay;
 };
 
 #endif // VIDEOPLAYBACK_H

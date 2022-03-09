@@ -1,5 +1,5 @@
 /************************************************************************************
-* Copyright (c) 2013 ONVIF.
+* Copyright (c) 2021 ONVIF.
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -25,55 +25,47 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#ifndef FULLSCREENPLAYERWIDGET_H
-#define FULLSCREENPLAYERWIDGET_H
+#ifndef QUEUEDMETADATADECODER_H
+#define QUEUEDMETADATADECODER_H
+#include <QTreeWidgetItem>
 
-#include "crosscompilation_cxx11.h"
+#include "queuedVideoDecoder.h"
+#include "videoContext.h"
 
-#include <QWidget>
-#include "playerWidgetInterface.h"
+#include "types.h"
 
-#include "controlsWidget.h"
-#include "videoFrameWidget.h"
-#include "movingOutArea.h"
-
-class FullscreenPlayerWidget : public QWidget, public PlayerWidgetInterface
+class EventItem : public QTreeWidgetItem
 {
-private:
-    Q_OBJECT
-
 public:
-    FullscreenPlayerWidget(QWidget* parent = 0);
-
-    ~FullscreenPlayerWidget();
-    
-    virtual VideoFrameWidget* getVideoWidget() { return &m_video_frame; }
-    
-    virtual void setControls(ControlsWidget* controls);
-
-    virtual void removeControls();
-
-    //! Recalc controls placement.
-    void relocateControls();
-
-protected:
-    //! On close event.
-    virtual void closeEvent(QCloseEvent* event);
-    
-    //! On resize event.
-    virtual void resizeEvent(QResizeEvent* event);
-
-    //! On show event.
-    virtual void showEvent(QShowEvent* event);
-
-    //! On hide event.
-    virtual void hideEvent(QHideEvent* event);
-
-private:
-    //! Video view UI.
-    VideoFrameWidget    m_video_frame;
-    //! Moving areas for conrols.
-    MovingOutArea       m_controls_moving_area;
+    EventItem(int t, size_t ha) : hash(ha) {
+        m_time = t;
+    }
+    int m_time;
+    size_t hash;
+};
+struct EventInfo
+{
+    EventInfo() : EventInfo(0) {}
+    EventInfo(int t) :
+    m_time(t),
+    item(0) {}
+    int m_time;
+    EventItem *item;
 };
 
-#endif // FULLSCREENPLAYERWIDGET_H
+class MetadataDecoder : public QueuedVideoDecoder
+{
+public:
+    MetadataDecoder(QueuedVideoDecoder* vc) : QueuedVideoDecoder(AVMEDIA_TYPE_DATA) { m_decoder = vc; }
+
+    Queue<EventInfo> m_eventQueue;
+protected:
+    virtual void processPacket(AVPacket* packet, int timestamp_ms);
+
+private:
+    //! Try to parse metadata
+    QImage parseMetadata(const unsigned char* buffer, size_t bytes, int time);
+    QueuedVideoDecoder* m_decoder;
+};
+
+#endif // QUEUEDMETADATADECODER_H

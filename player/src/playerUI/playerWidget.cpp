@@ -44,8 +44,10 @@ PlayerWidget::PlayerWidget(QWidget* parent) :
 #ifndef MEMORY_INFO
     m_ui->menuAdditional->menuAction()->setVisible(false);
 #endif //MEMORY_INFO
-
-    m_ui->frames_list_layout->addWidget(&m_fragments);
+    m_ui->splitter->setSizes({ 150, 500 });
+    m_events.setColumnCount(2);
+    m_events.setHeaderLabels({ "", "" });
+    m_ui->frames_list_layout->addWidget(&m_events);
     m_ui->video_layout->addWidget(&m_video_frame);
 
     QObject::connect(m_ui->actionOpen, SIGNAL(triggered()), this, SLOT(onOpenFile()));

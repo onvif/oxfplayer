@@ -59,7 +59,7 @@ void QueuedAudioDecoder::setIndex(int index)
     }
 }
 
-void QueuedAudioDecoder::processPacket(AVPacket* packet, int* readed_frames)
+void QueuedAudioDecoder::processPacket(AVPacket* packet, int timestamp_ms)
 {
     AVFrame* frame = av_frame_alloc();
 
@@ -71,8 +71,7 @@ void QueuedAudioDecoder::processPacket(AVPacket* packet, int* readed_frames)
 
         if(data_size > 0)
         {
-            if(m_skip_threshold == -1 ||
-                packet->pts >= m_skip_threshold)
+            if(timestamp_ms >= lastSeekTime())
             {
                 //resample audio
                 if(m_swr_context == nullptr)
@@ -95,11 +94,9 @@ void QueuedAudioDecoder::processPacket(AVPacket* packet, int* readed_frames)
                         len2 != out_count)
                     {
                         int new_data_size = len2 * m_context.m_audio_params.m_channels * m_context.m_audio_params.m_fmt_size;
-                        AudioFrame audio_frame;
+                        AudioFrame audio_frame(timestamp_ms);
                         audio_frame.m_data = QByteArray((const char*)out_buffer, new_data_size);
-                        audio_frame.calcTime(packet->pts, m_stream->time_base);
                         m_queue.push(audio_frame);
-                        ++(*readed_frames);
                     }
 
                     av_freep(&out_buffer);
