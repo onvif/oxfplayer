@@ -59,8 +59,6 @@ public:
 public slots:
     //! This slot is called when the box is selected and we need to show its content.
     void onItemChanged(QTreeWidgetItem * item);
-    //! This slot is called when some item is expanded or collapsed.
-    void onExpandCollaps(const QTreeWidgetItem* item);
 
 private:
     //! Creates a tree item for a box.
