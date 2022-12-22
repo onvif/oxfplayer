@@ -29,6 +29,7 @@
 
 #include "ffmpeg.h"
 #include "avFrameWrapper.h"
+#include "segmentInfo.h"
 #include <string>
 #include <sstream>
 #include <unordered_map>
@@ -36,6 +37,7 @@
 #include "../../ext/pugixml/src/pugixml.hpp"
 
 #include <QDebug>
+#include <qdatetime.h>
 #include <qpainter.h>
 
 class Transform
@@ -188,6 +190,10 @@ void MetadataDecoder::parseMetadata(VideoFrame& frame, const unsigned char* buff
                         auto topic = read(mc, "Topic");
                         auto prod = read(mc, "ProducerReference");
                         auto msg = read(mc, "Message");
+                        auto ttmsg = msg.first_child();
+                        auto utctime = ttmsg.attribute("UtcTime").value();
+                        auto datetime = QDateTime::fromString(utctime, Qt::ISODate);
+                        int timeoff = m_context.m_segment->getStartTime().msecsTo(datetime);
                         if (msg && topic) {
                             std::stringstream ss;
                             m.print(ss);
@@ -196,7 +202,7 @@ void MetadataDecoder::parseMetadata(VideoFrame& frame, const unsigned char* buff
                             auto item = new EventItem(time, hasher(ss.str()));
                             item->setText(0, "Event");
                             item->setText(1, topic.first_child().value());
-                            addChildren(msg.first_child(), item);
+                            addChildren(ttmsg, item);
                             m_eventQueue.push(item);
                         }
                     }

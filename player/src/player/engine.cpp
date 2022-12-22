@@ -68,7 +68,7 @@ void Engine::setVideoWidget(VideoFrameWidget* video_widget, QTreeWidget* event_w
 bool Engine::init(const QString& file_name, SegmentInfo& fragment)
 {
 	bool res = true;
-	res = res && initDecoders(file_name, fragment.getFpsFromSamples());
+	res = res && initDecoders(file_name, &fragment);
     res = res && initPlayback();
     res = res && m_video_decoder.getStreamsCount();
 
@@ -245,7 +245,7 @@ void Engine::memoryInfo(int& video_memory, int& audio_memory) const
 
 /*********************************************************************************************/
 
-bool Engine::initDecoders(const QString& file_name, double fps)
+bool Engine::initDecoders(const QString& file_name, SegmentInfo *segment)
 {
     bool res = true;
 
@@ -253,7 +253,9 @@ bool Engine::initDecoders(const QString& file_name, double fps)
     res = res && m_audio_decoder.open(file_name);
     res = res && m_metadata_decoder.open(file_name);
     res = res && m_video_decoder.getStreamsCount();
-    m_video_decoder.setStream(0, fps);
+    m_video_decoder.m_context.m_segment = segment;
+    m_metadata_decoder.m_context.m_segment = segment;
+    m_video_decoder.setStream(0, segment->getFpsFromSamples());
     m_metadata_decoder.setStream(0);
     m_audio_decoder.setIndex(0);
 

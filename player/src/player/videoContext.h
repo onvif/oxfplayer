@@ -31,6 +31,7 @@
 class StreamReader;
 struct AVStream;
 class VideoDecodeThread;
+class SegmentInfo;
 
 //! Class that contains and initialiaze main video parameters.
 class VideoContext
@@ -64,6 +65,7 @@ public:
     //! Calculate next frame delay using current fps.
     int getTimerDelay();
 
+    SegmentInfo *m_segment;
 private:
     //! Video stream.
     AVStream*   m_video_stream;
