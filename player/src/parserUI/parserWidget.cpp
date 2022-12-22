@@ -41,8 +41,6 @@ ParserWidget::ParserWidget(QWidget *parent) :
     m_ui->setupUi(this);
     m_ui->boxTree->setSelectionMode(QAbstractItemView::SingleSelection);
     connect(m_ui->boxTree, &QTreeWidget::currentItemChanged, this, &ParserWidget::onItemChanged);
-    connect(m_ui->boxTree, &QTreeWidget::itemCollapsed, this, &ParserWidget::onExpandCollaps);
-    connect(m_ui->boxTree, &QTreeWidget::itemExpanded, this, &ParserWidget::onExpandCollaps);
     connect(m_ui->expandBoxes, &QPushButton::clicked, [this] () {
         this->m_ui->boxTree->expandAll();
         this->resizeTreeToContents(m_ui->boxTree);
@@ -250,13 +248,6 @@ void ParserWidget::onItemChanged(QTreeWidgetItem *item)
 
         resizeTreeToContents(m_ui->propertyTree);
     }
-}
-
-void ParserWidget::onExpandCollaps(const QTreeWidgetItem* item)
-{
-    Q_UNUSED(item);
-
-    resizeTreeToContents(m_ui->boxTree);
 }
 
 QTreeWidgetItem * ParserWidget::createPropertyItem(QString name, const Property & value, QTreeWidgetItem *parent)
