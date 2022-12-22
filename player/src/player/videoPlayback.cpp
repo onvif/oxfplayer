@@ -238,16 +238,16 @@ void VideoPlayback::showFrame(bool single_frame)
     // Update events
     //
     while (!m_metadata_decoder->m_eventQueue.empty()) {
-        auto event = m_metadata_decoder->m_eventQueue.pop();
+        auto _event = m_metadata_decoder->m_eventQueue.pop();
         for (int i = 0; i < m_event_widget->invisibleRootItem()->childCount(); i++) {
             auto ev = (EventItem*)m_event_widget->invisibleRootItem()->child(i);
-            if (ev->hash == event.item->hash) {     // skip duplicates
-                delete event.item; 
-                event.item = 0;
+            if (ev->hash == _event->hash) {     // skip duplicates
+                delete _event; 
+                _event = 0;
                 break;
             }
         }
-        if (event.item) m_event_widget->addTopLevelItem(event.item);
+        if (_event) m_event_widget->addTopLevelItem(_event);
         else break;
     }
     //
