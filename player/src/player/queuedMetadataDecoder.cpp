@@ -199,7 +199,7 @@ void MetadataDecoder::parseMetadata(VideoFrame& frame, const unsigned char* buff
                             m.print(ss);
                             std::hash<std::string> hasher;
                             auto test = ss.str();
-                            auto item = new EventItem(time, hasher(ss.str()));
+                            auto item = new EventItem(timeoff >= 0 ? timeoff : time, hasher(ss.str()));
                             item->setText(0, "Event");
                             item->setText(1, topic.first_child().value());
                             addChildren(ttmsg, item);
