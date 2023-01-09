@@ -274,13 +274,16 @@ void VideoPlayback::showFrame(bool single_frame)
         //
         if (delta < 500 && m_overlay) {
             int height = m_current_frame.m_image.height(), width = m_current_frame.m_image.width();
-            for (int y = 0; y < height; y++)
-            {
-                uint* lmeta = (uint*)m_overlay.m_image.scanLine(y);
-                uint* lvideo = (uint*)m_current_frame.m_image.scanLine(y);
-                for (int x = 0; x < width; x++)
+            int oheight = m_overlay.m_image.height(), owidth = m_overlay.m_image.width();
+            if (height == oheight && width == owidth) {     // ensure that both have same size
+                for (int y = 0; y < height; y++)
                 {
-                    if (lmeta[x] & 0xffffff) lvideo[x] = lmeta[x];
+                    uint* lmeta = (uint*)m_overlay.m_image.scanLine(y);
+                    uint* lvideo = (uint*)m_current_frame.m_image.scanLine(y);
+                    for (int x = 0; x < width; x++)
+                    {
+                        if (lmeta[x] & 0xffffff) lvideo[x] = lmeta[x];
+                    }
                 }
             }
         }
