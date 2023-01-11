@@ -45,6 +45,7 @@
 #include "queuedMetadataDecoder.h"
 
 class VideoFrameWidget;
+class SegmentInfo;
 
 //! Base class that will manage video and audio playback.
 class Engine : public BasePlayback
@@ -111,7 +112,7 @@ public:
 
 private:
     //! Init MainContext.
-    bool initDecoders(const QString& file_name, double fps);
+    bool initDecoders(const QString& file_name, SegmentInfo *segment);
 
     //! Init audio and video playback.
     bool initPlayback();

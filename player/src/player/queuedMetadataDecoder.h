@@ -43,28 +43,19 @@ public:
     int m_time;
     size_t hash;
 };
-struct EventInfo
-{
-    EventInfo() : EventInfo(0) {}
-    EventInfo(int t) :
-    m_time(t),
-    item(0) {}
-    int m_time;
-    EventItem *item;
-};
 
 class MetadataDecoder : public QueuedVideoDecoder
 {
 public:
     MetadataDecoder(QueuedVideoDecoder* vc) : QueuedVideoDecoder(AVMEDIA_TYPE_DATA) { m_decoder = vc; }
 
-    Queue<EventInfo> m_eventQueue;
+    Queue<EventItem*> m_eventQueue;
 protected:
     virtual void processPacket(AVPacket* packet, int timestamp_ms);
 
 private:
     //! Try to parse metadata
-    QImage parseMetadata(const unsigned char* buffer, size_t bytes, int time);
+    void parseMetadata(VideoFrame& frame, const unsigned char* buffer, size_t bytes, int time);
     QueuedVideoDecoder* m_decoder;
 };
 

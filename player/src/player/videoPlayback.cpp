@@ -238,16 +238,16 @@ void VideoPlayback::showFrame(bool single_frame)
     // Update events
     //
     while (!m_metadata_decoder->m_eventQueue.empty()) {
-        auto event = m_metadata_decoder->m_eventQueue.pop();
+        auto _event = m_metadata_decoder->m_eventQueue.pop();
         for (int i = 0; i < m_event_widget->invisibleRootItem()->childCount(); i++) {
             auto ev = (EventItem*)m_event_widget->invisibleRootItem()->child(i);
-            if (ev->hash == event.item->hash) {     // skip duplicates
-                delete event.item; 
-                event.item = 0;
+            if (ev->hash == _event->hash) {     // skip duplicates
+                delete _event; 
+                _event = 0;
                 break;
             }
         }
-        if (event.item) m_event_widget->addTopLevelItem(event.item);
+        if (_event) m_event_widget->addTopLevelItem(_event);
         else break;
     }
     //
@@ -274,13 +274,16 @@ void VideoPlayback::showFrame(bool single_frame)
         //
         if (delta < 500 && m_overlay) {
             int height = m_current_frame.m_image.height(), width = m_current_frame.m_image.width();
-            for (int y = 0; y < height; y++)
-            {
-                uint* lmeta = (uint*)m_overlay.m_image.scanLine(y);
-                uint* lvideo = (uint*)m_current_frame.m_image.scanLine(y);
-                for (int x = 0; x < width; x++)
+            int oheight = m_overlay.m_image.height(), owidth = m_overlay.m_image.width();
+            if (height == oheight && width == owidth) {     // ensure that both have same size
+                for (int y = 0; y < height; y++)
                 {
-                    if (lmeta[x] & 0xffffff) lvideo[x] = lmeta[x];
+                    uint* lmeta = (uint*)m_overlay.m_image.scanLine(y);
+                    uint* lvideo = (uint*)m_current_frame.m_image.scanLine(y);
+                    for (int x = 0; x < width; x++)
+                    {
+                        if (lmeta[x] & 0xffffff) lvideo[x] = lmeta[x];
+                    }
                 }
             }
         }

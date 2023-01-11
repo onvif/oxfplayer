@@ -36,6 +36,7 @@ SegmentInfo::SegmentInfo(QString file_name /*= QString()*/)
 	, m_firstSampleCompositionOffset(0)
 	, m_lastSampleCompositionOffset(0)
 	, m_videoTimescale(0)
+	, m_defaultSampleDuration(0)
 {
 }
 
@@ -94,9 +95,11 @@ void SegmentInfo::read(TrackRunBox* box)
 	QListIterator<TrackRunEntry> it(box->getTable());
 	while (it.hasNext()) {
 		TrackRunEntry e = it.next();
-		if (std::get<0>(e).hasValue()) {
+		auto duration = m_defaultSampleDuration;
+		if (std::get<0>(e).hasValue()) duration = std::get<0>(e).value();
+		if (duration > 0) {
 			m_samples++;
-			m_accumulatedSampleDuration += std::get<0>(e).value();
+			m_accumulatedSampleDuration += duration;
 		}
 	}
 }

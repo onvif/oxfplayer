@@ -153,6 +153,7 @@ private:
 	uint32_t						m_firstTrackId;
 public:
 	uint32_t						m_currentParserTrackId;		///< track id currently beingparsed
+    uint32_t                        m_defaultSampleDuration;    ///< default sample duration of last tfhd read in order to pass to trun
 };
 
 typedef QList<SegmentInfo> SegmentList;

@@ -103,8 +103,12 @@ void SegmentExtractor::onBoxCreated(Box *box)
 		m_segments.back().read(dynamic_cast<CompositionOffsetBox*>(box));
 		break;
 	case 'tfhd':
-		m_segments.back().m_currentParserTrackId = dynamic_cast<TrackFragmentHeaderBox*>(box)->getTrackID();
+	{
+		auto tfhd = dynamic_cast<TrackFragmentHeaderBox*>(box);
+		m_segments.back().m_currentParserTrackId = tfhd->getTrackID();
+		m_segments.back().m_defaultSampleDuration = tfhd->getDefaultSampleDuration().hasValue() ? tfhd->getDefaultSampleDuration().value() : 0;
 		break;
+	}
 	case 'trun':
 		m_segments.back().read(dynamic_cast<TrackRunBox*>(box));
 		break;
