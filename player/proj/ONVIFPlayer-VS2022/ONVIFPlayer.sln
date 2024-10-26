@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34408.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Additional", "Additional", "{998EE075-324E-453F-BE81-9ABF4D2630A5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "signed-media-framework", "..\..\3rdparty\signed-media-framework\VS2022\signed-media-framework.vcxproj", "{C02ECFE1-167F-4B83-B8D2-33025B5B111F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "signer", "..\..\3rdparty\signed-media-framework\VS2022\signer.vcxproj", "{69BC1A2E-5280-4658-B500-DF0ED61F9308}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "validator", "..\..\3rdparty\signed-media-framework\VS2022\validator.vcxproj", "{73DF3554-1F71-47DF-8CA6-D774822BA766}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ONVIFPlayer", "ONVIFPlayer\ONVIFPlayer.vcxproj", "{D8BEAD3B-340A-4048-BF63-CF2CA19EEDBB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PortAudio", "..\..\3rdparty\build\portaudio\PortAudio.vcxproj", "{B115EF66-BC92-3E35-ACC4-1975596F7D47}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pugixml-static", "..\..\3rdparty\build\pugixml\pugixml-static.vcxproj", "{382A6C2F-B2A4-3A00-BFB7-3E0AB14FF870}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C02ECFE1-167F-4B83-B8D2-33025B5B111F}.Debug|x64.ActiveCfg = Debug|x64
+		{C02ECFE1-167F-4B83-B8D2-33025B5B111F}.Debug|x64.Build.0 = Debug|x64
+		{C02ECFE1-167F-4B83-B8D2-33025B5B111F}.Release|x64.ActiveCfg = Release|x64
+		{C02ECFE1-167F-4B83-B8D2-33025B5B111F}.Release|x64.Build.0 = Release|x64
+		{69BC1A2E-5280-4658-B500-DF0ED61F9308}.Debug|x64.ActiveCfg = Debug|x64
+		{69BC1A2E-5280-4658-B500-DF0ED61F9308}.Debug|x64.Build.0 = Debug|x64
+		{69BC1A2E-5280-4658-B500-DF0ED61F9308}.Release|x64.ActiveCfg = Release|x64
+		{69BC1A2E-5280-4658-B500-DF0ED61F9308}.Release|x64.Build.0 = Release|x64
+		{73DF3554-1F71-47DF-8CA6-D774822BA766}.Debug|x64.ActiveCfg = Debug|x64
+		{73DF3554-1F71-47DF-8CA6-D774822BA766}.Debug|x64.Build.0 = Debug|x64
+		{73DF3554-1F71-47DF-8CA6-D774822BA766}.Release|x64.ActiveCfg = Release|x64
+		{73DF3554-1F71-47DF-8CA6-D774822BA766}.Release|x64.Build.0 = Release|x64
+		{D8BEAD3B-340A-4048-BF63-CF2CA19EEDBB}.Debug|x64.ActiveCfg = Debug|x64
+		{D8BEAD3B-340A-4048-BF63-CF2CA19EEDBB}.Debug|x64.Build.0 = Debug|x64
+		{D8BEAD3B-340A-4048-BF63-CF2CA19EEDBB}.Release|x64.ActiveCfg = Release|x64
+		{D8BEAD3B-340A-4048-BF63-CF2CA19EEDBB}.Release|x64.Build.0 = Release|x64
+		{B115EF66-BC92-3E35-ACC4-1975596F7D47}.Debug|x64.ActiveCfg = Debug|x64
+		{B115EF66-BC92-3E35-ACC4-1975596F7D47}.Debug|x64.Build.0 = Debug|x64
+		{B115EF66-BC92-3E35-ACC4-1975596F7D47}.Release|x64.ActiveCfg = Release|x64
+		{B115EF66-BC92-3E35-ACC4-1975596F7D47}.Release|x64.Build.0 = Release|x64
+		{382A6C2F-B2A4-3A00-BFB7-3E0AB14FF870}.Debug|x64.ActiveCfg = Debug|x64
+		{382A6C2F-B2A4-3A00-BFB7-3E0AB14FF870}.Debug|x64.Build.0 = Debug|x64
+		{382A6C2F-B2A4-3A00-BFB7-3E0AB14FF870}.Release|x64.ActiveCfg = Release|x64
+		{382A6C2F-B2A4-3A00-BFB7-3E0AB14FF870}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C02ECFE1-167F-4B83-B8D2-33025B5B111F} = {998EE075-324E-453F-BE81-9ABF4D2630A5}
+		{69BC1A2E-5280-4658-B500-DF0ED61F9308} = {998EE075-324E-453F-BE81-9ABF4D2630A5}
+		{73DF3554-1F71-47DF-8CA6-D774822BA766} = {998EE075-324E-453F-BE81-9ABF4D2630A5}
+		{B115EF66-BC92-3E35-ACC4-1975596F7D47} = {998EE075-324E-453F-BE81-9ABF4D2630A5}
+		{382A6C2F-B2A4-3A00-BFB7-3E0AB14FF870} = {998EE075-324E-453F-BE81-9ABF4D2630A5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22EADF74-A363-472C-9201-52A949DBEFE8}
+	EndGlobalSection
+EndGlobal

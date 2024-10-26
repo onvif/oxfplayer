@@ -1,38 +1,35 @@
 # ONVIF_player
 
-
 ## How to build
+
+### Needed libraries
 You need next programs/libraries to be installed:
+- Visual Studio 2022
 - Qt 5.12
+- Qt add-on for Visual Studio (https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2022)
+- CMake (https://cmake.org/download/)
 - OpenSSL 3.3.1 (https://slproweb.com/products/Win32OpenSSL.html)
 - FFmgpeg 4.4, not higher (https://github.com/andrewGuzGRSE/FFmpegBuilds, https://github.com/BtbN/FFmpeg-Builds)
-- signed-media-framework already build on your machine (https://github.com/onvif/signed-media-framework)
+- GStreamer 1.0 or higher (https://gstreamer.freedesktop.org/download/#windows)
+
+### Add environment variables
+To compile you should set 3 environment variables:
+- OPENSLL_PATH (something like C:\Program Files\OpenSSL-Win64)
+- FFMPEG_PATH (something like C:\ffmpeg-4.4)
+- GSTREAMER (something like C:\gstreamer\1.0\msvc_x86_64)
+
+All of them should point to root folders, where include and lib subfolders can be found.
 
 ### Update submodules after clone
 ```
 git submodule update --init --recursive
 ```
 
-### Build commands
+### Prepare 3rd party libraries
 ```
-mkdir build
-
-cd build
-
-cmake -DCMAKE_BUILD_TYPE=Debug/Release -DCMAKE_PREFIX_PATH="PATH_TO_YOUR_QT\lib\cmake" -DFFMPEG_PATH="PATH_TO_YOUR_FFMPEG" -DSMF_INCLUDE_PATH="PATH_TO_SIGNED_MEDIA_FRAMEWORK_INCLUDES" -DSMF_LIB_PATH="PATH_TO_SIGNED_MEDIA_FRAMEWORK_LIB" ..
-
-cmake --build . --config Debug/Release -j N
+cd ./player/3rdparty
+./prepare3rdparty.bat
 ```
-"Debug/Release" means Debug OR Release.
 
-CMAKE_PREFIX_PATH and FFMPEG_PATH are needed only on Windows. On Linux libraries installed in system will be used, except you FFmpeg version is not higher that 4.4.
-
-FFMPEG_PATH="PATH_TO_YOUR_FFMPEG" means you should point to folder where include and lib folders are presented.
-
-SMF_XXX_PATH paths are always needed, except in Linux, if you already installed signed-media-framework library after build.
-
-
-### Run tests
-```
-ctest -C Debug/Release
-```
+### Build player
+Open `player/proj/OXFPlayer-VS2022/OXFPlayer.sln` and build the player.

@@ -34,7 +34,12 @@
 # Other folders
 build/
 .cache/
-.vscode
+.vscode/
+.vs/
+x64/
 Testing
+
+# Visual Studio files
+*.user
 
 3rdparty/*ffmpeg*
