@@ -2,8 +2,8 @@
 
 ## How to build
 
-### Needed libraries
-You need next programs/libraries to be installed:
+### Needed applications/libraries
+You need next applications/libraries to be installed:
 - Visual Studio 2022
 - Qt 5.12
 - Qt add-on for Visual Studio (https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2022)
@@ -32,4 +32,7 @@ cd ./player/3rdparty
 ```
 
 ### Build player
+
+Qt must be configured in Visual Studio with name `Qt 5.12 x64` (like C:\Qt\Qt5.12.12\5.12.12\msvc2017_64)
+
 Open `player/proj/OXFPlayer-VS2022/OXFPlayer.sln` and build the player.
