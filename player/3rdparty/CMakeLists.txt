@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-set(PROJECT_NAME ONVIFPlayerAdditional)
+set(PROJECT_NAME OXFPlayerAdditional)
 
 project(${PROJECT_NAME} VERSION 2.0.0 LANGUAGES CXX)
 
