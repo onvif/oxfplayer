@@ -126,20 +126,20 @@ void TrackFragmentHeaderBoxTest::readingTest_data()
         {
             QTest::newRow(short_test_name.arg(prepare_flag_names(flags)).toLatin1().data())
                     << box_size.fullbox_size() << BoxSize::large_empty() << fourCC << version_zero << flag
-                    << 4664u << 4234ull << 3247u << 24837u << 5345u << 23442u;
+                    << uint32_t(4664) << uint64_t(4234) << uint32_t(3247) << uint32_t(24837) << uint32_t(5345) << uint32_t(23442);
         }
         else
         {
             QTest::newRow(long_test_name.arg(prepare_flag_names(flags)).toLatin1().data())
                     << BoxSize::empty() << box_size.fullbox_large_size() << fourCC << version_zero << flag
-                    << 1u << 434ull << 247u << 432u << 0u << 7u;
+                    << uint32_t(1) << uint64_t(434)<< uint32_t(247) << uint32_t(432) << uint32_t(0) << uint32_t(7);
         }
         short_test = !short_test;
     }
 
     QTest::newRow("Negative test: wrong FourCC code")
             << BoxSize(sizeof(uint32_t)).fullbox_size() << BoxSize::large_empty() << FourCC()<< version_zero << flag_empty
-            << 534u << 0ull << 0u << 0u << 0u << 0u;
+            << uint32_t(534) << uint64_t(0) << uint32_t(0) << uint32_t(0) << uint32_t(0) << uint32_t(0);
 }
 
 void TrackFragmentHeaderBoxTest::readingTest()
@@ -259,3 +259,5 @@ void TrackFragmentHeaderBoxTest::readingTest()
     QVERIFY(Box::SizeOk == box->getSizeError());
     QVERIFY(has_more_data == false);
 }
+
+QTEST_MAIN(TrackFragmentHeaderBoxTest)

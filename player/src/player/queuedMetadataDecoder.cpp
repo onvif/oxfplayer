@@ -34,7 +34,7 @@
 #include <sstream>
 #include <unordered_map>
 
-#include "../../ext/pugixml/src/pugixml.hpp"
+#include <pugixml.hpp>
 
 #include <QDebug>
 #include <qdatetime.h>

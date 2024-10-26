@@ -138,7 +138,7 @@ void TrackRunBoxTest::readingTest_data()
     U_UInt24 flag_empty;
     flag_empty.m_value = 0;
 
-    TrackRunBox::TableType table(QVector<TrackRunEntry>(50, TrackRunEntry(89u, 3248u, 23489u, 0u)).toList());
+    TrackRunBox::TableType table(QVector<TrackRunEntry>(50, TrackRunEntry(uint32_t(89), uint32_t(3248), uint32_t(23489), uint32_t(0))).toList());
 
     FlagStateGenerator<TrackRunFlags> fsg;
     fsg.add(DataOffsetPresent).add(FirstSampleFlagsPresent).add(SampleDurationPresent).add(SampleSizePresent).add(SampleFlagsPresent).add(SampleCompositionTimeOffsetPresent);
@@ -158,19 +158,19 @@ void TrackRunBoxTest::readingTest_data()
         {
             QTest::newRow(short_test_name.arg(prepare_flag_names(flags)).toLatin1().data())
                     << box_size.fullbox_size() << BoxSize::large_empty() << fourCC << version_zero << flag
-                    << 4234 << 3247u << table;
+                    << 4234 << uint32_t(3247) << table;
         }
         else
         {
             QTest::newRow(long_test_name.arg(prepare_flag_names(flags)).toLatin1().data())
                     << BoxSize::empty() << box_size.fullbox_large_size() << fourCC << version_zero << flag
-                    << -434 << 247u << table;
+                    << -434 << uint32_t(247) << table;
         }
         short_test = !short_test;
     }
     QTest::newRow("Negative test: wrong FourCC code")
             << BoxSize(sizeof(uint32_t)).fullbox_size() << BoxSize::large_empty() << FourCC()<< version_zero << flag_empty
-            << 0 << 0u << table;
+            << 0 << uint32_t(0) << table;
 }
 
 void TrackRunBoxTest::readingTest()
@@ -259,3 +259,5 @@ void TrackRunBoxTest::readingTest()
     QVERIFY(Box::SizeOk == box->getSizeError());
     QVERIFY(has_more_data == false);
 }
+
+QTEST_MAIN(TrackRunBoxTest)

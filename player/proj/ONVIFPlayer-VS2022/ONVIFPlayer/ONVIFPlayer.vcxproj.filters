@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="resources">
+      <UniqueIdentifier>{799fc2ec-c0a7-46a7-ac65-296960308ce1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\src\resources\fullscreen.png">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="..\..\..\src\resources\media_next.png">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="..\..\..\src\resources\media_pause.png">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="..\..\..\src\resources\media_play.png">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="..\..\..\src\resources\media_prev.png">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="..\..\..\src\resources\media_stop.png">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="..\..\..\src\resources\movie_frame.png">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="..\..\..\src\resources\mute.png">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="..\..\..\src\resources\Onvif.png">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="..\..\..\src\resources\ONVIFPlayer.ico">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="..\..\..\src\resources\volume.png">
+      <Filter>resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\src\resources\ONVIFPlayer.rc">
+      <Filter>resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="..\..\..\src\resources\resources.qrc">
+      <Filter>resources</Filter>
+    </QtRcc>
+  </ItemGroup>
+</Project>

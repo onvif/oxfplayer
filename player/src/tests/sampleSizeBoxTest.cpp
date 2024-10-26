@@ -159,3 +159,5 @@ void SampleSizeBoxTest::fillData()
     for(int i = 0; i < ROWS; ++i)
         data.push_back(SampleSizeEntry(i));
 }
+
+QTEST_MAIN(SampleSizeBoxTest)

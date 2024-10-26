@@ -30,5 +30,3 @@
 #define MinGW
 
 #include "setup_private.iss"
-
-

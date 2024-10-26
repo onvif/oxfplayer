@@ -34,6 +34,30 @@
 
 #include "crosscompilation_inttypes.h"
 
+
+// This is dirty hach for Linux see description at
+// https://www.qtcentre.org/threads/18728-qFromBigEndian(-)-not-found and https://github.com/goldendict/goldendict/issues/714
+// solution https://github.com/pstavirs/ostinato/issues/265
+#ifdef __linux__
+
+template <> inline Q_DECL_CONSTEXPR unsigned long qbswap<unsigned long>(unsigned long source) {
+  if (sizeof(unsigned long) == 8) {
+    return qbswap<quint64>(quint64(source));
+  } else {
+    return qbswap<quint32>(quint32(source));
+  }
+}
+
+template <> inline Q_DECL_CONSTEXPR long qbswap<long>(long source) {
+  if (sizeof(long) == 8) {
+    return qbswap<quint64>(quint64(source));
+  } else {
+    return qbswap<quint32>(quint32(source));
+  }
+}
+
+#endif //__llinux__
+
 namespace detail
 {
     //! Helper class for identifying endianess convertible types.

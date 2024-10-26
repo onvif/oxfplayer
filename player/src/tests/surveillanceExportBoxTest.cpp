@@ -25,7 +25,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#include "SurveillanceExportBoxTest.h"
+#include "surveillanceExportBoxTest.h"
 
 #include "surveillanceExportBox.hpp"
 
@@ -221,3 +221,5 @@ void SurveillanceExportBoxTest::readingTest()
     QVERIFY(Box::SizeOk == box->getSizeError());
     QVERIFY(has_more_data == false);
 }
+
+QTEST_MAIN(SurveillanceExportBoxTest)

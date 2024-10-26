@@ -95,9 +95,9 @@ QString PlayerWidget::getLastOpenedFolder()
 #ifdef WIN32
     QSettings settings(QDir::homePath() + WINP_APP_DATA_ROAMING + COMPANY_NAME + "/" + PRODUCT_NAME + "/" + CONFIG_FILE_NAME, QSettings::IniFormat);
 #endif //WIN32
-#ifdef UNIX
+#ifdef __linux__
     QSettings settings(QDir::homePath() + "/." + PRODUCT_NAME + "/" + CONFIG_FILE_NAME, QSettings::IniFormat);
-#endif //UNIX
+#endif //__linux__
     return settings.value("lastOpenedFolder", "").toString();
 }
 
@@ -106,9 +106,9 @@ void PlayerWidget::saveLastOpenedFolder(const QString& folder)
 #ifdef WIN32
     QSettings settings(QDir::homePath() + WINP_APP_DATA_ROAMING + COMPANY_NAME + "/" + PRODUCT_NAME + "/" + CONFIG_FILE_NAME, QSettings::IniFormat);
 #endif //WIN32
-#ifdef UNIX
+#ifdef __linux__
     QSettings settings(QDir::homePath() + "/." + PRODUCT_NAME + "/" + CONFIG_FILE_NAME, QSettings::IniFormat);
-#endif //UNIX
+#endif //__linux__
     settings.setValue("lastOpenedFolder", folder);
 }
 

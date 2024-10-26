@@ -175,19 +175,19 @@ void TrackFragmentRandomAccessBoxTest::readingTest_data()
                 {
                     QTest::newRow(short_test_name.arg(version_zero).arg(traf_size + 1).arg(trun_size + 1).arg(sample_size + 1).toLatin1().data())
                             << v0_size.fullbox_size() << BoxSize::large_empty() << fourCC << version_zero << flag
-                            << 23u << traf_size << trun_size << sample_size << table;
+                            << uint32_t(23) << traf_size << trun_size << sample_size << table;
                     QTest::newRow(long_test_name.arg(version_one).arg(traf_size + 1).arg(trun_size + 1).arg(sample_size + 1).toLatin1().data())
                             << BoxSize::empty() << v1_size.fullbox_large_size() << fourCC << version_one << flag
-                            << 65234u << traf_size << trun_size << sample_size << table;
+                            << uint32_t(65234) << traf_size << trun_size << sample_size << table;
                 }
                 else
                 {
                     QTest::newRow(short_test_name.arg(version_one).arg(traf_size + 1).arg(trun_size + 1).arg(sample_size + 1).toLatin1().data())
                             << v1_size.fullbox_size() << BoxSize::large_empty() << fourCC << version_one << flag
-                            << 23u << traf_size << trun_size << sample_size << table;
+                            << uint32_t(23) << traf_size << trun_size << sample_size << table;
                     QTest::newRow(long_test_name.arg(version_zero).arg(traf_size + 1).arg(trun_size + 1).arg(sample_size + 1).toLatin1().data())
                             << BoxSize::empty() << v0_size.fullbox_large_size() << fourCC << version_zero << flag
-                            << 65234u << traf_size << trun_size << sample_size << table;
+                            << uint32_t(65234) << traf_size << trun_size << sample_size << table;
                 }
             }
         }
@@ -195,7 +195,7 @@ void TrackFragmentRandomAccessBoxTest::readingTest_data()
 
     QTest::newRow("Negative test: wrong FourCC code")
             << BoxSize( 3 * sizeof(uint32_t) ).fullbox_size() << BoxSize::large_empty() << FourCC() << version_zero << flag
-            << 2353u << uint8_t(0) << uint8_t(0) << uint8_t(0) << TrackFragmentRandomAccessBox::TableType();
+            << uint32_t(2353) << uint8_t(0) << uint8_t(0) << uint8_t(0) << TrackFragmentRandomAccessBox::TableType();
 }
 
 void TrackFragmentRandomAccessBoxTest::readingTest()
@@ -271,3 +271,5 @@ void TrackFragmentRandomAccessBoxTest::readingTest()
     QVERIFY(Box::SizeOk == box->getSizeError());
     QVERIFY(has_more_data == false);
 }
+
+QTEST_MAIN(TrackFragmentRandomAccessBoxTest)

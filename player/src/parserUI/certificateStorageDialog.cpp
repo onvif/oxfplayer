@@ -76,9 +76,9 @@ void CertificateStorageDialog::onAdd()
 #ifdef WIN32
     QSettings settings(QDir::homePath() + WINP_APP_DATA_ROAMING + COMPANY_NAME + "/" + PRODUCT_NAME + "/" + CONFIG_FILE_NAME, QSettings::IniFormat);
 #endif //WIN32
-#ifdef UNIX
+#ifdef __linux__
     QSettings settings(QDir::homePath() + "/." + PRODUCT_NAME + "/" + CONFIG_FILE_NAME, QSettings::IniFormat);
-#endif //UNIX
+#endif //__linux__
 
     QString file_name = QFileDialog::getOpenFileName(this, tr("Add certificate file"), settings.value("lastOpenedCertificateFolder", QDir::homePath()).toString(), BINARY_FORMAT);
     if(file_name.isEmpty())

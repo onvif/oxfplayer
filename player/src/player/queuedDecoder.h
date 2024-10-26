@@ -114,7 +114,7 @@ protected:
             int targetSize = (m_queue.empty() && m_pause) ? 2 : m_queue.size() + MINIMUM_FRAMES_IN_QUEUE / 2;
             while (m_queue.size() < targetSize)
             {
-                auto ctx = getFormatContext();
+                auto ctx = Decoder<T>::getFormatContext();
                 if (ctx == 0) return false;
 
                 int read_result = av_read_frame(ctx, packet);
@@ -124,7 +124,7 @@ protected:
                     //packet read normally
                     if(packet->stream_index == Decoder<T>::m_stream->index)
                     {
-                        int time = (int)((double)packet->pts * av_q2d(m_stream->time_base) * 1000.0);
+                        int time = (int)((double)packet->pts * av_q2d(Decoder<T>::m_stream->time_base) * 1000.0);
                         processPacket(packet, time);
                     }
                 }
