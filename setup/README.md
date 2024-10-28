@@ -12,9 +12,9 @@ Make sure that you added all required binaries to the "input" folder:
 
 * player executable;
 * Qt libraries with 'platforms' subfolder (can be found in plugins folder);
-* FFMpeg dlls;
-* PortAudio dll;
 * OpenSLL dlls;
+* FFMpeg dlls;
+* GStreamer dll;
 
 Check: You can verify that all files are added if you can start player executable from 'input' folder successfully.
 
