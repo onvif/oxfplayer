@@ -14,7 +14,7 @@ You need next applications/libraries to be installed:
 
 ### Add environment variables
 To compile you should set 3 environment variables:
-- OPENSLL_PATH (something like C:\Program Files\OpenSSL-Win64)
+- OPENSSL_PATH (something like C:\Program Files\OpenSSL-Win64)
 - FFMPEG_PATH (something like C:\ffmpeg-4.4)
 - GSTREAMER (something like C:\gstreamer\1.0\msvc_x86_64)
 
