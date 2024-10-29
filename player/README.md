@@ -34,5 +34,6 @@ cd ./player/3rdparty
 ### Build player
 
 Qt must be configured in Visual Studio with name `Qt 5.12 x64` (like C:\Qt\Qt5.12.12\5.12.12\msvc2017_64)
+![image](https://github.com/user-attachments/assets/8c7cd7ef-08ca-47c2-bd1b-5278e0a0a218)
 
 Open `player/proj/OXFPlayer-VS2022/OXFPlayer.sln` and build the player.
