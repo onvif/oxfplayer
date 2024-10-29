@@ -4,6 +4,3 @@
 [submodule "pugixml"]
 	path = player/3rdparty/pugixml
 	url = https://github.com/zeux/pugixml.git
-[submodule "signed-media-framework"]
-	path = player/3rdparty/signed-media-framework
-	url = https://github.com/onvif/signed-media-framework.git
