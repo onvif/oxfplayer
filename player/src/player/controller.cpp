@@ -35,6 +35,7 @@
 #include "certificateStorage.h"
 #include "certificateStorageDialog.h"
 #include "queuedMetadataDecoder.h"
+#include "smfValidatorWidget.h"
 
 Controller::Controller(Engine& engine,
                        PlayerWidget& player_widget, FullscreenPlayerWidget& fullscreen_player_widget, ControlsWidget& controls_widget,
@@ -55,6 +56,7 @@ Controller::Controller(Engine& engine,
     QObject::connect(&m_player_widget, SIGNAL(changeAudioStream(int)), this, SLOT(onAudioStreamIndexChanged(int)));
     QObject::connect(&m_player_widget, SIGNAL(showFileStructure()), this, SLOT(showFileStructure()));
     QObject::connect(&m_player_widget, SIGNAL(verifyFileSignature()), this, SLOT(verifyFileSignature()));
+    QObject::connect(&m_player_widget, SIGNAL(verifyUsingSignedMediaFramework()), this, SLOT(verifyUsingSignedMediaFramework()));
     QObject::connect(&m_player_widget, SIGNAL(openCertificateStorage()), this, SLOT(openCertificateStorage()));
     QObject::connect(&m_player_widget, SIGNAL(exit()), this, SLOT(exit()));
     QObject::connect(&m_player_widget, SIGNAL(showLocalTimeChanged(bool)), this, SLOT(onshowLocalTimeChanged(bool)));
@@ -165,6 +167,11 @@ void Controller::verifyFileSignature()
     m_verifyer_dialog.hide();
     m_verifyer_dialog.initialize( m_media_parser );
     m_verifyer_dialog.show();
+}
+
+void Controller::verifyUsingSignedMediaFramework() {
+    SMFValidationWidget dialog(&m_player_widget);
+    dialog.exec();
 }
 
 void Controller::openCertificateStorage()

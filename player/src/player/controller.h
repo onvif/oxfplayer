@@ -63,6 +63,9 @@ private slots:
     //! This slot will be called when file signature needs to be verified.
     void verifyFileSignature();
 
+    //! This slot will be called when file or stream signature needs to be verified using signed-media-framework library.
+    void verifyUsingSignedMediaFramework();
+
     //! This slot will be called when we want to work with certificates.
     void openCertificateStorage();
 

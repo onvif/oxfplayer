@@ -141,6 +141,9 @@
     <ClCompile Include="..\..\..\src\player\videoPlayback.cpp">
       <Filter>player</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\parserUI\smfValidatorWidget.cpp">
+      <Filter>parserUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\playerUI\playerWidgetInterface.h">
@@ -427,6 +430,9 @@
     <QtMoc Include="..\..\..\src\player\audioPlayback.h">
       <Filter>player</Filter>
     </QtMoc>
+    <QtMoc Include="..\..\..\src\parserUI\smfValidatorWidget.h">
+      <Filter>parserUI</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="..\..\..\src\playerUI\controlsWidget.ui">
@@ -442,6 +448,9 @@
       <Filter>parserUI</Filter>
     </QtUic>
     <QtUic Include="..\..\..\src\parserUI\verifyerdialog.ui">
+      <Filter>parserUI</Filter>
+    </QtUic>
+    <QtUic Include="..\..\..\src\parserUI\smfValidatorWidget.ui">
       <Filter>parserUI</Filter>
     </QtUic>
   </ItemGroup>

@@ -146,7 +146,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -163,6 +163,7 @@
     </property>
     <addaction name="actionFile_structure"/>
     <addaction name="actionFile_signature"/>
+    <addaction name="actionStream_signature"/>
     <addaction name="separator"/>
     <addaction name="actionCertificate_storage"/>
    </widget>
@@ -253,6 +254,11 @@
   <action name="action1_2">
    <property name="text">
     <string>1</string>
+   </property>
+  </action>
+  <action name="actionStream_signature">
+   <property name="text">
+    <string>Stream signature...</string>
    </property>
   </action>
  </widget>

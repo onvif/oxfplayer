@@ -74,6 +74,9 @@ signals:
     //! Verify File signature.
     void verifyFileSignature();
 
+    //! Verify File or Stream using signed-media-framework.
+    void verifyUsingSignedMediaFramework();
+
     //! Open certificate storage.
     void openCertificateStorage();
 

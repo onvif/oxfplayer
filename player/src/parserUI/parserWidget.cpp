@@ -34,14 +34,6 @@
 #include "parser/basic/mandatoryBox.h"
 #include "parser/basic/unknownBox.h"
 
-#include "onvif_validator.h"
-
-void qtcallback(ValidationResult validation_result)
-{
-    int a = 0;
-    int b = 0;
-}
-
 ParserWidget::ParserWidget(QWidget *parent) :
     QDialog(parent),
     m_ui(new Ui::parserWidget)
@@ -70,11 +62,6 @@ ParserWidget::ParserWidget(QWidget *parent) :
     flags &= ~(Qt::WindowContextHelpButtonHint);
     flags |= Qt::WindowMaximizeButtonHint;
     setWindowFlags(flags);
-
-    validation_callback(qtcallback);
-
-    validate((gchar*)"test", (gchar*)"test", (gchar*)"test");
-    
 }
 
 ParserWidget::~ParserWidget()

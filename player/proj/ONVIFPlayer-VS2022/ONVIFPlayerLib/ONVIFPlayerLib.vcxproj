@@ -114,6 +114,7 @@
     <ClCompile Include="..\..\..\src\parserUI\certificateStorageDialog.cpp" />
     <ClCompile Include="..\..\..\src\parserUI\oxfverifier.cpp" />
     <ClCompile Include="..\..\..\src\parserUI\parserWidget.cpp" />
+    <ClCompile Include="..\..\..\src\parserUI\smfValidatorWidget.cpp" />
     <ClCompile Include="..\..\..\src\parserUI\verifyerdialog.cpp" />
     <ClCompile Include="..\..\..\src\parser\basic\box.cpp" />
     <ClCompile Include="..\..\..\src\parser\basic\mandatoryBox.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="..\..\..\src\common\segmentInfo.h" />
     <ClInclude Include="..\..\..\src\common\signingInformation.h" />
     <ClInclude Include="..\..\..\src\common\types.h" />
+    <QtMoc Include="..\..\..\src\parserUI\smfValidatorWidget.h" />
     <ClInclude Include="..\..\..\src\player\audioContext.h" />
     <QtMoc Include="..\..\..\src\player\audioPlayback.h" />
     <ClInclude Include="..\..\..\src\player\avFrameWrapper.h" />
@@ -248,6 +250,7 @@
   <ItemGroup>
     <QtUic Include="..\..\..\src\parserUI\certificateStorageDialog.ui" />
     <QtUic Include="..\..\..\src\parserUI\parserWidget.ui" />
+    <QtUic Include="..\..\..\src\parserUI\smfValidatorWidget.ui" />
     <QtUic Include="..\..\..\src\parserUI\verifyerdialog.ui" />
     <QtUic Include="..\..\..\src\playerUI\controlsWidget.ui" />
     <QtUic Include="..\..\..\src\playerUI\playerWidget.ui" />
