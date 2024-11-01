@@ -36,7 +36,7 @@
 
 #include "onvif_validator.h"
 
-void qtcallback()
+void qtcallback(ValidationResult validation_result)
 {
     int a = 0;
     int b = 0;
