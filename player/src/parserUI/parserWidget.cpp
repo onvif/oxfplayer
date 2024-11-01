@@ -36,6 +36,11 @@
 
 #include "onvif_validator.h"
 
+void qtcallback()
+{
+    int a = 0;
+    int b = 0;
+}
 
 ParserWidget::ParserWidget(QWidget *parent) :
     QDialog(parent),
@@ -66,7 +71,10 @@ ParserWidget::ParserWidget(QWidget *parent) :
     flags |= Qt::WindowMaximizeButtonHint;
     setWindowFlags(flags);
 
+    callback_to_gui(qtcallback);
+
     validate((gchar*)"test", (gchar*)"test", (gchar*)"test");
+    
 }
 
 ParserWidget::~ParserWidget()
