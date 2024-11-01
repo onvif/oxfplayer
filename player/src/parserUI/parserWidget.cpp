@@ -71,7 +71,7 @@ ParserWidget::ParserWidget(QWidget *parent) :
     flags |= Qt::WindowMaximizeButtonHint;
     setWindowFlags(flags);
 
-    callback_to_gui(qtcallback);
+    validation_callback(qtcallback);
 
     validate((gchar*)"test", (gchar*)"test", (gchar*)"test");
     
