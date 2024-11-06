@@ -10,12 +10,13 @@ void validationFinished(ValidationResult validationResult) {
         widget->validationCallback(validationResult);
 }
 
-SMFValidationWidget::SMFValidationWidget(QWidget* parent, const QString& file_name) : QDialog(parent), m_ui(new Ui::SMFValidationWidget()) {
+SMFValidationWidget::SMFValidationWidget(QWidget* parent, const QString& file_name, const QString& codecString)
+    : QDialog(parent), m_ui(new Ui::SMFValidationWidget()) {
     m_ui->setupUi(this);
 
     m_ui->codec_cbx->addItem("H.264", "h264");
     m_ui->codec_cbx->addItem("H.265", "h265");
-    m_ui->codec_cbx->setCurrentIndex(0);
+    m_ui->codec_cbx->setCurrentIndex(m_ui->codec_cbx->findData(codecString));
 
     QObject::connect(m_ui->certificate_path_btn, &QPushButton::clicked, this, [this]() {
         const QString certificateFilePath = QFileDialog::getOpenFileName(nullptr, "Select certificate file..", {}, "*.pem");

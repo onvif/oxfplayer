@@ -48,6 +48,7 @@ Engine::Engine() :
     //direct connection used to prevent receiving messages from previously opened file
     QObject::connect(&m_audio_playback, SIGNAL(played(BasePlayback*)), &m_video_playback, SLOT(syncWithAudio(BasePlayback*)), Qt::DirectConnection);
     QObject::connect(&m_audio_playback, SIGNAL(playbackFinished()), this, SLOT(onFinished()));
+    QObject::connect(&m_video_decoder, &QueuedVideoDecoder::openedFileCodec, this, &Engine::openedFileCodec);
 }
 
 Engine::~Engine()

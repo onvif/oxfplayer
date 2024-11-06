@@ -156,6 +156,8 @@ private:
     int                     m_playing_fragment_index;
     //! Currently opened file name
     QString                 m_current_file_name;
+    //! Currently opened file coded
+    AVCodecID               m_current_codec = AVCodecID::AV_CODEC_ID_NONE;
 };
 
 #endif // CONTROLLER_H

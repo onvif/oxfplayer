@@ -15,7 +15,7 @@ private:
     Q_OBJECT
 
 public:
-    SMFValidationWidget(QWidget* parent, const QString& file_name);
+    SMFValidationWidget(QWidget* parent, const QString& file_name, const QString& codecString);
 
     virtual ~SMFValidationWidget();
 
