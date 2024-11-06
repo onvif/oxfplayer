@@ -100,12 +100,14 @@ Controller::~Controller()
 {
     m_engine.stop();
     m_engine.clear();
+    m_current_file_name.clear();
 }
 
 void Controller::openFile(const QString& file_name)
 {
     m_engine.stop();
     m_engine.clear();
+    m_current_file_name.clear();
     m_player_widget.getEventWidget()->clear();
     m_player_widget.getVideoWidget()->clear();
     m_player_widget.getEventTreeWidget()->clear();
@@ -153,6 +155,7 @@ void Controller::openFile(const QString& file_name)
     m_controls_widget.startPlayback();
     m_controls_widget.updateUI();
     m_engine.start();
+    m_current_file_name = file_name;
 }
 
 void Controller::showFileStructure()
@@ -170,7 +173,7 @@ void Controller::verifyFileSignature()
 }
 
 void Controller::verifyUsingSignedMediaFramework() {
-    SMFValidationWidget dialog(&m_player_widget);
+    SMFValidationWidget dialog(&m_player_widget, m_current_file_name);
     dialog.exec();
 }
 
@@ -184,6 +187,7 @@ void Controller::exit()
 {
     m_engine.stop();
     m_engine.clear();
+    m_current_file_name.clear();
     qApp->quit();
 }
 

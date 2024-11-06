@@ -1,29 +1,41 @@
 #include "smfValidatorWidget.h"
 
 #include "ui_smfValidatorWidget.h"
+#include <QFileDialog>
 
 SMFValidationWidget* widget = nullptr;
 
 void validationFinished(ValidationResult validationResult) {
     if (widget)
-        widget->accept();
-    widget->validationCallback(validationResult);
+        widget->validationCallback(validationResult);
 }
 
-SMFValidationWidget::SMFValidationWidget(QWidget* parent) : QDialog(parent), m_ui(new Ui::SMFValidationWidget()) {
+SMFValidationWidget::SMFValidationWidget(QWidget* parent, const QString& file_name) : QDialog(parent), m_ui(new Ui::SMFValidationWidget()) {
     m_ui->setupUi(this);
 
-    QObject::connect(m_ui->ok_btn, &QPushButton::clicked, this, [this]() {
+    m_ui->codec_cbx->addItem("H.264", "h264");
+    m_ui->codec_cbx->addItem("H.265", "h265");
+    m_ui->codec_cbx->setCurrentIndex(0);
+
+    QObject::connect(m_ui->certificate_path_btn, &QPushButton::clicked, this, [this]() {
+        const QString certificateFilePath = QFileDialog::getOpenFileName(nullptr, "Select certificate file..", {}, "*.pem");
+        m_ui->certificate_path_txt->setText(certificateFilePath);
+    });
+
+    QObject::connect(m_ui->validate_btn, &QPushButton::clicked, this, [this, file_name]() {
+        m_ui->validate_btn->hide();
+        m_ui->stackedWidget->setCurrentIndex(1);
+
+        ::widget = this;
+        validation_callback(validationFinished);
+        validate((gchar*)m_ui->codec_cbx->currentData().value<QString>().toStdString().data(), (gchar*)m_ui->certificate_path_txt->text().toStdString().data(), (gchar*)file_name.toStdString().data());
+    });
+
+    QObject::connect(m_ui->close_btn, &QPushButton::clicked, this, [this]() {
         widget = nullptr;
         this->accept();
     });
-
-    ::widget = this;
-
-    validation_callback(validationFinished);
-
-    validate((gchar*)"test", (gchar*)"test", (gchar*)"test");
-
+    
     // uncomment this to see how it will looks like
     //ValidationResult validation_result;
     //validation_result.public_key_is_valid = true;
@@ -44,7 +56,8 @@ SMFValidationWidget::~SMFValidationWidget() {
 }
 
 void SMFValidationWidget::validationCallback(ValidationResult validationResult) {
-    m_ui->stackedWidget->setCurrentIndex(1);
+    m_ui->stackedWidget->setCurrentIndex(2);
+
     QString message;
     message += QString{ "PUBLIC KEY IS " } + (validationResult.public_key_is_valid ? QString{ "VALID" } : QString{ "INVALID" }) + QString{ "<br/>" };
     message += QString{ "VIDEO IS " } + (validationResult.public_key_is_valid ? QString{ "VALID" } : QString{ "INVALID" }) + QString{ "<br/>" };
