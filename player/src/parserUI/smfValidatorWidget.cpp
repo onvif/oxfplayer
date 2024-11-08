@@ -8,6 +8,7 @@ void validationFinished(ValidationResult validationResult) {
     if (widget)
         widget->accept();
     widget->validationCallback(validationResult);
+    //validation_result_free();
 }
 
 SMFValidationWidget::SMFValidationWidget(QWidget* parent) : QDialog(parent), m_ui(new Ui::SMFValidationWidget()) {
