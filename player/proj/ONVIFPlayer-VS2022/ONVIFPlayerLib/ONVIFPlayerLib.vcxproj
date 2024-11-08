@@ -172,9 +172,9 @@
     <QtMoc Include="..\..\..\src\player\portAudioPlayback.h" />
     <QtMoc Include="..\..\..\src\player\portAudioThread.h" />
     <ClInclude Include="..\..\..\src\player\queuedAudioDecoder.h" />
-    <ClInclude Include="..\..\..\src\player\queuedDecoder.h" />
+    <QtMoc Include="..\..\..\src\player\queuedDecoder.h" />
     <ClInclude Include="..\..\..\src\player\queuedMetadataDecoder.h" />
-    <ClInclude Include="..\..\..\src\player\queuedVideoDecoder.h" />
+    <QtMoc Include="..\..\..\src\player\queuedVideoDecoder.h" />
     <ClInclude Include="..\..\..\src\player\streamReader.h" />
     <ClInclude Include="..\..\..\src\player\syncThread.h" />
     <ClInclude Include="..\..\..\src\player\videoContext.h" />

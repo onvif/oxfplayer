@@ -100,6 +100,9 @@ public:
     //! Set new stream index for audio.
     void setAudioStreamIndex(int index);
 
+signals:
+    void openedFileCodec(AVCodecID codec);
+
 public slots:
     //! Set volume. Volume should be between 0 and 100.
     void setVolume(int volume);

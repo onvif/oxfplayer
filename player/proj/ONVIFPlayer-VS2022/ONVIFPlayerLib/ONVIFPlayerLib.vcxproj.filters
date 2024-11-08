@@ -335,13 +335,7 @@
     <ClInclude Include="..\..\..\src\player\queuedAudioDecoder.h">
       <Filter>player</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\player\queuedDecoder.h">
-      <Filter>player</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\player\queuedMetadataDecoder.h">
-      <Filter>player</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\player\queuedVideoDecoder.h">
       <Filter>player</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\player\streamReader.h">
@@ -418,9 +412,6 @@
     <QtMoc Include="..\..\..\src\player\portAudioPlayback.h">
       <Filter>player</Filter>
     </QtMoc>
-    <QtMoc Include="..\..\..\src\player\engine.h">
-      <Filter>player</Filter>
-    </QtMoc>
     <QtMoc Include="..\..\..\src\player\controller.h">
       <Filter>player</Filter>
     </QtMoc>
@@ -432,6 +423,15 @@
     </QtMoc>
     <QtMoc Include="..\..\..\src\parserUI\smfValidatorWidget.h">
       <Filter>parserUI</Filter>
+    </QtMoc>
+    <QtMoc Include="..\..\..\src\player\queuedDecoder.h">
+      <Filter>player</Filter>
+    </QtMoc>
+    <QtMoc Include="..\..\..\src\player\queuedVideoDecoder.h">
+      <Filter>player</Filter>
+    </QtMoc>
+    <QtMoc Include="..\..\..\src\player\engine.h">
+      <Filter>player</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
