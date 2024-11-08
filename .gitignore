@@ -1,3 +1,4 @@
 # Do not load folders used by Inno Setup
 setup/input/
 setup/output/
+**/validation_results.txt
