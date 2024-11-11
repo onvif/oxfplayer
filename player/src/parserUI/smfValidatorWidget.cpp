@@ -29,7 +29,8 @@ SMFValidationWidget::SMFValidationWidget(QWidget* parent, const QString& file_na
 
         ::widget = this;
         validation_callback(validationFinished);
-        validate((gchar*)m_ui->codec_cbx->currentData().value<QString>().toStdString().data(), (gchar*)m_ui->certificate_path_txt->text().toStdString().data(), (gchar*)file_name.toStdString().data());
+        bool is_bulkrun = true; //just for test
+        validate((gchar*)m_ui->codec_cbx->currentData().value<QString>().toStdString().data(), (gchar*)m_ui->certificate_path_txt->text().toStdString().data(), (gchar*)file_name.toStdString().data(), is_bulkrun);
     });
 
     QObject::connect(m_ui->close_btn, &QPushButton::clicked, this, [this]() {
