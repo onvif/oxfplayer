@@ -1,8 +1,7 @@
 #pragma once
 
 #include <QDialog>
-
-// TODO: Think about sending file name or else
+#include <QTemporaryFile> 
 
 #include "onvif_validator.h"
 
@@ -23,4 +22,5 @@ public:
 
 private:
     Ui::SMFValidationWidget* m_ui;
+    QTemporaryFile* m_tmpFile;
 };

@@ -5,6 +5,7 @@
 
 #include "defines.h"
 #include "ui_smfValidatorWidget.h"
+#include <qtemporaryfile.h>
 
 namespace {
 
@@ -61,11 +62,13 @@ SMFValidationWidget::SMFValidationWidget(QWidget* parent, const QString& file_na
             m_ui->validate_btn->hide();
             m_ui->stackedWidget->setCurrentIndex(1);
 
+            m_tmpFile = new QTemporaryFile();
+            m_tmpFile->open();
             ::widget = this;
             validation_callback(validationFinished);
             validate((gchar*)m_ui->codec_cbx->currentData().value<QString>().toStdString().data(),
                      (gchar*)m_ui->certificate_path_txt->text().toStdString().data(), (gchar*)file_name.toStdString().data(),
-                     m_ui->bulk_cb->isChecked());
+                     m_ui->bulk_cb->isChecked(), m_tmpFile->fileName().toUtf8().constData());
         }
         else if (m_ui->stackedWidget->currentIndex() == 2) {
             m_ui->validate_btn->setText(QObject::tr("Validate"));
@@ -92,39 +95,16 @@ void SMFValidationWidget::validationCallback(ValidationResult validationResult) 
     widget = nullptr;
 
     QString message;
-    message += QString{ "PUBLIC KEY IS " } + (validationResult.public_key_is_valid ? QString{ "VALID" } : QString{ "INVALID" }) + QString{ "<br/>" };
-    message += QString{ "VIDEO IS " } + (validationResult.video_is_valid ? QString{ "VALID" } : QString{ "INVALID" }) + QString{ "<br/>" };
-    message += QString{ "<br/>" };
-    if (!validationResult.public_key_is_valid ||
-        !validationResult.video_is_valid) {
-        if (strlen(validationResult.video_error_str) != 0) {
-            message += QString{ "Video error: %1<br/>" }.arg(validationResult.video_error_str);
-        }
-        if (strlen(validationResult.key_validation_str) != 0) {
-            message += QString{ "Key validation error: %1<br/>" }.arg(validationResult.key_validation_str);
-        }
-        if (strlen(validationResult.video_valid_str) != 0) {
-            message += QString{ "Video validation info: %1<br/>" }.arg(validationResult.video_valid_str);
-        }
-    } else {
-        message += QString{ "Vendor Info:<br/>" };
-        message += QString{ "Serial Number: " } +
-                   (validationResult.vendor_info.serial_number ? QString{ validationResult.vendor_info.serial_number } : QString{ "N/A" }) +
-                   QString{ "<br/>" };
-        message += QString{ "Firmware Version: " } +
-                   (validationResult.vendor_info.firmware_version ? QString{ validationResult.vendor_info.firmware_version } : QString{ "N/A" }) +
-                   QString{ "<br/>" };
-        message += QString{ "Manufacturer: " } +
-                   (validationResult.vendor_info.manufacturer ? QString{ validationResult.vendor_info.manufacturer } : QString{ "N/A" }) +
-                   QString{ "<br/>" };
-        message += QString{ "<br/>" };
-        message += QString{ "GOP Info:<br/>" };
-        message += QString{ "Number of valid GOPs: " } + QString::number(validationResult.gop_info.valid_gops_count) + QString{ "<br/>" };
-        message += QString{ "Number of valid GOPs with missing NALUs: " } +
-                   QString::number(validationResult.gop_info.valid_gops_with_missing_nalu_count) + QString{ "<br/>" };
-        message += QString{ "Number of invalid GOPs: " } + QString::number(validationResult.gop_info.invalid_gops_count) + QString{ "<br/>" };
-        message += QString{ "Number of GOPs without signature: " } + QString::number(validationResult.gop_info.gops_without_signature_count) +
-                   QString{ "<br/>" };
+
+    {
+        QFile validationResultsFile(m_tmpFile->fileName());
+        if (!validationResultsFile.open(QIODevice::ReadOnly)) {
+            message = "Failed to open results file...";
+        } else
+            message = validationResultsFile.readAll();
+        delete m_tmpFile;
+        m_tmpFile = nullptr;
     }
+
     m_ui->textEdit->setText(message);
 }
