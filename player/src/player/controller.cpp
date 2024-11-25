@@ -187,6 +187,12 @@ void Controller::verifyUsingSignedMediaFramework() {
         case AV_CODEC_ID_H265:
             codecString = "h265";
             break;
+        default: {
+            QMessageBox message_box(QMessageBox::Warning, m_player_widget.windowTitle(), QString("File can not be verified, because signing only allowed for H.265/H.264 encoders."),
+                                    QMessageBox::Ok, &m_player_widget);
+            message_box.exec();
+        }
+            return;
     }
     SMFValidationWidget dialog(&m_player_widget, m_current_file_name, codecString);
     dialog.exec();

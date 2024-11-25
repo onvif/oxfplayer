@@ -44,31 +44,24 @@
     <widget class="QStackedWidget" name="stackedWidget">
      <widget class="QWidget" name="options_page">
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="1" column="1" colspan="2">
-        <widget class="QComboBox" name="codec_cbx">
-         <property name="editable">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Path to trusted certificate:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QCheckBox" name="bulk_cb">
+         <property name="text">
+          <string>Bulk run</string>
+         </property>
+         <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="certificate_path_txt"/>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Path to certificate:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Codec:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
+       <item row="2" column="1">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -94,12 +87,8 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QCheckBox" name="bulk_cb">
-         <property name="text">
-          <string>Bulk run</string>
-         </property>
-        </widget>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="certificate_path_txt"/>
        </item>
       </layout>
      </widget>

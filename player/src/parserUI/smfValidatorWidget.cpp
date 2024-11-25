@@ -42,13 +42,11 @@ SMFValidationWidget::SMFValidationWidget(QWidget* parent, const QString& file_na
     : QDialog(parent), m_ui(new Ui::SMFValidationWidget()) {
     m_ui->setupUi(this);
 
+    m_ui->bulk_cb->hide();
+
     m_ui->certificate_path_txt->setText(GetCertPath());
     m_ui->validate_btn->setText(QObject::tr("Validate"));
     m_ui->validate_btn->show();
-
-    m_ui->codec_cbx->addItem("H.264", "h264");
-    m_ui->codec_cbx->addItem("H.265", "h265");
-    m_ui->codec_cbx->setCurrentIndex(m_ui->codec_cbx->findData(codecString));
 
     QObject::connect(m_ui->certificate_path_btn, &QPushButton::clicked, this, [this]() {
         const QString certificateFilePath =
@@ -57,7 +55,7 @@ SMFValidationWidget::SMFValidationWidget(QWidget* parent, const QString& file_na
         SetCertPath(certificateFilePath);
     });
 
-    QObject::connect(m_ui->validate_btn, &QPushButton::clicked, this, [this, file_name]() {
+    QObject::connect(m_ui->validate_btn, &QPushButton::clicked, this, [this, file_name, codecString]() {
         if (m_ui->stackedWidget->currentIndex() == 0) {
             m_ui->validate_btn->hide();
             m_ui->stackedWidget->setCurrentIndex(1);
@@ -66,7 +64,7 @@ SMFValidationWidget::SMFValidationWidget(QWidget* parent, const QString& file_na
             m_tmpFile->open();
             ::widget = this;
             validation_callback(validationFinished);
-            validate((gchar*)m_ui->codec_cbx->currentData().value<QString>().toStdString().data(),
+            validate((gchar*)codecString.toStdString().data(),
                      (gchar*)m_ui->certificate_path_txt->text().toStdString().data(), (gchar*)file_name.toStdString().data(),
                      m_ui->bulk_cb->isChecked(), m_tmpFile->fileName().toUtf8().constData());
         }
@@ -95,7 +93,7 @@ void SMFValidationWidget::validationCallback(ValidationResult validationResult) 
     widget = nullptr;
 
     QString message;
-
+     
     {
         QFile validationResultsFile(m_tmpFile->fileName());
         if (!validationResultsFile.open(QIODevice::ReadOnly)) {
