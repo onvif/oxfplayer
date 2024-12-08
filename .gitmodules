@@ -6,4 +6,4 @@
 	url = https://github.com/zeux/pugixml.git
 [submodule "signed-media-framework"]
 	path = player/3rdparty/signed-media-framework
-	url = https://andrewGuzGRSE@github.com/onvif/signed-media-framework.git
+	url = https://github.com/onvif/signed-media-framework.git
