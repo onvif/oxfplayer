@@ -48,11 +48,12 @@ cd player
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=BUILD_TYPE -DPLUGIN_NAME=PLUGIN_NAME -DFFMPEG_PATH=PATH_TO_LOCAL_FFMPEG .. 
-cmake --build .
+cmake --build . -j THREADS_COUNT
 ```
 Where
 - BUILD_TYPE can be 'Debug' or 'Release'
 - PLUGIN_NAME can be `threaded-signing` or `unthreaded-signing`
 - PATH_TO_LOCAL_FFMPEG is a path to FFmpeg 4.4 if it's not a part of you Linux
+- THREADS_COUNT is a threads count used to build application
 
 In case of using not system FFmpeg, you will have to copy it's so files near by Player executable.
