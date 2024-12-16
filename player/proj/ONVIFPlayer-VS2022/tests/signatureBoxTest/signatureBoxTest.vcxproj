@@ -71,12 +71,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_INSTALL_DIR_3_3_1)\include;$(FFMPEG_PATH)\include;..\..\..\..\src;..\..\..\..\src\common;..\..\..\..\src\parser;..\..\..\..\src\parser\basic;..\..\..\..\src\parser\basic\mixin;..\..\..\..\src\parser\helpers;..\..\..\..\src\parserUI;..\..\..\..\src\player;..\..\..\..\src\playerUI;..\..\..\..\src\tests;..\..\..\..\3rdparty\portaudio\include;..\..\..\..\3rdparty\pugixml\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_PATH)\include;$(FFMPEG_PATH)\include;..\..\..\..\src;..\..\..\..\src\common;..\..\..\..\src\parser;..\..\..\..\src\parser\basic;..\..\..\..\src\parser\basic\mixin;..\..\..\..\src\parser\helpers;..\..\..\..\src\parserUI;..\..\..\..\src\player;..\..\..\..\src\playerUI;..\..\..\..\src\tests;..\..\..\..\3rdparty\portaudio\include;..\..\..\..\3rdparty\pugixml\src</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_INSTALL_DIR_3_3_1)\include;$(FFMPEG_PATH)\include;..\..\..\..\src;..\..\..\..\src\common;..\..\..\..\src\parser;..\..\..\..\src\parser\basic;..\..\..\..\src\parser\basic\mixin;..\..\..\..\src\parser\helpers;..\..\..\..\src\parserUI;..\..\..\..\src\player;..\..\..\..\src\playerUI;..\..\..\..\src\tests;..\..\..\..\3rdparty\portaudio\include;..\..\..\..\3rdparty\pugixml\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_PATH)\include;$(FFMPEG_PATH)\include;..\..\..\..\src;..\..\..\..\src\common;..\..\..\..\src\parser;..\..\..\..\src\parser\basic;..\..\..\..\src\parser\basic\mixin;..\..\..\..\src\parser\helpers;..\..\..\..\src\parserUI;..\..\..\..\src\player;..\..\..\..\src\playerUI;..\..\..\..\src\tests;..\..\..\..\3rdparty\portaudio\include;..\..\..\..\3rdparty\pugixml\src</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
