@@ -112,7 +112,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_PATH)\include;$(FFMPEG_PATH)\include;$(GSTREAMER)\include\gstreamer-1.0;$(GSTREAMER)\include\glib-2.0;$(GSTREAMER)\lib\glib-2.0\include;..\..\..\src;..\..\..\src\common;..\..\..\src\parser;..\..\..\src\parser\basic;..\..\..\src\parser\basic\mixin;..\..\..\src\parser\helpers;..\..\..\src\parserUI;..\..\..\src\player;..\..\..\src\playerUI;..\..\..\src\tests;..\..\..\3rdparty\portaudio\include;..\..\..\3rdparty\pugixml\src</AdditionalIncludeDirectories>
-      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
