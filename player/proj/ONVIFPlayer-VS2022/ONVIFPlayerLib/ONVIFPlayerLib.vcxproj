@@ -60,7 +60,9 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_INSTALL_DIR_3_3_1)\include;$(FFMPEG_PATH)\include;$(GSTREAMER)\include\gstreamer-1.0;$(GSTREAMER)\include\glib-2.0;$(GSTREAMER)\lib\glib-2.0\include;..\..\..\src;..\..\..\src\common;..\..\..\src\parser;..\..\..\src\parser\basic;..\..\..\src\parser\basic\mixin;..\..\..\src\parser\helpers;..\..\..\src\parserUI;..\..\..\src\player;..\..\..\src\playerUI;..\..\..\src\tests;..\..\..\3rdparty\portaudio\include;..\..\..\3rdparty\pugixml\src;..\..\..\3rdparty\signed-media-framework\lib\src;..\..\..\3rdparty\signed-media-framework\lib\src\includes</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_PATH)\include;$(FFMPEG_PATH)\include;$(GSTREAMER)\include\gstreamer-1.0;$(GSTREAMER)\include\glib-2.0;$(GSTREAMER)\lib\glib-2.0\include;..\..\..\src;..\..\..\src\common;..\..\..\src\parser;..\..\..\src\parser\basic;..\..\..\src\parser\basic\mixin;..\..\..\src\parser\helpers;..\..\..\src\parserUI;..\..\..\src\player;..\..\..\src\playerUI;..\..\..\src\tests;..\..\..\3rdparty\portaudio\include;..\..\..\3rdparty\pugixml\src;..\..\..\3rdparty\signed-media-framework\lib\src;..\..\..\3rdparty\signed-media-framework\lib\src\includes</AdditionalIncludeDirectories>
+      
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>$(OPENSSL_PATH)\lib\VC\x64\MDd;$(FFMPEG_PATH)\lib;$(GSTREAMER)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -68,7 +70,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_INSTALL_DIR_3_3_1)\include;$(FFMPEG_PATH)\include;$(GSTREAMER)\include\gstreamer-1.0;$(GSTREAMER)\include\glib-2.0;$(GSTREAMER)\lib\glib-2.0\include;..\..\..\src;..\..\..\src\common;..\..\..\src\parser;..\..\..\src\parser\basic;..\..\..\src\parser\basic\mixin;..\..\..\src\parser\helpers;..\..\..\src\parserUI;..\..\..\src\player;..\..\..\src\playerUI;..\..\..\src\tests;..\..\..\3rdparty\portaudio\include;..\..\..\3rdparty\pugixml\src;..\..\..\3rdparty\signed-media-framework\lib\src;..\..\..\3rdparty\signed-media-framework\lib\src\includes</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_PATH)\include;$(FFMPEG_PATH)\include;$(GSTREAMER)\include\gstreamer-1.0;$(GSTREAMER)\include\glib-2.0;$(GSTREAMER)\lib\glib-2.0\include;..\..\..\src;..\..\..\src\common;..\..\..\src\parser;..\..\..\src\parser\basic;..\..\..\src\parser\basic\mixin;..\..\..\src\parser\helpers;..\..\..\src\parserUI;..\..\..\src\player;..\..\..\src\playerUI;..\..\..\src\tests;..\..\..\3rdparty\portaudio\include;..\..\..\3rdparty\pugixml\src;..\..\..\3rdparty\signed-media-framework\lib\src;..\..\..\3rdparty\signed-media-framework\lib\src\includes</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>$(OPENSSL_PATH)\lib\VC\x64\MD;$(FFMPEG_PATH)\lib;$(GSTREAMER)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
