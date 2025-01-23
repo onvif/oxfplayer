@@ -2,15 +2,35 @@
 
 ## How to build
 
-### Needed applications/libraries
+### Needed applications/libraries (Windows build)
 You need next applications/libraries to be installed:
-- Visual Studio 2022 (for Windows build)
+- Visual Studio 2022
 - Qt 5.12
-- Qt add-on for Visual Studio (for Windows build) (https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2022)
+- Qt add-on for Visual Studio (https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2022)
 - CMake (https://cmake.org/download/)
 - OpenSSL 3.3.1 (https://slproweb.com/products/Win32OpenSSL.html)
 - FFmgpeg 4.4, not higher (https://github.com/andrewGuzGRSE/FFmpegBuilds, https://github.com/BtbN/FFmpeg-Builds)
 - GStreamer 1.0 or higher (https://gstreamer.freedesktop.org/download/#windows)
+
+### Needed applications/libraries (Ubuntu 24.04 build)
+You need next applications/libraries to be installed:
+- OpenSSL:
+  ```
+  sudo apt install libssl-dev
+  ```
+- CMake:
+  ```
+  sudo apt install cmake build-essential
+  ```
+- Qt 5.15:
+  ```
+  sudo apt install qtbase5-dev qt5-qmake libqt5multimedia5-plugins qtmultimedia5-dev
+  ```
+- GStreamer:
+  ```
+  sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+  ```
+- FFmpeg 4.4, not higher (https://github.com/andrewGuzGRSE/FFmpegBuilds)
 
 ### Update submodules after clone
 ```
