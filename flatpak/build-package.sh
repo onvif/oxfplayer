@@ -72,7 +72,7 @@ sed -i "s|\$SIGNING_TYPE|$SIGNING_TYPE|g" org.onvif.Player.yaml
 flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Build the Flatpak package
-flatpak-builder --force-clean --install-deps-from=flathub --repo=repo builddir org.onvif.Player.yaml
+flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo builddir org.onvif.Player.yaml
 
 # Create the Flatpak bundle
 flatpak build-bundle repo onvif-player-$VERSION-x86_64.flatpak org.onvif.Player
