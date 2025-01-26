@@ -3,3 +3,7 @@ setup/input/
 setup/output/
 **/validation_results.txt
 **/openssl_onvif_log.txt
+
+player/build/
+deb/build/
+flatpak/build/

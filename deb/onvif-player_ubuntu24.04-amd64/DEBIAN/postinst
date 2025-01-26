@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "/usr/local/lib/onvif-player" > /etc/ld.so.conf.d/onvif-player.conf
+ldconfig
+

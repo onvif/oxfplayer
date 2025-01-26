@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Onvif Player
+Comment=Onvif Player 3.0-alpha
+Exec=onvif-player
+Icon=org.onvif.Player
+Terminal=false
+Type=Application
+Categories=AudioVideo;

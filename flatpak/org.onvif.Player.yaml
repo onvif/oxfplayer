@@ -1,0 +1,48 @@
+app-id: org.onvif.Player
+runtime: org.kde.Platform
+runtime-version: 5.15-24.08
+sdk: org.kde.Sdk
+command: onvif-player
+finish-args:
+  - --socket=pulseaudio
+  - --device=all
+  - --filesystem=host
+  - --socket=x11
+  - --socket=fallback-x11
+cleanup-commands:
+  - find /app/ffmpeg -mindepth 1 -maxdepth 1 ! -name 'lib' -exec rm -rf {} \;
+  - rm -rf /app/ffmpeg/lib/libavdevice.*
+  - rm -rf /app/ffmpeg/lib/libavfilter.*
+  - rm -rf /app/ffmpeg/lib/libpostproc.*
+  - rm -rf /app/ffmpeg/lib/pkgconfig
+modules:
+  - name: ffmpeg
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/ffmpeg
+      - cp -r ./* /app/ffmpeg
+    sources:
+      - type: dir
+        path: ffmpeg
+  - name: onvif-player
+    buildsystem: simple
+    builddir: true
+    build-commands:
+      - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPLUGIN_NAME=$SIGNING_TYPE -DFFMPEG_PATH=/app/ffmpeg .
+      - cmake --build . -j $(nproc)
+      - mkdir -p /app/bin
+      - mv bin/$BUILD_TYPE/ONVIFPlayer /app/bin/onvif-player
+    sources:
+      - type: dir
+        path: player
+  - name: share
+    buildsystem: simple
+    builddir: true
+    build-commands:
+      - mkdir -p /app/share/applications
+      - cp org.onvif.Player.desktop /app/share/applications/
+      - mkdir -p /app/share/icons/hicolor/32x32/apps
+      - cp org.onvif.Player.png /app/share/icons/hicolor/32x32/apps/
+    sources:
+      - type: dir
+        path: share

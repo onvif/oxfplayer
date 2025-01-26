@@ -4,7 +4,7 @@ if(NOT LINUX)
   message( FATAL_ERROR "Only for linux build" )
 endif()
 
-project(ONVIFPlayer VERSION 2.0.0 LANGUAGES CXX)
+project(ONVIFPlayer VERSION 3.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -73,3 +73,4 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 add_subdirectory(src)
+
