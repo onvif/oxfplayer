@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Onvif Player
-Comment=Onvif Player 3.0-alpha
+Comment=Onvif Player $VERSION
 Exec=onvif-player
 Icon=org.onvif.Player
 Terminal=false

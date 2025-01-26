@@ -57,13 +57,14 @@ ln -s -r "../player" build/player
 # Create a symlink to the ffmpeg folder in the build directory
 ln -s "$FFMPEG_PATH" build/ffmpeg
 
-# Create a symlink to the share folder in the build directory
-ln -s -r "./share" build/share
+# Prepare share folder
+cp -r ./share build/share
 
 # Change to the build directory
 cd build
 
-# Replace placeholders in 'org.onvif.Player.yaml'
+# Replace placeholders
+sed -i "s|\$VERSION|$VERSION|g" share/org.onvif.Player.desktop
 sed -i "s|\$BUILD_TYPE|$BUILD_TYPE|g" org.onvif.Player.yaml
 sed -i "s|\$SIGNING_TYPE|$SIGNING_TYPE|g" org.onvif.Player.yaml
 
