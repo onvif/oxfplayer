@@ -1,0 +1,25 @@
+Package: onvif-player
+Version: $VERSION
+Maintainer: Vladimir Dergachyov <vladimir.dergachyov@grse.de>
+Architecture: amd64
+Description: Onvif Player $VERSION
+Depends: libssl3t64,
+         libqt5core5t64,
+         libqt5gui5t64,
+         libqt5network5t64,
+         libqt5widgets5t64,
+         libqt5multimedia5-plugins,
+         libgstreamer1.0-0,
+         gstreamer1.0-plugins-base,
+         gstreamer1.0-plugins-good,
+         gstreamer1.0-plugins-bad,
+         gstreamer1.0-plugins-ugly,
+         gstreamer1.0-libav,
+         gstreamer1.0-tools,
+         gstreamer1.0-x,
+         gstreamer1.0-alsa,
+         gstreamer1.0-gl,
+         gstreamer1.0-gtk3,
+         gstreamer1.0-qt5,
+         gstreamer1.0-pulseaudio
+

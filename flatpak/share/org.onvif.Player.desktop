@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Onvif Player
+Comment=Onvif Player $VERSION
+Exec=onvif-player
+Icon=org.onvif.Player
+Terminal=false
+Type=Application
+Categories=AudioVideo;
