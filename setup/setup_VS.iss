@@ -30,6 +30,3 @@
 #define VS
 
 #include "setup_private.iss"
-
-
-

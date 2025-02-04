@@ -428,8 +428,8 @@ bool OXFVerifier::verifySignatureWithDecrypt(const QByteArray& hashData, EVP_PKE
 bool OXFVerifier::verifySignatureWithDigest(const QByteArray& hashData, EVP_PKEY* pkey)
 {
     // EVP context initialization
-    EVP_MD_CTX  ctx;
-    EVP_MD_CTX_init(&ctx);
+    EVP_MD_CTX* ctx = EVP_MD_CTX_create();
+    EVP_MD_CTX_init(ctx);
 
     int keysize = EVP_PKEY_size(pkey);
     int rsa_inlen = m_sign.length();  // what we got from parser
@@ -439,11 +439,11 @@ bool OXFVerifier::verifySignatureWithDigest(const QByteArray& hashData, EVP_PKEY
     //EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new(pkey, nullptr);
 
     int evpRes = 0;
-    int res1 = EVP_DigestVerifyInit(&ctx, /*&pctx*/nullptr, EVP_sha256(), nullptr, pkey);
-    int res2 = EVP_DigestVerifyUpdate(&ctx, hashData.data(), hashData.length());
+    int res1 = EVP_DigestVerifyInit(ctx, /*&pctx*/nullptr, EVP_sha256(), nullptr, pkey);
+    int res2 = EVP_DigestVerifyUpdate(ctx, hashData.data(), hashData.length());
     if ( (1 == res1) && (1 == res2))
     {
-        evpRes = EVP_DigestVerifyFinal(&ctx, (unsigned char*)m_sign.data(), rsa_inlen);
+        evpRes = EVP_DigestVerifyFinal(ctx, (unsigned char*)m_sign.data(), rsa_inlen);
         if (1 != evpRes)
         {
             ERR_load_crypto_strings();
@@ -456,7 +456,7 @@ bool OXFVerifier::verifySignatureWithDigest(const QByteArray& hashData, EVP_PKEY
         qDebug() << "EVP_Digest ERROR: " << ERR_error_string(ERR_get_error(),NULL);
     }
 
-    EVP_MD_CTX_cleanup(&ctx);
+    EVP_MD_CTX_destroy(ctx);
     return (evpRes != 0) ? true : false;
 }
 

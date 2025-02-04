@@ -42,6 +42,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <cstdint>
 
 #include "defines.h"
 #include "endian.hpp"
@@ -144,6 +145,16 @@ private:
 
     //! Converts byte-arrays to lists of properties.
     inline void convert(QByteArray value)
+    {
+        m_string = QString("Byte array of %1 records").arg(value.size());
+        for(auto it = value.begin(), end = value.end(); it != end; ++it)
+        {
+			uint8_t entry = *it;
+            push_back( Property(entry) );
+        }
+    }
+
+    inline void convert(QVector<std::uint64_t> value)
     {
         m_string = QString("Byte array of %1 records").arg(value.size());
         for(auto it = value.begin(), end = value.end(); it != end; ++it)

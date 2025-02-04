@@ -142,3 +142,5 @@ void SampleDependencyTypeBoxTest::fillData()
     for(int i = 0; i < SHORT_DATA_SIZE; ++i)
         short_table_data.push_back(0);
 }
+
+QTEST_MAIN(SampleDependencyTypeBoxTest)

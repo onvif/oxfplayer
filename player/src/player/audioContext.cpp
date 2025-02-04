@@ -29,8 +29,7 @@
 
 #include "audioContext.h"
 
-#include <qmediadevices.h>
-#include <qaudiodevice.h>
+#include <QAudioDeviceInfo> 
 
 AudioContext::AudioContext()
 {
@@ -48,7 +47,7 @@ bool AudioContext::init(AVCodecContext* codecContext)
     if(audio_codec_context == nullptr)
         return false;
 
-    QAudioDevice default_device_info = QMediaDevices::defaultAudioOutput();
+    QAudioDeviceInfo default_device_info = QAudioDeviceInfo::defaultOutputDevice();
     QAudioFormat audio_format = default_device_info.preferredFormat();
     audio_format.setSampleRate(audio_codec_context->sample_rate);
     audio_format.setChannelCount(audio_codec_context->channels);
@@ -59,6 +58,7 @@ bool AudioContext::init(AVCodecContext* codecContext)
     m_audio_params.m_freq = audio_format.sampleRate();
     m_audio_params.m_channels = audio_format.channelCount();
     m_audio_params.m_channel_layout = av_get_default_channel_layout(m_audio_params.m_channels);
+    /*
     switch(audio_format.sampleFormat())
     {
     case QAudioFormat::Int16:
@@ -67,6 +67,24 @@ bool AudioContext::init(AVCodecContext* codecContext)
         m_audio_params.m_fmt = AV_SAMPLE_FMT_S32;
         break;
     case QAudioFormat::UInt8:
+        m_audio_params.m_fmt = AV_SAMPLE_FMT_U8;
+        break;
+    case QAudioFormat::Float:
+        m_audio_params.m_fmt = AV_SAMPLE_FMT_FLT;
+        break;
+    default:
+        break;
+    }
+    */
+   switch(audio_format.sampleType())
+    {
+    case QAudioFormat::Unknown:
+        m_audio_params.m_fmt = AV_SAMPLE_FMT_NONE;
+        break;
+    case QAudioFormat::SignedInt:
+        m_audio_params.m_fmt = AV_SAMPLE_FMT_S32;
+        break;
+    case QAudioFormat::UnSignedInt:
         m_audio_params.m_fmt = AV_SAMPLE_FMT_U8;
         break;
     case QAudioFormat::Float:

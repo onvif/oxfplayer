@@ -35,6 +35,9 @@
 
 class QueuedVideoDecoder : public QueuedDecoder<VideoFrame>
 {
+private:
+    Q_OBJECT
+
 public:
     QueuedVideoDecoder(AVMediaType type = AVMEDIA_TYPE_VIDEO);
 
@@ -48,6 +51,9 @@ public:
 
     int frameWidth() const { return m_frame_width; }
     int frameHeight() const { return m_frame_height; }
+
+signals:
+    void openedFileCodec(AVCodecID codec);
 
 protected:
     virtual void processPacket(AVPacket* packet, int timestamp_ms);
@@ -69,7 +75,6 @@ protected:
     //! Temp buffer for conversion.
     uint8_t*    m_buffer;
     int         m_frame_width, m_frame_height;
-
 };
 
 #endif // QUEUEDVIDEODECODER_H

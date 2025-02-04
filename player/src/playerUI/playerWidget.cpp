@@ -53,6 +53,7 @@ PlayerWidget::PlayerWidget(QWidget* parent) :
     QObject::connect(m_ui->actionOpen, SIGNAL(triggered()), this, SLOT(onOpenFile()));
     QObject::connect(m_ui->actionFile_structure, SIGNAL(triggered()), this, SIGNAL(showFileStructure()));
     QObject::connect(m_ui->actionFile_signature, SIGNAL(triggered()), this, SIGNAL(verifyFileSignature()));
+    QObject::connect(m_ui->actionStream_signature, SIGNAL(triggered()), this, SIGNAL(verifyUsingSignedMediaFramework()));
     QObject::connect(m_ui->actionCertificate_storage, SIGNAL(triggered()), this, SIGNAL(openCertificateStorage()));
     QObject::connect(m_ui->actionExit, SIGNAL(triggered()), this, SIGNAL(exit()));
 	QObject::connect(m_ui->actionLocalTime, SIGNAL(triggered()), this, SLOT(showLocalTime()));
@@ -95,9 +96,9 @@ QString PlayerWidget::getLastOpenedFolder()
 #ifdef WIN32
     QSettings settings(QDir::homePath() + WINP_APP_DATA_ROAMING + COMPANY_NAME + "/" + PRODUCT_NAME + "/" + CONFIG_FILE_NAME, QSettings::IniFormat);
 #endif //WIN32
-#ifdef UNIX
+#ifdef __linux__
     QSettings settings(QDir::homePath() + "/." + PRODUCT_NAME + "/" + CONFIG_FILE_NAME, QSettings::IniFormat);
-#endif //UNIX
+#endif //__linux__
     return settings.value("lastOpenedFolder", "").toString();
 }
 
@@ -106,9 +107,9 @@ void PlayerWidget::saveLastOpenedFolder(const QString& folder)
 #ifdef WIN32
     QSettings settings(QDir::homePath() + WINP_APP_DATA_ROAMING + COMPANY_NAME + "/" + PRODUCT_NAME + "/" + CONFIG_FILE_NAME, QSettings::IniFormat);
 #endif //WIN32
-#ifdef UNIX
+#ifdef __linux__
     QSettings settings(QDir::homePath() + "/." + PRODUCT_NAME + "/" + CONFIG_FILE_NAME, QSettings::IniFormat);
-#endif //UNIX
+#endif //__linux__
     settings.setValue("lastOpenedFolder", folder);
 }
 

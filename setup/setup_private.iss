@@ -24,7 +24,7 @@
 ;* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;************************************************************************************/
-
+                    
 #ifndef NormalSetup
 	#error You should not execute this file directly. Call one of the custom specific setup files to build a setup (MinGW or VS)
 #endif
@@ -43,26 +43,24 @@ SetupIconFile = setup.ico
 ; exe
 Source: "input/ONVIFPlayer.exe"; DestDir: "{app}"
 ; dlls
-; Qt
-Source: "input/Qt*.dll"; DestDir: "{app}"
-Source: "input/plugins/platforms/*.*"; DestDir: "{app}/plugins/platforms"
 #ifdef MinGW
 Source: "input/D3DCompiler_*.dll"; DestDir: "{app}"
-#endif
-; FFMpeg
-Source: "input/av*.dll"; DestDir: "{app}"
-Source: "input/sw*.dll"; DestDir: "{app}"
-#ifdef MinGW
-; MinGW
 Source: "input/libgcc_s_sjlj-1.dll"; DestDir: "{app}"
 Source: "input/libstdc++-6.dll"; DestDir: "{app}"
 Source: "input/libwinpthread-1.dll"; DestDir: "{app}"
 #endif
-; PortAudio
-Source: "input/portaudio*.dll"; DestDir: "{app}"
+#ifdef VS
+Source: "VC_redist.x64.exe"; DestDir: "{tmp}"
+#endif
+; Qt
+Source: "input/Qt*.dll"; DestDir: "{app}"
+Source: "input/plugins/platforms/*.*"; DestDir: "{app}/platforms"
+; FFMpeg
+Source: "input/av*.dll"; DestDir: "{app}"
+Source: "input/sw*.dll"; DestDir: "{app}"
 ; OpenSSL
-Source: "input/libeay32.dll"; DestDir: "{app}"
-Source: "input/ssleay32.dll"; DestDir: "{app}"
+Source: "input/libcrypto*.dll"; DestDir: "{app}"
+Source: "input/libssl*.dll"; DestDir: "{app}"
 ;Licenses
 Source: "license.txt"; DestDir: "{app}"
 
@@ -75,6 +73,9 @@ Name: "{commondesktop}\ONVIFPlayer"; Filename: "{app}\ONVIFPlayer.exe"; WorkingD
 Name: "{group}\Uninstall ONVIFPlayer"; Filename: "{uninstallexe}"; WorkingDir: "{app}"
 
 [Run]
+#ifdef VS
+Filename: "{tmp}\VC_redist.x64.exe"; Parameters: "/quiet"; Flags: waituntilterminated
+#endif
 Filename: "{app}\ONVIFPlayer.exe"; Flags: postinstall nowait
 
 

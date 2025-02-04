@@ -166,3 +166,18 @@ void MediaHeaderBoxTestLocal<DATA_TYPE>::localTest()
     QVERIFY(Box::SizeOk == box->getSizeError());
     QVERIFY(has_more_data == false);
 }
+
+// Note: This is equivalent to QTEST_APPLESS_MAIN for multiple test classes.
+int main(int argc, char** argv)
+{
+   int status = 0;
+   {
+      MediaHeaderBoxTest32 tc;
+      status |= QTest::qExec(&tc, argc, argv);
+   }
+   {
+      MediaHeaderBoxTest64 tc;
+      status |= QTest::qExec(&tc, argc, argv);
+   }
+   return status;
+}

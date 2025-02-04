@@ -234,3 +234,18 @@ void MovieExtendsHeaderBoxTest64::readingTest()
     QVERIFY(has_more_data == false);
 }
 #endif
+
+// Note: This is equivalent to QTEST_APPLESS_MAIN for multiple test classes.
+int main(int argc, char** argv)
+{
+   int status = 0;
+   {
+      MovieExtendsHeaderBoxTest32 tc;
+      status |= QTest::qExec(&tc, argc, argv);
+   }
+   {
+      MovieExtendsHeaderBoxTest64 tc;
+      status |= QTest::qExec(&tc, argc, argv);
+   }
+   return status;
+}

@@ -223,9 +223,9 @@ void VerifyerDialog::onCertificateActionClicked(void)
 #ifdef WIN32
     dir = QDir::homePath() + WINP_APP_DATA_ROAMING + COMPANY_NAME + "/" + PRODUCT_NAME + "/" + CERTIFICATES_FOLDER + "/";
 #endif //WIN32
-#ifdef UNIX
+#ifdef __linux__
     dir = QDir::homePath() + "/." + PRODUCT_NAME + "/" + CERTIFICATES_FOLDER + "/";
-#endif //UNIX
+#endif //__linux__
     if(!QDir(dir).exists())
         QDir().mkpath(dir);
     QFileDialog save_file_dialog(this);

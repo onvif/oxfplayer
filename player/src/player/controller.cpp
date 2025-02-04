@@ -35,6 +35,7 @@
 #include "certificateStorage.h"
 #include "certificateStorageDialog.h"
 #include "queuedMetadataDecoder.h"
+#include "smfValidatorWidget.h"
 
 Controller::Controller(Engine& engine,
                        PlayerWidget& player_widget, FullscreenPlayerWidget& fullscreen_player_widget, ControlsWidget& controls_widget,
@@ -55,11 +56,13 @@ Controller::Controller(Engine& engine,
     QObject::connect(&m_player_widget, SIGNAL(changeAudioStream(int)), this, SLOT(onAudioStreamIndexChanged(int)));
     QObject::connect(&m_player_widget, SIGNAL(showFileStructure()), this, SLOT(showFileStructure()));
     QObject::connect(&m_player_widget, SIGNAL(verifyFileSignature()), this, SLOT(verifyFileSignature()));
+    QObject::connect(&m_player_widget, SIGNAL(verifyUsingSignedMediaFramework()), this, SLOT(verifyUsingSignedMediaFramework()));
     QObject::connect(&m_player_widget, SIGNAL(openCertificateStorage()), this, SLOT(openCertificateStorage()));
     QObject::connect(&m_player_widget, SIGNAL(exit()), this, SLOT(exit()));
     QObject::connect(&m_player_widget, SIGNAL(showLocalTimeChanged(bool)), this, SLOT(onshowLocalTimeChanged(bool)));
 
-    QObject::connect(&m_engine, SIGNAL(playbackFinished()), this, SLOT(onPlaybackFinished()));    
+    QObject::connect(&m_engine, SIGNAL(playbackFinished()), this, SLOT(onPlaybackFinished()));
+    QObject::connect(&m_engine, &Engine::openedFileCodec, this, [this](AVCodecID codec) { m_current_codec = codec; });
 
     QObject::connect(&m_controls_widget, SIGNAL(started()), this, SLOT(onPlay()), Qt::QueuedConnection);
     QObject::connect(&m_controls_widget, SIGNAL(paused()), this, SLOT(onPause()), Qt::QueuedConnection);
@@ -98,12 +101,16 @@ Controller::~Controller()
 {
     m_engine.stop();
     m_engine.clear();
+    m_current_file_name.clear();
+    m_current_codec = AVCodecID::AV_CODEC_ID_NONE;
 }
 
 void Controller::openFile(const QString& file_name)
 {
     m_engine.stop();
     m_engine.clear();
+    m_current_file_name.clear();
+    m_current_codec = AVCodecID::AV_CODEC_ID_NONE;
     m_player_widget.getEventWidget()->clear();
     m_player_widget.getVideoWidget()->clear();
     m_player_widget.getEventTreeWidget()->clear();
@@ -151,6 +158,7 @@ void Controller::openFile(const QString& file_name)
     m_controls_widget.startPlayback();
     m_controls_widget.updateUI();
     m_engine.start();
+    m_current_file_name = file_name;
 }
 
 void Controller::showFileStructure()
@@ -167,6 +175,29 @@ void Controller::verifyFileSignature()
     m_verifyer_dialog.show();
 }
 
+void Controller::verifyUsingSignedMediaFramework() {
+    if (m_current_file_name.isEmpty())
+        return;
+
+    QString codecString;
+    switch(m_current_codec) {
+        case AVCodecID::AV_CODEC_ID_H264:
+            codecString = "h264";
+            break;
+        case AV_CODEC_ID_H265:
+            codecString = "h265";
+            break;
+        default: {
+            QMessageBox message_box(QMessageBox::Warning, m_player_widget.windowTitle(), QString("File can not be verified, because signing only allowed for H.265/H.264 encoders."),
+                                    QMessageBox::Ok, &m_player_widget);
+            message_box.exec();
+        }
+            return;
+    }
+    SMFValidationWidget dialog(&m_player_widget, m_current_file_name, codecString);
+    dialog.exec();
+}
+
 void Controller::openCertificateStorage()
 {
     CertificateStorageDialog certificate_storage_dialog(&m_player_widget);
@@ -177,6 +208,8 @@ void Controller::exit()
 {
     m_engine.stop();
     m_engine.clear();
+    m_current_file_name.clear();
+    m_current_codec = AVCodecID::AV_CODEC_ID_NONE;
     qApp->quit();
 }
 

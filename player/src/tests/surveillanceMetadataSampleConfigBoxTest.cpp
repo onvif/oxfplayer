@@ -123,3 +123,4 @@ void SurveillanceMetadataSampleConfigBoxTest::readingTest()
     QVERIFY(has_more_data == false);
 }
 
+QTEST_MAIN(SurveillanceMetadataSampleConfigBoxTest)

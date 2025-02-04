@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\main.cpp">
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Disabled</InlineFunctionExpansion>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\src\resources\fullscreen.png" />
+    <Image Include="..\..\..\src\resources\media_next.png" />
+    <Image Include="..\..\..\src\resources\media_pause.png" />
+    <Image Include="..\..\..\src\resources\media_play.png" />
+    <Image Include="..\..\..\src\resources\media_prev.png" />
+    <Image Include="..\..\..\src\resources\media_stop.png" />
+    <Image Include="..\..\..\src\resources\movie_frame.png" />
+    <Image Include="..\..\..\src\resources\mute.png" />
+    <Image Include="..\..\..\src\resources\Onvif.png" />
+    <Image Include="..\..\..\src\resources\ONVIFPlayer.ico" />
+    <Image Include="..\..\..\src\resources\volume.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\src\resources\ONVIFPlayer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="..\..\..\src\resources\resources.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\3rdparty\build\portaudio\PortAudio.vcxproj">
+      <Project>{b115ef66-bc92-3e35-acc4-1975596f7d47}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\3rdparty\build\pugixml\pugixml-static.vcxproj">
+      <Project>{382a6c2f-b2a4-3a00-bfb7-3e0ab14ff870}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\3rdparty\signed-media-framework\VS2022\signed-media-framework.vcxproj">
+      <Project>{c02ecfe1-167f-4b83-b8d2-33025b5b111f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ONVIFPlayerLib\ONVIFPlayerLib.vcxproj">
+      <Project>{c76a39f2-db97-45bf-a8e6-b28c294615ed}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D8BEAD3B-340A-4048-BF63-CF2CA19EEDBB}</ProjectGuid>
+    <Keyword>QtVS_v304</Keyword>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
+    <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
+    <Import Project="$(QtMsBuild)\qt_defaults.props" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
+    <QtInstall>Qt 5.12 x64</QtInstall>
+    <QtModules>core;gui;multimedia;network;widgets</QtModules>
+    <QtBuildConfig>debug</QtBuildConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
+    <QtInstall>Qt 5.12 x64</QtInstall>
+    <QtModules>core;gui;multimedia;network;widgets</QtModules>
+    <QtBuildConfig>release</QtBuildConfig>
+  </PropertyGroup>
+  <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
+    <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
+  </Target>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_PATH)\include;$(FFMPEG_PATH)\include;$(GSTREAMER)\include\gstreamer-1.0;$(GSTREAMER)\include\glib-2.0;$(GSTREAMER)\lib\glib-2.0\include;..\..\..\src;..\..\..\src\common;..\..\..\src\parser;..\..\..\src\parser\basic;..\..\..\src\parser\basic\mixin;..\..\..\src\parser\helpers;..\..\..\src\parserUI;..\..\..\src\player;..\..\..\src\playerUI;..\..\..\src\tests;..\..\..\3rdparty\portaudio\include;..\..\..\3rdparty\pugixml\src</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(OPENSSL_PATH)\lib\VC\x64\MD;$(FFMPEG_PATH)\lib;$(GSTREAMER)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ass.lib;avcodec.lib;avfilter.lib;avformat.lib;avutil.lib;bz2.lib;cairo.lib;cairo-gobject.lib;cairo-script-interpreter.lib;charset.lib;croco-0.6.lib;crypto.lib;dav1d.lib;dca.lib;dv.lib;expat.lib;ffi.lib;FLAC.lib;fontconfig.lib;freetype.lib;fribidi.lib;gdk_pixbuf-2.0.lib;ges-1.0.lib;gio-2.0.lib;glib-2.0.lib;gmodule-2.0.lib;gobject-2.0.lib;graphene-1.0.lib;gstadaptivedemux-1.0.lib;gstallocators-1.0.lib;gstanalytics-1.0.lib;gstapp-1.0.lib;gstaudio-1.0.lib;gstbadaudio-1.0.lib;gstbase-1.0.lib;gstbasecamerabinsrc-1.0.lib;gstcheck-1.0.lib;gstcodecparsers-1.0.lib;gstcodecs-1.0.lib;gstcontroller-1.0.lib;gstcuda-1.0.lib;gstd3d11-1.0.lib;gstdxva-1.0.lib;gstfft-1.0.lib;gstgl-1.0.lib;gstinsertbin-1.0.lib;gstisoff-1.0.lib;gstmpegts-1.0.lib;gstmse-1.0.lib;gstnet-1.0.lib;gstpbutils-1.0.lib;gstphotography-1.0.lib;gstplay-1.0.lib;gstplayer-1.0.lib;gstreamer-1.0.lib;gstriff-1.0.lib;gstrtp-1.0.lib;gstrtsp-1.0.lib;gstrtspserver-1.0.lib;gstsctp-1.0.lib;gstsdp-1.0.lib;gsttag-1.0.lib;gsttranscoder-1.0.lib;gsturidownloader-1.0.lib;gstvalidate-1.0.lib;gstvideo-1.0.lib;gstwebrtc-1.0.lib;gstwebrtcnice-1.0.lib;gstwinrt-1.0.lib;gthread-2.0.lib;harfbuzz.lib;iconv.lib;intl.lib;jpeg.lib;json-glib-1.0.lib;ltc.lib;mp3lame.lib;mpg123.lib;nice.lib;ogg.lib;opencore-amrnb.lib;opencore-amrwb.lib;openh264.lib;openjp2.lib;opus.lib;orc-0.4.lib;orc-test-0.4.lib;pango-1.0.lib;pangocairo-1.0.lib;pangoft2-1.0.lib;pangowin32-1.0.lib;pcre2-8.lib;pixman-1.lib;png16.lib;postproc.lib;psl.lib;rsvg-2.lib;rtmp.lib;sbc.lib;SoundTouch.lib;soup-2.4.lib;spandsp.lib;speex.lib;sqlite3.lib;srt.lib;srtp2.lib;ssl.lib;swresample.lib;swscale.lib;tag.lib;theora.lib;theoradec.lib;theoraenc.lib;tiff.lib;turbojpeg.lib;vo-aacenc.lib;vorbis.lib;vorbisenc.lib;vorbisfile.lib;wavpack.lib;x264.lib;xml2.lib;z.lib;zbar.lib;libcrypto.lib;libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /I /Y $(TargetDir) $(ProjectDir)..\..\..\..\setup\input</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_PATH)\include;$(FFMPEG_PATH)\include;$(GSTREAMER)\include\gstreamer-1.0;$(GSTREAMER)\include\glib-2.0;$(GSTREAMER)\lib\glib-2.0\include;..\..\..\src;..\..\..\src\common;..\..\..\src\parser;..\..\..\src\parser\basic;..\..\..\src\parser\basic\mixin;..\..\..\src\parser\helpers;..\..\..\src\parserUI;..\..\..\src\player;..\..\..\src\playerUI;..\..\..\src\tests;..\..\..\3rdparty\portaudio\include;..\..\..\3rdparty\pugixml\src</AdditionalIncludeDirectories>
+      
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(OPENSSL_PATH)\lib\VC\x64\MDd;$(FFMPEG_PATH)\lib;$(GSTREAMER)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ass.lib;avcodec.lib;avfilter.lib;avformat.lib;avutil.lib;bz2.lib;cairo.lib;cairo-gobject.lib;cairo-script-interpreter.lib;charset.lib;croco-0.6.lib;crypto.lib;dav1d.lib;dca.lib;dv.lib;expat.lib;ffi.lib;FLAC.lib;fontconfig.lib;freetype.lib;fribidi.lib;gdk_pixbuf-2.0.lib;ges-1.0.lib;gio-2.0.lib;glib-2.0.lib;gmodule-2.0.lib;gobject-2.0.lib;graphene-1.0.lib;gstadaptivedemux-1.0.lib;gstallocators-1.0.lib;gstanalytics-1.0.lib;gstapp-1.0.lib;gstaudio-1.0.lib;gstbadaudio-1.0.lib;gstbase-1.0.lib;gstbasecamerabinsrc-1.0.lib;gstcheck-1.0.lib;gstcodecparsers-1.0.lib;gstcodecs-1.0.lib;gstcontroller-1.0.lib;gstcuda-1.0.lib;gstd3d11-1.0.lib;gstdxva-1.0.lib;gstfft-1.0.lib;gstgl-1.0.lib;gstinsertbin-1.0.lib;gstisoff-1.0.lib;gstmpegts-1.0.lib;gstmse-1.0.lib;gstnet-1.0.lib;gstpbutils-1.0.lib;gstphotography-1.0.lib;gstplay-1.0.lib;gstplayer-1.0.lib;gstreamer-1.0.lib;gstriff-1.0.lib;gstrtp-1.0.lib;gstrtsp-1.0.lib;gstrtspserver-1.0.lib;gstsctp-1.0.lib;gstsdp-1.0.lib;gsttag-1.0.lib;gsttranscoder-1.0.lib;gsturidownloader-1.0.lib;gstvalidate-1.0.lib;gstvideo-1.0.lib;gstwebrtc-1.0.lib;gstwebrtcnice-1.0.lib;gstwinrt-1.0.lib;gthread-2.0.lib;harfbuzz.lib;iconv.lib;intl.lib;jpeg.lib;json-glib-1.0.lib;ltc.lib;mp3lame.lib;mpg123.lib;nice.lib;ogg.lib;opencore-amrnb.lib;opencore-amrwb.lib;openh264.lib;openjp2.lib;opus.lib;orc-0.4.lib;orc-test-0.4.lib;pango-1.0.lib;pangocairo-1.0.lib;pangoft2-1.0.lib;pangowin32-1.0.lib;pcre2-8.lib;pixman-1.lib;png16.lib;postproc.lib;psl.lib;rsvg-2.lib;rtmp.lib;sbc.lib;SoundTouch.lib;soup-2.4.lib;spandsp.lib;speex.lib;sqlite3.lib;srt.lib;srtp2.lib;ssl.lib;swresample.lib;swscale.lib;tag.lib;theora.lib;theoradec.lib;theoraenc.lib;tiff.lib;turbojpeg.lib;vo-aacenc.lib;vorbis.lib;vorbisenc.lib;vorbisfile.lib;wavpack.lib;x264.lib;xml2.lib;z.lib;zbar.lib;libcrypto.lib;libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /I /Y $(TargetDir) $(ProjectDir)..\..\..\..\setup\input</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ClCompile>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ClCompile>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <Optimization>MaxSpeed</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
+    <Import Project="$(QtMsBuild)\qt.targets" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

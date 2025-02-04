@@ -27,7 +27,7 @@
 
 #include "signatureConfigurationBox.hpp"
 
-#include "SignatureConfigurationBoxTest.h"
+#include "signatureConfigurationBoxTest.h"
 
 SignatureConfigurationBoxTest::SignatureConfigurationBoxTest()
 {
@@ -106,3 +106,5 @@ void SignatureConfigurationBoxTest::readingTest()
     QVERIFY(Box::SizeOk == box->getSizeError());
     QVERIFY(has_more_data == false);
 }
+
+QTEST_MAIN(SignatureConfigurationBoxTest)

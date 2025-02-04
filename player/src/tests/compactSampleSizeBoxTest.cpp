@@ -190,3 +190,5 @@ void CompactSampleSizeBoxTest::readingTest()
     QVERIFY(Box::SizeOk == box->getSizeError());
     QVERIFY(has_more_data == false);
 }
+
+QTEST_MAIN(CompactSampleSizeBoxTest)

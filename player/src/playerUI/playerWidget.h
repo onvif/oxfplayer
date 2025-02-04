@@ -74,6 +74,9 @@ signals:
     //! Verify File signature.
     void verifyFileSignature();
 
+    //! Verify File or Stream using signed-media-framework.
+    void verifyUsingSignedMediaFramework();
+
     //! Open certificate storage.
     void openCertificateStorage();
 
@@ -123,7 +126,7 @@ private:
     //! UI.
     Ui::PlayerWidget*   m_ui;
     //! Event view UI.
-    QTreeWidget  m_events;
+    QTreeWidget         m_events;
     //! Video view UI.
     VideoFrameWidget    m_video_frame;
 };

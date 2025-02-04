@@ -144,3 +144,4 @@ void CertificateSSLTest::testCertProperties()
     QCOMPARE(cert.expiryDate().toUTC(), QDateTime(QDate(2007, 5, 17), QTime(7,40,26), Qt::UTC));
 }
 
+QTEST_MAIN(CertificateSSLTest)

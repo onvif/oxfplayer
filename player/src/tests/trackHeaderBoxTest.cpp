@@ -44,19 +44,19 @@ void TrackHeaderBoxTest::readingTest_data()
 
     QTest::newRow("Positive test with 32 bit box size and version 0")
             << v0_size.fullbox_size() << BoxSize::large_empty() << fourCC << version_zero << flag
-            << datetime_write() << datetime_write() << 879u << 38638ull << int16_t(876) << int16_t(13) << int16_t(100) << matrix << 320u << 240u;
+            << datetime_write() << datetime_write() << uint32_t(879) << uint64_t(38638) << int16_t(876) << int16_t(13) << int16_t(100) << matrix << uint32_t(320) << uint32_t(240);
     QTest::newRow("Positive test with 32 bit box size and version 1")
             << v1_size.fullbox_size() << BoxSize::large_empty() << fourCC  << version_one << flag
-            << datetime_write() << datetime_write() << 766u << 67385ull << int16_t(125) << int16_t(-713) << int16_t(0) << matrix << 799u << 599u;
+            << datetime_write() << datetime_write() << uint32_t(766) << uint64_t(67385) << int16_t(125) << int16_t(-713) << int16_t(0) << matrix << uint32_t(799) << uint32_t(599);
     QTest::newRow("Positive test with 64 bit box size and version 0")
             << BoxSize::empty() << v0_size.fullbox_large_size() << fourCC  << version_zero << flag
-            << datetime_write() << datetime_write() << 12u << 6344ull << int16_t(5433) << int16_t(11233) << int16_t(30) << matrix << 1u << 1u;
+            << datetime_write() << datetime_write() << uint32_t(12) << uint64_t(6344) << int16_t(5433) << int16_t(11233) << int16_t(30) << matrix << uint32_t(1) << uint32_t(1);
     QTest::newRow("Positive test with 64 bit box size and version 1")
             << BoxSize::empty() << v1_size.fullbox_large_size() << fourCC  << version_one << flag
-            << datetime_write() << datetime_write() << 87u << 54234ull << int16_t(534) << int16_t(-5653) << int16_t(-100) << matrix << 1280u << 240u;
+            << datetime_write() << datetime_write() << uint32_t(87) << uint64_t(54234) << int16_t(534) << int16_t(-5653) << int16_t(-100) << matrix << uint32_t(1280) << uint32_t(240);
     QTest::newRow("Negative test: wrong FourCC code")
             << v0_size.fullbox_size() << BoxSize::large_empty() << FourCC()  << version_zero << flag
-            << datetime_write() << datetime_write() << 879u << 38638ull << int16_t(876) << int16_t(13) << int16_t(100) << matrix << 0u << 0u;
+            << datetime_write() << datetime_write() << uint32_t(879) << uint64_t(38638) << int16_t(876) << int16_t(13) << int16_t(100) << matrix << uint32_t(0) << uint32_t(0);
 }
 
 void TrackHeaderBoxTest::readingTest()
@@ -171,3 +171,5 @@ void TrackHeaderBoxTest::readingTest()
     QVERIFY(Box::SizeOk == box->getSizeError());
     QVERIFY(has_more_data == false);
 }
+
+QTEST_MAIN(TrackHeaderBoxTest)

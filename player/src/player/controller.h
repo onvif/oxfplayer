@@ -63,6 +63,9 @@ private slots:
     //! This slot will be called when file signature needs to be verified.
     void verifyFileSignature();
 
+    //! This slot will be called when file or stream signature needs to be verified using signed-media-framework library.
+    void verifyUsingSignedMediaFramework();
+
     //! This slot will be called when we want to work with certificates.
     void openCertificateStorage();
 
@@ -148,9 +151,13 @@ private:
     //! Media parser to validate file.
     MediaParser&            m_media_parser;
     //! Fragments info of opened file/file set.
-    SegmentList           m_segments;
+    SegmentList             m_segments;
     //! Currently playing fragment.
     int                     m_playing_fragment_index;
+    //! Currently opened file name
+    QString                 m_current_file_name;
+    //! Currently opened file coded
+    AVCodecID               m_current_codec = AVCodecID::AV_CODEC_ID_NONE;
 };
 
 #endif // CONTROLLER_H

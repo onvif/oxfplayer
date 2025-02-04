@@ -25,7 +25,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#include "AdditionalUserInformationBoxTest.h"
+#include "additionalUserInformationBoxTest.h"
 
 #include "additionalUserInformation.hpp"
 #include "boxTestsCommon.h"
@@ -112,3 +112,5 @@ void AdditionalUserInformationBoxTest::readingTest()
     QVERIFY(Box::SizeOk == box->getSizeError());
     QVERIFY(has_more_data == false);
 }
+
+QTEST_MAIN(AdditionalUserInformationBoxTest)

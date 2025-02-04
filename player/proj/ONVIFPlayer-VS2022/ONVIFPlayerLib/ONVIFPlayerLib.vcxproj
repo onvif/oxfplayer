@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C76A39F2-DB97-45BF-A8E6-B28C294615ED}</ProjectGuid>
+    <Keyword>QtVS_v304</Keyword>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
+    <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
+    <Import Project="$(QtMsBuild)\qt_defaults.props" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
+    <QtInstall>Qt 5.12 x64</QtInstall>
+    <QtModules>core;gui;multimedia;network;widgets</QtModules>
+    <QtBuildConfig>debug</QtBuildConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
+    <QtInstall>Qt 5.12 x64</QtInstall>
+    <QtModules>core;gui;multimedia;network;widgets</QtModules>
+    <QtBuildConfig>release</QtBuildConfig>
+  </PropertyGroup>
+  <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
+    <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
+  </Target>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_PATH)\include;$(FFMPEG_PATH)\include;$(GSTREAMER)\include\gstreamer-1.0;$(GSTREAMER)\include\glib-2.0;$(GSTREAMER)\lib\glib-2.0\include;..\..\..\src;..\..\..\src\common;..\..\..\src\parser;..\..\..\src\parser\basic;..\..\..\src\parser\basic\mixin;..\..\..\src\parser\helpers;..\..\..\src\parserUI;..\..\..\src\player;..\..\..\src\playerUI;..\..\..\src\tests;..\..\..\3rdparty\portaudio\include;..\..\..\3rdparty\pugixml\src;..\..\..\3rdparty\signed-media-framework\lib\src;..\..\..\3rdparty\signed-media-framework\lib\src\includes</AdditionalIncludeDirectories>
+      
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>$(OPENSSL_PATH)\lib\VC\x64\MDd;$(FFMPEG_PATH)\lib;$(GSTREAMER)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(Qt_INCLUDEPATH_);$(OPENSSL_PATH)\include;$(FFMPEG_PATH)\include;$(GSTREAMER)\include\gstreamer-1.0;$(GSTREAMER)\include\glib-2.0;$(GSTREAMER)\lib\glib-2.0\include;..\..\..\src;..\..\..\src\common;..\..\..\src\parser;..\..\..\src\parser\basic;..\..\..\src\parser\basic\mixin;..\..\..\src\parser\helpers;..\..\..\src\parserUI;..\..\..\src\player;..\..\..\src\playerUI;..\..\..\src\tests;..\..\..\3rdparty\portaudio\include;..\..\..\3rdparty\pugixml\src;..\..\..\3rdparty\signed-media-framework\lib\src;..\..\..\3rdparty\signed-media-framework\lib\src\includes</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>$(OPENSSL_PATH)\lib\VC\x64\MD;$(FFMPEG_PATH)\lib;$(GSTREAMER)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ClCompile>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ClCompile>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <Optimization>MaxSpeed</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\3rdparty\build\portaudio\PortAudio.vcxproj">
+      <Project>{b115ef66-bc92-3e35-acc4-1975596f7d47}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\3rdparty\build\pugixml\pugixml-static.vcxproj">
+      <Project>{382a6c2f-b2a4-3a00-bfb7-3e0ab14ff870}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\3rdparty\signed-media-framework\VS2022\signed-media-framework.vcxproj">
+      <Project>{c02ecfe1-167f-4b83-b8d2-33025b5b111f}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\common\segmentInfo.cpp" />
+    <ClCompile Include="..\..\..\src\parserUI\certificateStorageDialog.cpp" />
+    <ClCompile Include="..\..\..\src\parserUI\oxfverifier.cpp" />
+    <ClCompile Include="..\..\..\src\parserUI\parserWidget.cpp" />
+    <ClCompile Include="..\..\..\src\parserUI\smfValidatorWidget.cpp" />
+    <ClCompile Include="..\..\..\src\parserUI\verifyerdialog.cpp" />
+    <ClCompile Include="..\..\..\src\parser\basic\box.cpp" />
+    <ClCompile Include="..\..\..\src\parser\basic\mandatoryBox.cpp" />
+    <ClCompile Include="..\..\..\src\parser\basic\unknownBox.cpp" />
+    <ClCompile Include="..\..\..\src\parser\boxFactory.cpp" />
+    <ClCompile Include="..\..\..\src\parser\certificateStorage.cpp" />
+    <ClCompile Include="..\..\..\src\parser\consistencyChecker.cpp" />
+    <ClCompile Include="..\..\..\src\parser\fourcc.cpp" />
+    <ClCompile Include="..\..\..\src\parser\mediaParser.cpp" />
+    <ClCompile Include="..\..\..\src\parser\segmentExtractor.cpp" />
+    <ClCompile Include="..\..\..\src\parser\signatureExtractor.cpp" />
+    <ClCompile Include="..\..\..\src\parser\validatorISO.cpp" />
+    <ClCompile Include="..\..\..\src\parser\validatorOXF.cpp" />
+    <ClCompile Include="..\..\..\src\parser\validatorSurveillance.cpp" />
+    <ClCompile Include="..\..\..\src\playerUI\clickableSlider.cpp" />
+    <ClCompile Include="..\..\..\src\playerUI\controlsWidget.cpp" />
+    <ClCompile Include="..\..\..\src\playerUI\fullscreenPlayerWidget.cpp" />
+    <ClCompile Include="..\..\..\src\playerUI\movingOutArea.cpp" />
+    <ClCompile Include="..\..\..\src\playerUI\playerWidget.cpp" />
+    <ClCompile Include="..\..\..\src\playerUI\videoFrameWidget.cpp" />
+    <ClCompile Include="..\..\..\src\player\audioContext.cpp" />
+    <ClCompile Include="..\..\..\src\player\audioPlayback.cpp" />
+    <ClCompile Include="..\..\..\src\player\avFrameWrapper.cpp" />
+    <ClCompile Include="..\..\..\src\player\controller.cpp" />
+    <ClCompile Include="..\..\..\src\player\engine.cpp" />
+    <ClCompile Include="..\..\..\src\player\portAudioPlayback.cpp" />
+    <ClCompile Include="..\..\..\src\player\portAudioThread.cpp" />
+    <ClCompile Include="..\..\..\src\player\queuedAudioDecoder.cpp" />
+    <ClCompile Include="..\..\..\src\player\queuedMetadataDecoder.cpp" />
+    <ClCompile Include="..\..\..\src\player\queuedVideoDecoder.cpp" />
+    <ClCompile Include="..\..\..\src\player\streamReader.cpp" />
+    <ClCompile Include="..\..\..\src\player\syncThread.cpp" />
+    <ClCompile Include="..\..\..\src\player\videoContext.cpp" />
+    <ClCompile Include="..\..\..\src\player\videoPlayback.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\common\crosscompilation_cxx11.h" />
+    <ClInclude Include="..\..\..\src\common\crosscompilation_inttypes.h" />
+    <ClInclude Include="..\..\..\src\common\defines.h" />
+    <ClInclude Include="..\..\..\src\common\enums.h" />
+    <ClInclude Include="..\..\..\src\common\ffmpeg.h" />
+    <ClInclude Include="..\..\..\src\common\ONVIFSignInfo.h" />
+    <ClInclude Include="..\..\..\src\common\queue.h" />
+    <ClInclude Include="..\..\..\src\common\segmentInfo.h" />
+    <ClInclude Include="..\..\..\src\common\signingInformation.h" />
+    <ClInclude Include="..\..\..\src\common\types.h" />
+    <QtMoc Include="..\..\..\src\parserUI\smfValidatorWidget.h" />
+    <ClInclude Include="..\..\..\src\player\audioContext.h" />
+    <QtMoc Include="..\..\..\src\player\audioPlayback.h" />
+    <ClInclude Include="..\..\..\src\player\avFrameWrapper.h" />
+    <QtMoc Include="..\..\..\src\player\basePlayback.h" />
+    <QtMoc Include="..\..\..\src\player\controller.h" />
+    <ClInclude Include="..\..\..\src\player\decoder.h" />
+    <QtMoc Include="..\..\..\src\player\engine.h" />
+    <QtMoc Include="..\..\..\src\player\portAudioPlayback.h" />
+    <QtMoc Include="..\..\..\src\player\portAudioThread.h" />
+    <ClInclude Include="..\..\..\src\player\queuedAudioDecoder.h" />
+    <QtMoc Include="..\..\..\src\player\queuedDecoder.h" />
+    <ClInclude Include="..\..\..\src\player\queuedMetadataDecoder.h" />
+    <QtMoc Include="..\..\..\src\player\queuedVideoDecoder.h" />
+    <ClInclude Include="..\..\..\src\player\streamReader.h" />
+    <ClInclude Include="..\..\..\src\player\syncThread.h" />
+    <ClInclude Include="..\..\..\src\player\videoContext.h" />
+    <QtMoc Include="..\..\..\src\player\videoPlayback.h" />
+    <QtMoc Include="..\..\..\src\parserUI\oxfverifier.h" />
+    <QtMoc Include="..\..\..\src\parserUI\parserWidget.h" />
+    <QtMoc Include="..\..\..\src\parserUI\verifyerdialog.h" />
+    <QtMoc Include="..\..\..\src\parserUI\certificateStorageDialog.h" />
+    <ClInclude Include="..\..\..\src\parser\additionalUserInformation.hpp" />
+    <ClInclude Include="..\..\..\src\parser\afIdentificationBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\basic\box.h" />
+    <ClInclude Include="..\..\..\src\parser\basic\contentBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\basic\dataBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\basic\fileBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\basic\fullBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\basic\mandatoryBox.h" />
+    <ClInclude Include="..\..\..\src\parser\basic\mixin\children.hpp" />
+    <ClInclude Include="..\..\..\src\parser\basic\mixin\data.hpp" />
+    <ClInclude Include="..\..\..\src\parser\basic\mixin\table.hpp" />
+    <ClInclude Include="..\..\..\src\parser\basic\superBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\basic\superFullBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\basic\tableBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\basic\unknownBox.h" />
+    <ClInclude Include="..\..\..\src\parser\helpers\endian.hpp" />
+    <ClInclude Include="..\..\..\src\parser\helpers\istream.hpp" />
+    <ClInclude Include="..\..\..\src\parser\helpers\is_a.hpp" />
+    <ClInclude Include="..\..\..\src\parser\helpers\optional.hpp" />
+    <ClInclude Include="..\..\..\src\parser\helpers\property.hpp" />
+    <ClInclude Include="..\..\..\src\parser\helpers\uint24.hpp" />
+    <QtMoc Include="..\..\..\src\parser\boxFactory.h" />
+    <ClInclude Include="..\..\..\src\parser\cameraMicrophoneIdentificationBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\certificateBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\certificateStorage.h" />
+    <ClInclude Include="..\..\..\src\parser\compactSampleSizeBox.hpp" />
+    <QtMoc Include="..\..\..\src\parser\consistencyChecker.h" />
+    <ClInclude Include="..\..\..\src\parser\correctstarttimebox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\editListBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\fileTypeBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\fourcc.h" />
+    <ClInclude Include="..\..\..\src\parser\mediaHeaderBox.hpp" />
+    <QtMoc Include="..\..\..\src\parser\mediaParser.h" />
+    <ClInclude Include="..\..\..\src\parser\movieExtendsHeaderBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\movieHeaderBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\sampleDependencyTypeBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\sampleSizeBox.hpp" />
+    <QtMoc Include="..\..\..\src\parser\segmentExtractor.h" />
+    <ClInclude Include="..\..\..\src\parser\signatureBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\signatureConfigurationBox.hpp" />
+    <QtMoc Include="..\..\..\src\parser\signatureExtractor.h" />
+    <ClInclude Include="..\..\..\src\parser\surveillanceExportBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\surveillanceMetadataSampleConfigBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\surveillanceMetadataSampleEntryBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\templateContentBoxes.hpp" />
+    <ClInclude Include="..\..\..\src\parser\templateFullBoxes.hpp" />
+    <ClInclude Include="..\..\..\src\parser\templateSuperBoxes.hpp" />
+    <ClInclude Include="..\..\..\src\parser\templateSuperFullBoxes.hpp" />
+    <ClInclude Include="..\..\..\src\parser\templateTableBoxes.hpp" />
+    <ClInclude Include="..\..\..\src\parser\trackFragmentHeaderBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\trackFragmentRandomAccessBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\trackHeaderBox.hpp" />
+    <ClInclude Include="..\..\..\src\parser\trackRunBox.hpp" />
+    <QtMoc Include="..\..\..\src\parser\validatorISO.h" />
+    <QtMoc Include="..\..\..\src\parser\validatorOXF.h" />
+    <QtMoc Include="..\..\..\src\parser\validatorSurveillance.h" />
+    <QtMoc Include="..\..\..\src\playerUI\clickableSlider.h" />
+    <QtMoc Include="..\..\..\src\playerUI\controlsWidget.h" />
+    <QtMoc Include="..\..\..\src\playerUI\fullscreenPlayerWidget.h" />
+    <QtMoc Include="..\..\..\src\playerUI\movingOutArea.h" />
+    <QtMoc Include="..\..\..\src\playerUI\playerWidget.h" />
+    <ClInclude Include="..\..\..\src\playerUI\playerWidgetInterface.h" />
+    <QtMoc Include="..\..\..\src\playerUI\videoFrameWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="..\..\..\src\parserUI\certificateStorageDialog.ui" />
+    <QtUic Include="..\..\..\src\parserUI\parserWidget.ui" />
+    <QtUic Include="..\..\..\src\parserUI\smfValidatorWidget.ui" />
+    <QtUic Include="..\..\..\src\parserUI\verifyerdialog.ui" />
+    <QtUic Include="..\..\..\src\playerUI\controlsWidget.ui" />
+    <QtUic Include="..\..\..\src\playerUI\playerWidget.ui" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
+    <Import Project="$(QtMsBuild)\qt.targets" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

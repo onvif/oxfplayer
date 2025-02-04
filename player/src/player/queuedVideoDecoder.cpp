@@ -61,6 +61,7 @@ void QueuedVideoDecoder::setStream(int index, double fps)
     m_context.open(getStream(m_streamIndex), fps);
     m_stream = getStream(m_streamIndex);
 
+    emit openedFileCodec(m_stream->codec->codec_id);
 }
 
 void QueuedVideoDecoder::processPacket(AVPacket* packet, int timestamp_ms)

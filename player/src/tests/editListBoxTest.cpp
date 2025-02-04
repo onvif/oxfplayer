@@ -248,3 +248,5 @@ void EditListBoxTest::fillData()
     data.push_back(EditListEntry(1, 2, 3, 4));
     data.push_back(EditListEntry(1, 2, 3, 4));
 }
+
+QTEST_MAIN(EditListBoxTest)

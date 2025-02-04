@@ -31,8 +31,8 @@ void SurveillanceMetadataSampleEntryBoxTest::readingTest_data()
     FourCC fourCC = SurveillanceMetadataSampleEntryBox::getFourCC();
     FourCC smscFourCC = SurveillanceMetadataSampleConfigBox::getFourCC();
 
-    QVector<uint64_t> short_table(1, 44789234ull),
-            long_table(58, 2347ull);
+    QVector<uint64_t> short_table(1, uint64_t(44789234)),
+            long_table(58, uint64_t(2347));
 
     BoxSize smsc_box_size( sizeof(uint8_t) );
     BoxSize short_box_size_32( sizeof(uint32_t) + 2 * sizeof(uint16_t) + smsc_box_size.fullbox_size() + short_table.size() * sizeof(uint64_t) ),
@@ -153,3 +153,5 @@ void SurveillanceMetadataSampleEntryBoxTest::readingTest()
     QVERIFY(Box::SizeOk == box->getSizeError());
     QVERIFY(has_more_data == false);
 }
+
+QTEST_MAIN(SurveillanceMetadataSampleEntryBoxTest)
