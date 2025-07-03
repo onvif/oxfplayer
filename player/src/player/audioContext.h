@@ -28,7 +28,7 @@
 #ifndef AUDIO_CONTEXT_H
 #define AUDIO_CONTEXT_H
 
-#include <QAudioFormat>
+#include <QtMultimedia/QAudioFormat>
 
 #include "types.h"
 

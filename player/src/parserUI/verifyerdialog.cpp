@@ -164,7 +164,7 @@ void  VerifyerDialog::initialize(MediaParser& parser)
             signatures_found = true;
 
             QTreeWidgetItem * item = new QTreeWidgetItem(parent);
-            item->setData(0, Qt::UserRole, QVariant(&refInf));
+            item->setData(0, Qt::UserRole, QVariant::fromValue(inf.getSigningInformation(j)));
             item->setText(0, QString("Signature %1").arg(j+1));
             {
                 OXFVerifier ver;

@@ -569,7 +569,7 @@ void OXFVerifier::getCertificateInfo(QStringList&  certInfo)
 
     qDebug() << m_cert.toText();
 
-    certInfo <<  tr("Certificate version: ") << m_cert.version();
+    certInfo <<  tr("Certificate version: ") << QString::fromLatin1(m_cert.version());
     certInfo << tr("Organization: %1").arg(m_cert.subjectInfo(QSslCertificate::Organization).join(QLatin1Char(' ')))
             << tr("Subunit: %1").arg(m_cert.subjectInfo(QSslCertificate::OrganizationalUnitName).join(QLatin1Char(' ')))
             << tr("Country: %1").arg(m_cert.subjectInfo(QSslCertificate::CountryName).join(QLatin1Char(' ')))

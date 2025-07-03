@@ -69,8 +69,8 @@ protected:
     void initializeHeaders(LimitedStreamReader& stream)
     {
         Box::initialize(stream);
-        stream.read(std::get<0>(m_data));
-        stream.read(std::get<1>(m_data));
+        stream.read(std::get<0>(FullBoxMixin<TData...>::m_data));
+        stream.read(std::get<1>(FullBoxMixin<TData...>::m_data));
     }
 };
 

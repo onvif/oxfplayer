@@ -79,7 +79,7 @@ public:
     //! Returns fragment start time.
     QDateTime getStartTime()
     {
-        return QDateTime(QDate(1601, 1, 1), QTime(0, 0), Qt::UTC).addMSecs(std::get<3>(DataBoxType::m_data) / 10000);
+        return QDateTime(QDate(1601, 1, 1), QTime(0, 0), QTimeZone::utc()).addMSecs(std::get<3>(DataBoxType::m_data) / 10000);
     }
 
     //! Returns the fragment duration in seconds.

@@ -18,7 +18,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <PlatformToolSet>v142</PlatformToolSet>
+    <PlatformToolSet>v143</PlatformToolSet>
     <OutputDirectory>release\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
     <CharacterSet>NotSet</CharacterSet>
@@ -27,7 +27,7 @@
     <PrimaryOutput>ONVIFPlayer</PrimaryOutput>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <PlatformToolSet>v142</PlatformToolSet>
+    <PlatformToolSet>v143</PlatformToolSet>
     <OutputDirectory>debug\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
     <CharacterSet>NotSet</CharacterSet>
@@ -100,14 +100,14 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>..\..\src;..\..\src\common;..\..\src\player;..\..\src\playerUI;..\..\src\parser;..\..\src\parserUI;..\..\ext\FFMPEG-4.4\include;..\..\ext\PortAudio\include;..\..\ext\OpenSSL-1.0.1\include;$(QTDIR)\include;$(QTDIR)\include\QtMultimedia;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtCore;debug;.;$(QTDIR)\mkspecs\win32-msvc2012;.\GeneratedFiles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>-Zm200 -w34100 -w34189 /bigobj /Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Zm200 -w34100 -w34189 /bigobj /Zc:__cplusplus  /permissive- %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;DECODE_USING_QUEUE;QT_MULTIMEDIA_LIB;QT_WIDGETS_LIB;QT_NETWORK_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_OPENGL_ES_2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;DECODE_USING_QUEUE;QT_MULTIMEDIA_LIB;QT_WIDGETS_LIB;QT_NETWORK_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_OPENGL_ES_2;D_COM_DISABLE_EXPLICIT_OPERATOR_BOOL;QT_RESTRICTED_CAST_FROM_ASCII;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>

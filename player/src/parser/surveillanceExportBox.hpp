@@ -87,7 +87,7 @@ public:
     //! Returns the export time.
     QDateTime getExportUnitTime()
     {
-        return QDateTime(QDate(1904, 1, 1), QTime(0, 0), Qt::UTC).addSecs( std::get<5>(FullBoxType::m_data) );
+        return QDateTime(QDate(1904, 1, 1), QTime(0, 0), QTimeZone::utc()).addSecs( std::get<5>(FullBoxType::m_data) );
     }
 
     //! Returns the export unit OID.
