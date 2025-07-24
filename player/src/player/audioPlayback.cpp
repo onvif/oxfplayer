@@ -28,6 +28,7 @@
 #include "audioPlayback.h"
 
 #include "portAudioPlayback.h"
+#include "moc_basePlayback.cpp"
 
 AudioPlayback::AudioPlayback() :
     BasePlayback()
