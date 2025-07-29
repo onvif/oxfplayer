@@ -36,9 +36,7 @@
 QueuedVideoDecoder::QueuedVideoDecoder(AVMediaType type) :
     QueuedDecoder<VideoFrame>(type),
     m_sws_context(0),
-    m_frame_RGB(0),
-    m_buffer_size(-1),
-    m_buffer(0)
+    m_frame_RGB(0)
 {
 
 }
@@ -66,10 +64,11 @@ void QueuedVideoDecoder::setStream(int index, double fps)
 void QueuedVideoDecoder::processPacket(AVPacket* packet, int timestamp_ms)
 {
     AVFrame* frame = av_frame_alloc();
+    auto stream = m_streams[m_streamIndex];
 
-    avcodec_send_packet(m_stream->codec, packet);
+    avcodec_send_packet(stream.m_codec, packet);
 
-    if (avcodec_receive_frame(m_stream->codec, frame) == 0)
+    if (avcodec_receive_frame(stream.m_codec, frame) == 0)
     {
         if (timestamp_ms >= lastSeekTime())       // Seek always seeks to I-Frame. Ignore frames before target frame.
         {
@@ -113,27 +112,21 @@ void QueuedVideoDecoder::initSwsContext(AVFrame* frame)
 
     //create RGB frame
     m_frame_RGB = av_frame_alloc();
-    m_frame_width = frame->width;
-    m_frame_height = frame->height;
+    m_frame_RGB->width = frame->width;
+    m_frame_RGB->height = frame->height;
+    m_frame_RGB->format = AV_PIX_FMT_RGB32;
 
-    //allocate buffer for RGBFrame
-    m_buffer_size = avpicture_get_size(AV_PIX_FMT_RGB32, frame->width, frame->height);
-    m_buffer = (uint8_t*)av_malloc(m_buffer_size * sizeof(uint8_t));
-
-    //assign buffer with frame
-    avpicture_fill((AVPicture*)m_frame_RGB, m_buffer, AV_PIX_FMT_RGB32, frame->width, frame->height);
+    ////allocate buffer for RGBFrame
+    av_frame_get_buffer(m_frame_RGB, 4);        // continuous
 }
 
 void QueuedVideoDecoder::clearSwsContext()
 {
     if(m_sws_context != nullptr)
     {
-        av_free(m_buffer);
         av_frame_free(&m_frame_RGB);
         sws_freeContext(m_sws_context);
         m_sws_context = 0;
         m_frame_RGB = 0;
-        m_buffer_size = -1;
-        m_buffer = 0;
     }
 }

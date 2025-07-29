@@ -4,7 +4,13 @@ set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
 project(ONVIFPlayer CXX)
 
+find_package(pugixml REQUIRED)
+
+find_package(ffmpeg REQUIRED)
+
 find_package(Qt6 COMPONENTS Widgets)
+
+find_package(OpenSSL REQUIRED)
 
 ################################################################################
 # Set target arch type if empty. Visual studio solution generator provides it.
@@ -140,11 +146,6 @@ set(boxes
 )
 source_group("boxes" FILES ${boxes})
 
-set(external
-    "ext/pugixml/src/pugixml.cpp"
-)
-source_group("external" FILES ${external})
-
 set(player
     "src/player/audioContext.cpp"
     "src/player/audioPlayback.cpp"
@@ -201,7 +202,6 @@ source_group("verifier" FILES ${verifier})
 set(ALL_FILES
     ${no_group_source_files}
     ${boxes}
-    ${external}
     ${player}
     ${playerUI}
     ${verifier}
@@ -263,9 +263,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/playerUI;"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/parser;"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/parserUI;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/ext/FFMPEG-4.4/include;"
     "${CMAKE_CURRENT_SOURCE_DIR}/ext/PortAudio/include;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/ext/OpenSSL-1.0.1/include;"
     "$ENV{QTDIR}/include;"
     "$ENV{QTDIR}/include/QtMultimedia;"
     "$ENV{QTDIR}/include/QtWidgets;"
@@ -310,12 +308,14 @@ if(MSVC)
         $<$<CONFIG:Debug>:
             /Od;
             /Zi;
-            /permissive-
         >
         $<$<CONFIG:Release>:
-            /O2;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
+            /Od;
+            /Zi;
+#            /O2;
+#            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
         >
+        /permissive-
         /std:c++17;
         /W3;
         /GR;
@@ -336,7 +336,8 @@ if(MSVC)
             /DEBUG
         >
         $<$<CONFIG:Release>:
-            /INCREMENTAL:NO
+            /DEBUG
+#            /INCREMENTAL:NO
         >
         /NOLOGO;
         /SUBSYSTEM:WINDOWS;
@@ -365,25 +366,13 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
         "Qt6Core;"
         "gdi32"
     ">"
-    "avcodec;"
-    "avdevice;"
-    "avfilter;"
-    "avformat;"
-    "avutil;"
-    "swresample;"
-    "swscale;"
-    "libeay32;"
-    "ssleay32;"
-    "portaudio_x64;"
-    "user32;"
-    "Ws2_32"
+    "portaudio_x64"
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+target_link_libraries(${PROJECT_NAME} PRIVATE "${ADDITIONAL_LIBRARY_DEPENDENCIES}" ffmpeg::ffmpeg openssl::openssl pugixml::pugixml)
 
 target_link_directories(${PROJECT_NAME} PRIVATE
     "$ENV{QTDIR}/lib;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/ext/FFMPEG-4.4/lib;"
+    "${CMAKE_LIBRARY_PATH}"
     "${CMAKE_CURRENT_SOURCE_DIR}/ext/PortAudio/lib;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/ext/OpenSSL-1.0.1/lib"
 )
 

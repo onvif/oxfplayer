@@ -81,10 +81,7 @@ private:
     //! Init with file.
     bool init(const QString& file_name, const QSet<int>& valid_streams = QSet<int>());
 
-    //! Init stream by index.
-    bool openStream(int index, AVStream*& stream, AVCodecContext*& codec_context, AVCodec*& codec);
-
-private:
+protected:
     //! Structure that describes one stream in video file.
     struct StreamInfo
     {
@@ -93,31 +90,30 @@ private:
         //! Stream.
         AVStream*       m_stream;
         //! Codec context.
-        AVCodecContext* m_codec_context;
-        //! Codec.
-        AVCodec*        m_codec;
+        AVCodecContext* m_codec;
 
         StreamInfo() :
             m_index(-1),
             m_stream(nullptr),
-            m_codec_context(nullptr),
             m_codec(nullptr)
         {}
 
         //! Close codec.
         void clear()
         {
-            if(m_codec != nullptr)
-                avcodec_close(m_codec_context);
+            avcodec_free_context(&m_codec);
         }
 
         //! Convert time in ms to pts.
         int timeMsToPts(int timestamp_ms) const;
     };
 
+    //! Init stream by index.
+    bool openStream(int index, struct StreamInfo* stream);
+
     //! Stream type
     AVMediaType         m_stream_type;
-    //! Main format context.
+    //! Input stream context.
     AVFormatContext*    m_format_context;
     //! QVector of streams.
     QVector<StreamInfo> m_streams;

@@ -51,14 +51,14 @@ bool AudioContext::init(AVCodecContext* codecContext)
     QAudioDevice default_device_info = QMediaDevices::defaultAudioOutput();
     QAudioFormat audio_format = default_device_info.preferredFormat();
     audio_format.setSampleRate(audio_codec_context->sample_rate);
-    audio_format.setChannelCount(audio_codec_context->channels);
+    audio_format.setChannelCount(audio_codec_context->codec->ch_layouts->nb_channels);
     if(!default_device_info.isFormatSupported(audio_format))
         audio_format = default_device_info.preferredFormat();
 
     //fill target audio params
     m_audio_params.m_freq = audio_format.sampleRate();
     m_audio_params.m_channels = audio_format.channelCount();
-    m_audio_params.m_channel_layout = av_get_default_channel_layout(m_audio_params.m_channels);
+    m_audio_params.m_channel_layout = audio_codec_context->codec->ch_layouts->nb_channels;
     switch(audio_format.sampleFormat())
     {
     case QAudioFormat::Int16:

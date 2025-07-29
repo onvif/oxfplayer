@@ -34,7 +34,7 @@
 #include <sstream>
 #include <unordered_map>
 
-#include "../../ext/pugixml/src/pugixml.hpp"
+#include <pugixml.hpp>
 
 #include <QDebug>
 #include <qdatetime.h>
@@ -123,8 +123,6 @@ void MetadataDecoder::processPacket(AVPacket* packet, int timestamp_ms)
     VideoFrame video_frame(timestamp_ms);
     video_frame.m_isOverlay = true;
     if (m_decoder) {
-        m_frame_height = m_decoder->frameHeight();
-        m_frame_width = m_decoder->frameWidth();
         parseMetadata(video_frame, packet->buf->data, packet->buf->size, timestamp_ms);
     }
 }
@@ -132,13 +130,13 @@ void MetadataDecoder::processPacket(AVPacket* packet, int timestamp_ms)
 void MetadataDecoder::parseMetadata(VideoFrame& frame, const unsigned char* buffer, size_t bytes, int time)
 {
     bool hasMetadata = false;
-    QImage image(m_frame_width, m_frame_height, QImage::Format_RGB32);
+    QImage image(m_decoder->frameWidth(), m_decoder->frameHeight(), QImage::Format_RGB32);
     image.fill(Qt::black);
     QPainter painter(&image);
     QPen redpen(Qt::red, 5
     );
     painter.setPen(redpen);
-    Transform trans(m_frame_width, m_frame_height);
+    Transform trans(m_decoder->frameWidth(), m_decoder->frameHeight());
 
     pugi::xml_document doc;
     if (doc.load_buffer(buffer, bytes, pugi::encoding_utf8).status == 0) {

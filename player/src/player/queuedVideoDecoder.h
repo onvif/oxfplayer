@@ -46,8 +46,8 @@ public:
     VideoContext    m_context;
     void setStream(int index, double fps = 0.0);
 
-    int frameWidth() const { return m_frame_width; }
-    int frameHeight() const { return m_frame_height; }
+    int frameWidth() const { return m_frame_RGB ? m_frame_RGB->width : 0; }
+    int frameHeight() const { return m_frame_RGB ? m_frame_RGB->height : 0; }
 
 protected:
     virtual void processPacket(AVPacket* packet, int timestamp_ms);
@@ -64,12 +64,6 @@ protected:
     SwsContext* m_sws_context;
     //! RGB frame used for conversion.
     AVFrame*    m_frame_RGB;
-    //! Temp buffer size.
-    int         m_buffer_size;
-    //! Temp buffer for conversion.
-    uint8_t*    m_buffer;
-    int         m_frame_width, m_frame_height;
-
 };
 
 #endif // QUEUEDVIDEODECODER_H
