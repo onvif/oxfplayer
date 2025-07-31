@@ -113,8 +113,8 @@ void QueuedAudioDecoder::processPacket(AVPacket* packet, int timestamp_ms)
 void QueuedAudioDecoder::initSwrContext(AVFrame* frame)
 {
     swr_alloc_set_opts2(&m_swr_context,
-        &m_streams[m_streamIndex].m_codec->ch_layout, m_context.m_audio_params.m_fmt, m_context.m_audio_params.m_freq,
-        &m_streams[m_streamIndex].m_codec->ch_layout, (AVSampleFormat)frame->format, frame->sample_rate,
+        &m_context.m_audio_params.m_channel_layout, m_context.m_audio_params.m_fmt, m_context.m_audio_params.m_freq,
+                                       &frame->ch_layout, (AVSampleFormat)frame->format, frame->sample_rate,
                                        0, 0);
     if(m_swr_context != nullptr)
     {

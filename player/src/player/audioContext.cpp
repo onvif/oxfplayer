@@ -58,11 +58,12 @@ bool AudioContext::init(AVCodecContext* codecContext)
     //fill target audio params
     m_audio_params.m_freq = audio_format.sampleRate();
     m_audio_params.m_channels = audio_format.channelCount();
-    m_audio_params.m_channel_layout = audio_codec_context->codec->ch_layouts->nb_channels;
+    av_channel_layout_default(&m_audio_params.m_channel_layout, m_audio_params.m_channels);
     switch(audio_format.sampleFormat())
     {
     case QAudioFormat::Int16:
         m_audio_params.m_fmt = AV_SAMPLE_FMT_S16;
+        break;
     case QAudioFormat::Int32:
         m_audio_params.m_fmt = AV_SAMPLE_FMT_S32;
         break;
