@@ -43,7 +43,7 @@ private:
     Q_OBJECT
     
 public:
-    explicit CertificateStorageDialog(QWidget* parent = 0);
+    explicit CertificateStorageDialog(QWidget* parent, const char *name, const char *extensions, const char *folder);
 
     ~CertificateStorageDialog();
 
@@ -63,6 +63,7 @@ private:
     Ui::CertificateStorageDialog*   m_ui;
     //! Certificate storage.
     CertificateStorage              m_storage;
+    QString m_extensions;
 };
 
 #endif // CERTIFICATESTORAGEDIALOG_H

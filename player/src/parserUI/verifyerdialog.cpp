@@ -218,7 +218,7 @@ void VerifyerDialog::onSignatureItemClicked(QTreeWidgetItem * item, int column)
 
 void VerifyerDialog::onCertificateActionClicked(void)
 {
-    QString filter = BINARY_FORMAT;
+    QString filter = CERT_FORMAT_EXTENSIONS;
     QString dir;
 #ifdef WIN32
     dir = QDir::homePath() + WINP_APP_DATA_ROAMING + COMPANY_NAME + "/" + PRODUCT_NAME + "/" + CERTIFICATES_FOLDER + "/";
@@ -233,7 +233,7 @@ void VerifyerDialog::onCertificateActionClicked(void)
     save_file_dialog.setDirectory(dir);
     save_file_dialog.setOptions(QFileDialog::DontUseNativeDialog);
     save_file_dialog.setWindowTitle(tr("Save certificate to file..."));
-    save_file_dialog.setNameFilter(QString(BINARY_FORMAT) + QString(";;") + QString(BASE64_FORMAT));
+    save_file_dialog.setNameFilter(QString(CERT_FORMAT_EXTENSIONS) + QString(";;") + QString(BASE64_FORMAT));
     save_file_dialog.selectFile(m_verifier->getCertificateIssuer());
     QString fileName;
     if(save_file_dialog.exec() == QDialog::Accepted &&
@@ -248,7 +248,7 @@ void VerifyerDialog::onCertificateActionClicked(void)
     QFileInfo  fi(fileName);
     if ( (fi.suffix()).isEmpty() )  // add selected filter
     {
-        if(filter == BINARY_FORMAT)
+        if(filter == CERT_FORMAT_EXTENSIONS)
             fileName.append(BINARY_EXT);
         else
             fileName.append(BASE64_EXT);
@@ -372,7 +372,7 @@ void VerifyerDialog::onOperationCompleted(VerificationStatus result)
     ver_struct.m_tree_item->setTextAlignment(2, Qt::AlignVCenter | Qt::AlignHCenter);
 
     // certificate
-    bool certificate_known = CertificateStorage().isCertificateKnown(m_verifier->getBinaryCertificate());
+    bool certificate_known = CertificateStorage(CERTIFICATES_FOLDER).isCertificateKnown(m_verifier->getBinaryCertificate());
     ver_struct.m_tree_item->setText(3, certificate_known ? tr("Known") : tr("Unknown"));
     ver_struct.m_tree_item->setBackground(3, certificate_known ? QColor(green) : QColor(yellow));
     ver_struct.m_tree_item->setTextAlignment(3, Qt::AlignVCenter | Qt::AlignHCenter);

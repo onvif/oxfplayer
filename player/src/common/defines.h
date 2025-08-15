@@ -81,11 +81,14 @@
 //! Folder for certificates
 #define CERTIFICATES_FOLDER "KnownCerts"
 
+//! Folder for PKCS12 keys
+#define KEYSTORE_FOLDER "KeyStore"
+
 //! Binary format filter
-#define BINARY_FORMAT QObject::tr("Binary format (*.der)")
+#define CERT_FORMAT_EXTENSIONS QObject::tr("Binary format (*.der;*.cer;*.crt;*.pem)")
 
 //! Binary filter.
-#define BINARY_FILTER "*.der"
+#define CERT_FILE_EXTENSIONS "*.der;*.cer;*.crt;*.pfx;*.pem"
 
 //! Binary extention
 #define BINARY_EXT ".der"

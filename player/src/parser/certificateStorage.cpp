@@ -31,8 +31,9 @@
 
 #include "defines.h"
 
-CertificateStorage::CertificateStorage()
+CertificateStorage::CertificateStorage(const char *folder)
 {
+    m_folder = folder;
     update();
 }
 
@@ -45,10 +46,10 @@ QString CertificateStorage::getCertificateFolder()
 {
     QString certificates_folder;
 #ifdef WIN32
-    certificates_folder = QDir::homePath() + WINP_APP_DATA_ROAMING + COMPANY_NAME + "/" + PRODUCT_NAME + "/" + CERTIFICATES_FOLDER;
+    certificates_folder = QDir::homePath() + WINP_APP_DATA_ROAMING + COMPANY_NAME + "/" + PRODUCT_NAME + "/" + m_folder;
 #endif //WIN32
 #ifdef UNIX
-    certificates_folder = QDir::homePath() + "/." + PRODUCT_NAME + "/" + CERTIFICATES_FOLDER;
+    certificates_folder = QDir::homePath() + "/." + PRODUCT_NAME + "/" + m_folder;
 #endif //UNIX
 
     //create it if needed
@@ -62,7 +63,8 @@ void CertificateStorage::update()
 {
     m_files.clear();
     QDir certificate_dir(getCertificateFolder());
-    m_files = certificate_dir.entryInfoList(QStringList(BINARY_FILTER), QDir::Files | QDir::Readable, QDir::Name);
+    auto ext = QString(CERT_FILE_EXTENSIONS).split(';');
+    m_files = certificate_dir.entryInfoList(ext, QDir::Files | QDir::Readable, QDir::Name);
 }
 
 void CertificateStorage::removeCertificate(int index)

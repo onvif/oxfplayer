@@ -35,11 +35,14 @@
 
 #include "defines.h"
 
-CertificateStorageDialog::CertificateStorageDialog(QWidget* parent) :
+CertificateStorageDialog::CertificateStorageDialog(QWidget* parent, const char* name, const char* extensions, const char *folder) :
     QDialog(parent),
-    m_ui(new Ui::CertificateStorageDialog)
+    m_ui(new Ui::CertificateStorageDialog),
+    m_storage(folder)
 {
     m_ui->setupUi(this);
+    setWindowTitle(name);
+    m_extensions = extensions;
 
     Qt::WindowFlags flags = this->windowFlags();
     flags &= ~(Qt::WindowContextHelpButtonHint);
@@ -80,13 +83,13 @@ void CertificateStorageDialog::onAdd()
     QSettings settings(QDir::homePath() + "/." + PRODUCT_NAME + "/" + CONFIG_FILE_NAME, QSettings::IniFormat);
 #endif //UNIX
 
-    QString file_name = QFileDialog::getOpenFileName(this, tr("Add certificate file"), settings.value("lastOpenedCertificateFolder", QDir::homePath()).toString(), BINARY_FORMAT);
+    QString file_name = QFileDialog::getOpenFileName(this, tr("Add certificate file"), settings.value("lastOpenedCertificateFolder", QDir::homePath()).toString(), m_extensions);
     if(file_name.isEmpty())
         return;
 
     settings.setValue("lastOpenedCertificateFolder", QFileInfo(file_name).absolutePath());
 
-    if(QFile::copy(file_name, CertificateStorage::getCertificateFolder() + "/" + QFileInfo(file_name).fileName()))
+    if(QFile::copy(file_name, m_storage.getCertificateFolder() + "/" + QFileInfo(file_name).fileName()))
         fillFilesList();
 }
 

@@ -165,6 +165,7 @@
     <addaction name="actionFile_signature"/>
     <addaction name="separator"/>
     <addaction name="actionCertificate_storage"/>
+	<addaction name="actionKey_storage"/>
    </widget>
    <widget class="QMenu" name="menuAdditional">
     <property name="title">
@@ -226,10 +227,15 @@
   </action>
   <action name="actionCertificate_storage">
    <property name="text">
-    <string>Certificate storage</string>
+    <string>Trusted CAs</string>
    </property>
   </action>
-  <action name="actionLocalTime">
+	 <action name="actionKey_storage">
+		 <property name="text">
+			 <string>Decryption keys</string>
+		 </property>
+	 </action>
+	 <action name="actionLocalTime">
    <property name="checkable">
     <bool>true</bool>
    </property>

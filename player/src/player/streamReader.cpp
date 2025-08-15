@@ -105,7 +105,10 @@ bool StreamReader::init(const QString& file_name, const QSet<int>& valid_streams
        !QFile::exists(file_name))
         return false;
 
-    if(avformat_open_input(&m_format_context, file_name.toUtf8().data(), 0, 0) != 0)
+    AVDictionary* format_opts = NULL;
+    av_dict_set(&format_opts, "decryption_key", "76a6c65c5ea762046bd749a2e632ccbb", 0);
+    if (avformat_open_input(&m_format_context, file_name.toUtf8().data(), 0, &format_opts) != 0)
+//    if(avformat_open_input(&m_format_context, file_name.toUtf8().data(), 0, 0) != 0)
         return false;
 
     if(avformat_find_stream_info(m_format_context, 0) < 0)

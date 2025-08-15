@@ -34,12 +34,12 @@
 class CertificateStorage
 {
 public:
-    CertificateStorage();
+    CertificateStorage(const char *folder);
 
     ~CertificateStorage();
 
     //! Get folders with certificate.
-    static QString getCertificateFolder();
+    QString getCertificateFolder();
 
     //! Update certificate storage.
     void update();
@@ -56,6 +56,7 @@ public:
 private:
     //! List of files
     QFileInfoList   m_files;
+    QString m_folder;
 };
 
 #endif // CERTIFICATESTORAGE_H
