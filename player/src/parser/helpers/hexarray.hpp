@@ -28,12 +28,13 @@
 #ifndef HELPERS_HEXARRAY_H
 #define HELPERS_HEXARRAY_H
 
-#include <QByteArray>
+#include <vector>
 //! Union describing uint24_t data type.
-class HexArray : public QByteArray
+class HexArray : public std::vector<uint8_t>
 {
 public:
-    HexArray(uint8_t *data, size_t size) : QByteArray((char*)data, size) {}
+    HexArray() {}
+    HexArray(uint8_t *data, size_t size) : std::vector<uint8_t>(data, data + size) {}
 
 };
 

@@ -28,8 +28,15 @@
 #include "certificateStorage.h"
 
 #include <QDir>
+#include <qinputdialog.h>
 
 #include "defines.h"
+
+#include <openssl/pkcs12.h>
+#include <openssl/x509.h>
+#include <openssl/err.h>
+#include <map>
+#include <string>
 
 CertificateStorage::CertificateStorage(const char *folder)
 {
@@ -95,4 +102,111 @@ bool CertificateStorage::isCertificateKnown(const QByteArray& binary_certificate
         }
     }
     return false;
+}
+
+HexArray CertificateStorage::decryptKey(const HexArray& thumbPrint, const HexArray& encryptedKey)
+{
+    HexArray resp;
+    //
+    // Lookup cached hashes
+    // Note: will fail when a file is replaced and encrypted by different key
+    //
+    std::map<std::string, bool> files;
+    auto hexthumb = QByteArray(thumbPrint).toHex().toStdString().c_str();
+    auto hashes = getCertificateFolder() + "/hashes.txt";
+    std::string fname;
+    if (FILE* fd = fopen(hashes.toStdString().c_str(), "r")) {
+        char line[1024] = {};
+        while (fgets(line, sizeof(line), fd)) {
+            auto del = strchr(line, ' ');
+            size_t hlen = del - line, len = strlen(line);
+            if (len > 0 && line[len - 1] == '\n') line[len - 1] = 0;    // remove trailing newline
+            files[del + 1] = true;
+            if (hlen < sizeof(line) && hlen == thumbPrint.size() * 2 && !memcmp(line, hexthumb, hlen)) {
+                fname = del + 1;
+            }
+        }
+        fclose(fd);
+    }
+
+    EVP_PKEY* pkey = 0;
+    if (fname.empty()) {        // update hashes if not found
+        //
+        // If unkown cert hash search for a new pkcs12 file
+        //
+        if (FILE* fd = fopen(hashes.toStdString().c_str(), "a+")) {
+            for (auto cIter = m_files.constBegin(); cIter != m_files.constEnd(); ++cIter)
+            {
+                if (files.find(cIter->fileName().toStdString()) == files.end()) {
+                    if (auto p12_file = fopen(cIter->absoluteFilePath().toStdString().c_str(), "rb"))
+                    {
+                        auto p12 = d2i_PKCS12_fp(p12_file, 0);
+                        fclose(p12_file);
+
+                        bool ok{};
+                        QString text = QInputDialog::getText(0, "Password for " + cIter->fileName(),
+                            "Password:", QLineEdit::Normal, "", &ok);
+
+                        EVP_PKEY* pk = 0;
+                        X509* cert = 0;
+                        if (!PKCS12_parse(p12, text.toStdString().c_str(), &pk, &cert, 0)) {
+                            char buf[256];
+                            fprintf(stdout, "Error parsing PKCS#12 file: %s\n", ERR_error_string(ERR_get_error(), buf));
+                        }
+                        else {
+                            if (cert) {
+                                const EVP_MD* md = EVP_sha256();
+                                uint8_t sig[64] = {};
+                                uint32_t siglen = sizeof(sig);
+                                if (X509_digest(cert, md, sig, &siglen)) {
+                                    const char* thumb = QByteArray((char*)sig, siglen).toHex().toStdString().c_str();
+                                    fprintf(fd, "%s %s\n", thumb, cIter->fileName().toStdString().c_str());
+                                    if (siglen == thumbPrint.size() && !memcmp(thumb, thumbPrint.data(), siglen)) {
+                                        fname = cIter->fileName().toStdString();
+                                        pkey = pk;      // keep key for decryption
+                                        pk = 0;
+                                    }
+                                }
+                                X509_free(cert);
+                            }
+                            if (pk) EVP_PKEY_free(pk);
+                            PKCS12_free(p12);
+                        }
+                        fclose(p12_file);
+                    }
+                }
+            }
+            fclose(fd);
+        }
+    }
+
+    if (pkey == 0) {
+        auto pfx = (getCertificateFolder() + QString("/") + QString(fname.c_str())).toStdString();
+        if (auto p12_file = fopen(pfx.c_str(), "rb"))
+        {
+            auto p12 = d2i_PKCS12_fp(p12_file, 0);
+            fclose(p12_file);
+
+            bool ok{};
+            QString text = QInputDialog::getText(0, "Password for " + QString(fname.c_str()),
+                "Password:", QLineEdit::Normal, "", &ok);
+
+            if (!PKCS12_parse(p12, text.toStdString().c_str(), &pkey, 0, 0)) {
+                char buf[256];
+                fprintf(stdout, "Error parsing PKCS#12 file: %s\n", ERR_error_string(ERR_get_error(), buf));
+                return resp;
+            }
+            PKCS12_free(p12);
+        }
+    }
+    auto ctx = EVP_PKEY_CTX_new(pkey, NULL);
+    EVP_PKEY_decrypt_init(ctx);
+    EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_OAEP_PADDING);
+    uint8_t buffer[32];
+    size_t bufsiz = sizeof(buffer);
+    if (EVP_PKEY_decrypt(ctx, buffer, &bufsiz, encryptedKey.data(), encryptedKey.size())) {
+        resp = HexArray(buffer, bufsiz);
+    }
+
+    return resp;
 }

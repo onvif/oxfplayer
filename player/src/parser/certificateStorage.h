@@ -29,6 +29,7 @@
 #define CERTIFICATESTORAGE_H
 
 #include <QFileInfo>
+#include "helpers/hexarray.hpp"
 
 //! Certificate storage.
 class CertificateStorage
@@ -52,6 +53,9 @@ public:
 
     //! Check if certificate known.
     bool isCertificateKnown(const QByteArray& binary_certificate);
+
+    //! Try to load pkcs12 file and decrypt the key
+    HexArray decryptKey(const HexArray &thumbPrint, const HexArray &encryptedKey);
 
 private:
     //! List of files

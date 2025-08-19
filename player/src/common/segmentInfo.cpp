@@ -26,6 +26,7 @@
 ************************************************************************************/
 
 #include "segmentInfo.h"
+#include "certificateStorage.h"
 
 SegmentInfo::SegmentInfo(QString file_name /*= QString()*/)
     : m_segment_number(0)
@@ -55,6 +56,11 @@ void SegmentInfo::read(MediaHeaderBox*box)
 {
 	// assume that first track is Video
     if (m_videoTimescale == 0) m_videoTimescale = box->getTimeScale();
+}
+
+void SegmentInfo::read(ProtectionSystemSpecificHeaderBox* box)
+{
+	m_key = CertificateStorage(KEYSTORE_FOLDER).decryptKey(box->getCertThumbprint(), box->getEncryptedKey());
 }
 
 void SegmentInfo::readAfIdentificationBox(AFIdentificationBox *box)

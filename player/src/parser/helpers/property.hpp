@@ -118,7 +118,7 @@ private:
     //! Converts HexArray to strings.
     inline void convert(HexArray value)
     {
-        m_string = value.toHex();
+        m_string = QByteArray((char*)value.data(), value.size()).toHex();
     }
 
     //! Converts DateTime values to strings.
