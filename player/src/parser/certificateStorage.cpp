@@ -130,6 +130,7 @@ HexArray CertificateStorage::decryptKey(const HexArray& thumbPrint, const HexArr
     }
 
     EVP_PKEY* pkey = 0;
+    PKCS12* p12 = 0;
     if (fname.empty()) {        // update hashes if not found
         //
         // If unkown cert hash search for a new pkcs12 file
@@ -140,7 +141,8 @@ HexArray CertificateStorage::decryptKey(const HexArray& thumbPrint, const HexArr
                 if (files.find(cIter->fileName().toStdString()) == files.end()) {
                     if (auto p12_file = fopen(cIter->absoluteFilePath().toStdString().c_str(), "rb"))
                     {
-                        auto p12 = d2i_PKCS12_fp(p12_file, 0);
+                        if (p12) PKCS12_free(p12);
+                        p12 = d2i_PKCS12_fp(p12_file, 0);
                         fclose(p12_file);
 
                         bool ok{};
@@ -170,7 +172,6 @@ HexArray CertificateStorage::decryptKey(const HexArray& thumbPrint, const HexArr
                                 X509_free(cert);
                             }
                             if (pk) EVP_PKEY_free(pk);
-                            PKCS12_free(p12);
                         }
                         fclose(p12_file);
                     }
@@ -185,28 +186,40 @@ HexArray CertificateStorage::decryptKey(const HexArray& thumbPrint, const HexArr
         if (auto p12_file = fopen(pfx.c_str(), "rb"))
         {
             auto p12 = d2i_PKCS12_fp(p12_file, 0);
-            fclose(p12_file);
 
             bool ok{};
             QString text = QInputDialog::getText(0, "Password for " + QString(fname.c_str()),
                 "Password:", QLineEdit::Normal, "", &ok);
-
-            if (!PKCS12_parse(p12, text.toStdString().c_str(), &pkey, 0, 0)) {
+            X509* cert = 0;
+            if (!PKCS12_parse(p12, text.toStdString().c_str(), &pkey, &cert, 0) || pkey == 0) {
                 char buf[256];
                 fprintf(stdout, "Error parsing PKCS#12 file: %s\n", ERR_error_string(ERR_get_error(), buf));
                 return resp;
             }
-            PKCS12_free(p12);
+            fclose(p12_file);
         }
     }
+
+    char buf[256];
     auto ctx = EVP_PKEY_CTX_new(pkey, NULL);
     EVP_PKEY_decrypt_init(ctx);
     EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_OAEP_PADDING);
-    uint8_t buffer[32];
+    if (EVP_PKEY_CTX_set_rsa_oaep_md(ctx, EVP_sha256()) <= 0)
+        fprintf(stdout, "Error parsing PKCS#12 file: %s\n", ERR_error_string(ERR_get_error(), buf));
+    
+    uint8_t buffer[1024] = {};
     size_t bufsiz = sizeof(buffer);
-    if (EVP_PKEY_decrypt(ctx, buffer, &bufsiz, encryptedKey.data(), encryptedKey.size())) {
+    EVP_PKEY_decrypt(ctx, NULL, &bufsiz, encryptedKey.data(), encryptedKey.size());
+
+    if (bufsiz <= sizeof(buffer) && EVP_PKEY_decrypt(ctx, buffer, &bufsiz, encryptedKey.data(), encryptedKey.size())) {
         resp = HexArray(buffer, bufsiz);
     }
+    else {
+        fprintf(stdout, "Error parsing PKCS#12 file: %s\n", ERR_error_string(ERR_get_error(), buf));
+    }
+    if (p12) PKCS12_free(p12);
+    EVP_PKEY_CTX_free(ctx);
+    if (pkey) EVP_PKEY_free(pkey);
 
     return resp;
 }
