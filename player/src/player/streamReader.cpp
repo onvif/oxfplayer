@@ -41,10 +41,10 @@ StreamReader::~StreamReader()
     clear();
 }
 
-bool StreamReader::open(const QString& file_name, const QSet<int>& valid_streams)
+bool StreamReader::open(const QString& file_name, const SegmentInfo* segment, const QSet<int>& valid_streams)
 {
     clear();
-    if(!init(file_name, valid_streams))
+    if(!init(file_name, segment, valid_streams))
     {
         clear();
         return false;
@@ -99,16 +99,17 @@ bool StreamReader::seek(int timestamp_ms)
     return true;
 }
 
-bool StreamReader::init(const QString& file_name, const QSet<int>& valid_streams)
+bool StreamReader::init(const QString& file_name, const SegmentInfo* info, const QSet<int>& valid_streams)
 {
     if(file_name.isEmpty() ||
        !QFile::exists(file_name))
         return false;
 
     AVDictionary* format_opts = NULL;
-    av_dict_set(&format_opts, "decryption_key", "76a6c65c5ea762046bd749a2e632ccbb", 0);
+    if (info->m_key.size()) {
+        av_dict_set(&format_opts, "decryption_key", QByteArray(info->m_key).toHex().toStdString().c_str(), 0);
+    }
     if (avformat_open_input(&m_format_context, file_name.toUtf8().data(), 0, &format_opts) != 0)
-//    if(avformat_open_input(&m_format_context, file_name.toUtf8().data(), 0, 0) != 0)
         return false;
 
     if(avformat_find_stream_info(m_format_context, 0) < 0)
