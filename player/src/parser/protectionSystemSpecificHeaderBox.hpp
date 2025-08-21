@@ -29,6 +29,7 @@
 #define PSSH_BOX_H
 
 #include "basic/fullBox.hpp"
+#include <openssl/hpke.h>
 
 typedef uint8_t KidType[16];
 
@@ -65,10 +66,23 @@ public:
     HexArray getKID() { return HexArray(m_kid, sizeof(m_kid)); }
     uint32_t getDataSize() { return m_dataSize; }
     uint32_t getEntries() { return m_entries; }
-    uint16_t getCertThumbprintAlgorithm() { return m_thumbAlg; }
+    uint16_t getCertThumbprintAlg() { return m_thumbAlg; }
     HexArray getCertThumbprint() { return HexArray(m_thumb, m_thumbSize); }
     uint16_t getEncryptionVersion() { return m_encVersion; }
     HexArray getEncryptedKey() { return HexArray(m_encKey, m_encDataSize); }
+    uint16_t getHPKE_KEM() { return m_hpke[0]; }
+    uint16_t getHPKE_KDF() { return m_hpke[1]; }
+    uint16_t getHPKE_AEAD() { return m_hpke[2]; }
+    uint16_t getSharedSecretSize() { 
+        switch (m_hpke[0]) {
+        case OSSL_HPKE_KEM_ID_P256: return 65;
+        case OSSL_HPKE_KEM_ID_P384: return 97;
+        case OSSL_HPKE_KEM_ID_P521: return 209;
+        case OSSL_HPKE_KEM_ID_X25519: return 32;
+        default: return 0;
+        }
+    }
+    HexArray getSharedSecret() { return HexArray(m_sharedSecret, getSharedSecretSize()); }
 
 public:
     BOX_INFO("pssh", "Protection System Specific Header Box")
@@ -83,10 +97,14 @@ protected:
         BOX_PROPERTY(KID);
         BOX_PROPERTY(DataSize);
         BOX_PROPERTY(Entries);
-        BOX_PROPERTY(CertThumbprintAlgorithm);
+        BOX_PROPERTY(CertThumbprintAlg);
         BOX_PROPERTY(CertThumbprint);
         BOX_PROPERTY(EncryptionVersion);
         BOX_PROPERTY(EncryptedKey);
+        BOX_PROPERTY(HPKE_KEM);
+        BOX_PROPERTY(HPKE_KDF);
+        BOX_PROPERTY(HPKE_AEAD);
+        BOX_PROPERTY(SharedSecret);
     }
 
 private:
@@ -107,6 +125,21 @@ private:
                 stream.read(m_encKey, m_encDataSize);
             }
         }
+        else if (m_encVersion == 2) {
+            stream.read(m_hpke[0]);
+            stream.read(m_hpke[1]);
+            stream.read(m_hpke[2]);
+            int sharedSecretSize = getSharedSecretSize();
+            if (sharedSecretSize <= sizeof(m_sharedSecret)) {
+                stream.read(m_sharedSecret, sharedSecretSize);
+            }
+            uint16_t u16;
+            stream.read(u16);
+            m_encDataSize = u16;
+            if (m_encDataSize <= sizeof(m_encKey)) {
+                stream.read(m_encKey, m_encDataSize);
+            }
+        }
     }
 
 private:
@@ -116,9 +149,11 @@ private:
     uint16_t m_thumbAlg;
     uint32_t m_thumbSize;
     uint8_t m_thumb[128];
-    uint16_t m_encVersion;
-    uint32_t m_encDataSize;
+    uint8_t m_encVersion{};
+    uint32_t m_encDataSize{};
     uint8_t m_encKey[1024];
-};
+    uint16_t m_hpke[3]{};
+    uint8_t m_sharedSecret[128]{};
+}; 
 
 #endif // SURVIELANCE_EXPORT_BOX_H

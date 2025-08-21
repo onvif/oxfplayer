@@ -30,6 +30,7 @@
 
 #include <QFileInfo>
 #include "helpers/hexarray.hpp"
+#include "ProtectionSystemSpecificHeaderBox.hpp"
 
 //! Certificate storage.
 class CertificateStorage
@@ -55,7 +56,7 @@ public:
     bool isCertificateKnown(const QByteArray& binary_certificate);
 
     //! Try to load pkcs12 file and decrypt the key
-    HexArray decryptKey(const HexArray &thumbPrint, const HexArray &encryptedKey);
+    HexArray decryptKey(ProtectionSystemSpecificHeaderBox* box);
 
 private:
     //! List of files

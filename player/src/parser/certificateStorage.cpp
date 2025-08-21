@@ -29,9 +29,11 @@
 
 #include <QDir>
 #include <qinputdialog.h>
+#include <qmessagebox.h>
 
 #include "defines.h"
 
+#include <openssl/hpke.h>
 #include <openssl/pkcs12.h>
 #include <openssl/x509.h>
 #include <openssl/err.h>
@@ -104,8 +106,9 @@ bool CertificateStorage::isCertificateKnown(const QByteArray& binary_certificate
     return false;
 }
 
-HexArray CertificateStorage::decryptKey(const HexArray& thumbPrint, const HexArray& encryptedKey)
+HexArray CertificateStorage::decryptKey(ProtectionSystemSpecificHeaderBox* box)
 {
+    HexArray thumbPrint = box->getCertThumbprint();
     HexArray resp;
     //
     // Lookup cached hashes
@@ -192,34 +195,60 @@ HexArray CertificateStorage::decryptKey(const HexArray& thumbPrint, const HexArr
                 "Password:", QLineEdit::Normal, "", &ok);
             X509* cert = 0;
             if (!PKCS12_parse(p12, text.toStdString().c_str(), &pkey, &cert, 0) || pkey == 0) {
-                char buf[256];
-                fprintf(stdout, "Error parsing PKCS#12 file: %s\n", ERR_error_string(ERR_get_error(), buf));
+                QMessageBox::warning(0, "Decryption", "Error accessing private key.\n Check password.");
                 return resp;
             }
             fclose(p12_file);
         }
     }
-
-    char buf[256];
-    auto ctx = EVP_PKEY_CTX_new(pkey, NULL);
-    EVP_PKEY_decrypt_init(ctx);
-    EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_OAEP_PADDING);
-    if (EVP_PKEY_CTX_set_rsa_oaep_md(ctx, EVP_sha256()) <= 0)
-        fprintf(stdout, "Error parsing PKCS#12 file: %s\n", ERR_error_string(ERR_get_error(), buf));
-    
-    uint8_t buffer[1024] = {};
-    size_t bufsiz = sizeof(buffer);
-    EVP_PKEY_decrypt(ctx, NULL, &bufsiz, encryptedKey.data(), encryptedKey.size());
-
-    if (bufsiz <= sizeof(buffer) && EVP_PKEY_decrypt(ctx, buffer, &bufsiz, encryptedKey.data(), encryptedKey.size())) {
-        resp = HexArray(buffer, bufsiz);
+    if (pkey == 0) {
+        QMessageBox::warning(0, "Decryption", QString("Error accessing key ") + QString(fname.c_str()));
+        return resp;
     }
-    else {
-        fprintf(stdout, "Error parsing PKCS#12 file: %s\n", ERR_error_string(ERR_get_error(), buf));
-    }
-    if (p12) PKCS12_free(p12);
-    EVP_PKEY_CTX_free(ctx);
-    if (pkey) EVP_PKEY_free(pkey);
 
+    auto encryptedKey = box->getEncryptedKey();
+    switch (box->getEncryptionVersion()) {
+    case 1: {
+        char buf[256];
+        auto ctx = EVP_PKEY_CTX_new(pkey, NULL);
+        EVP_PKEY_decrypt_init(ctx);
+        EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_OAEP_PADDING);
+        if (EVP_PKEY_CTX_set_rsa_oaep_md(ctx, EVP_sha256()) <= 0)
+            fprintf(stdout, "Error parsing PKCS#12 file: %s\n", ERR_error_string(ERR_get_error(), buf));
+
+        uint8_t buffer[1024] = {};
+        size_t bufsiz = sizeof(buffer);
+        EVP_PKEY_decrypt(ctx, NULL, &bufsiz, encryptedKey.data(), encryptedKey.size());
+
+        if (bufsiz <= sizeof(buffer) && EVP_PKEY_decrypt(ctx, buffer, &bufsiz, encryptedKey.data(), encryptedKey.size())) {
+            resp = HexArray(buffer, bufsiz);
+        }
+        else {
+            fprintf(stdout, "Error parsing PKCS#12 file: %s\n", ERR_error_string(ERR_get_error(), buf));
+        }
+        if (p12) PKCS12_free(p12);
+        EVP_PKEY_CTX_free(ctx);
+        if (pkey) EVP_PKEY_free(pkey);
+        break;
+    }
+    case 2: {
+        OSSL_HPKE_SUITE suite = { box->getHPKE_KEM(), box->getHPKE_KDF(), box->getHPKE_AEAD() };
+        OSSL_HPKE_CTX* ctx = OSSL_HPKE_CTX_new(OSSL_HPKE_MODE_BASE, suite, OSSL_HPKE_ROLE_RECEIVER, NULL, NULL);
+
+        uint8_t buffer[256] = {};
+        size_t bufsiz = sizeof(buffer);
+        if (ctx) {
+            OSSL_HPKE_decap(ctx, box->getSharedSecret().data(), box->getSharedSecret().size(), pkey, NULL, 0);
+            if (OSSL_HPKE_open(ctx, buffer, &bufsiz, NULL, 0, encryptedKey.data(), encryptedKey.size())) {
+                resp = HexArray(buffer, bufsiz);
+            }
+        }
+        OSSL_HPKE_CTX_free(ctx);
+        break;
+    }
+    default:
+        QMessageBox::warning(0, "Decryption", QString("Encryption version not supported"));
+        break;
+    }
     return resp;
 }

@@ -60,7 +60,7 @@ void SegmentInfo::read(MediaHeaderBox*box)
 
 void SegmentInfo::read(ProtectionSystemSpecificHeaderBox* box)
 {
-	m_key = CertificateStorage(KEYSTORE_FOLDER).decryptKey(box->getCertThumbprint(), box->getEncryptedKey());
+	m_key = CertificateStorage(KEYSTORE_FOLDER).decryptKey(box);
 }
 
 void SegmentInfo::readAfIdentificationBox(AFIdentificationBox *box)
