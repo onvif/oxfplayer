@@ -133,9 +133,7 @@ private:
             if (sharedSecretSize <= sizeof(m_sharedSecret)) {
                 stream.read(m_sharedSecret, sharedSecretSize);
             }
-            uint16_t u16;
-            stream.read(u16);
-            m_encDataSize = u16;
+            stream.read(m_encDataSize);
             if (m_encDataSize <= sizeof(m_encKey)) {
                 stream.read(m_encKey, m_encDataSize);
             }
@@ -150,7 +148,7 @@ private:
     uint32_t m_thumbSize;
     uint8_t m_thumb[128];
     uint8_t m_encVersion{};
-    uint32_t m_encDataSize{};
+    uint16_t m_encDataSize{};
     uint8_t m_encKey[1024];
     uint16_t m_hpke[3]{};
     uint8_t m_sharedSecret[128]{};
