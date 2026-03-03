@@ -30,6 +30,7 @@
 
 #include "basic/fullBox.hpp"
 #include <openssl/hpke.h>
+#include <vector>
 
 typedef uint8_t KidType[16];
 
@@ -83,6 +84,7 @@ public:
         }
     }
     HexArray getSharedSecret() { return HexArray(m_sharedSecret, getSharedSecretSize()); }
+    std::vector<uint8_t> getInfo() { return m_info; }
 
 public:
     BOX_INFO("pssh", "Protection System Specific Header Box")
@@ -137,6 +139,14 @@ private:
             if (m_encDataSize <= sizeof(m_encKey)) {
                 stream.read(m_encKey, m_encDataSize);
             }
+            if (stream.getCurrentOffset() < stream.getFinalOffset()) {
+                uint16_t size;
+                stream.read(size);
+                if (size > 0) {
+                    m_info.resize(size);
+                    stream.read(m_info.data(), size);
+                }
+            }
         }
     }
 
@@ -152,6 +162,7 @@ private:
     uint8_t m_encKey[1024];
     uint16_t m_hpke[3]{};
     uint8_t m_sharedSecret[128]{};
+    std::vector<uint8_t> m_info;
 }; 
 
 #endif // SURVIELANCE_EXPORT_BOX_H

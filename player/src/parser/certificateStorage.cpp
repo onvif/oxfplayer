@@ -238,7 +238,7 @@ HexArray CertificateStorage::decryptKey(ProtectionSystemSpecificHeaderBox* box)
         uint8_t buffer[256] = {};
         size_t bufsiz = sizeof(buffer);
         if (ctx) {
-            OSSL_HPKE_decap(ctx, box->getSharedSecret().data(), box->getSharedSecret().size(), pkey, NULL, 0);
+            OSSL_HPKE_decap(ctx, box->getSharedSecret().data(), box->getSharedSecret().size(), pkey, box->getInfo().data(), box->getInfo().size());
             if (OSSL_HPKE_open(ctx, buffer, &bufsiz, NULL, 0, encryptedKey.data(), encryptedKey.size())) {
                 resp = HexArray(buffer, bufsiz);
             }
