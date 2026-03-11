@@ -64,7 +64,10 @@ private slots:
     void verifyFileSignature();
 
     //! This slot will be called when we want to work with certificates.
-    void openCertificateStorage();
+    void openTrustedCertificate();
+
+    //! Open key storage.
+    void openKeyStore();
 
     //! This slot will be called when new Exit selected in menu.
     void exit();

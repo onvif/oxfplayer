@@ -47,6 +47,7 @@
 #include "endian.hpp"
 #include "uint24.hpp"
 #include "optional.hpp"
+#include "hexarray.hpp"
 
 //! Helper class, allowing to build trees of string values. Used for exporting box properties in human readable format. Uses curiosly recurring template pattern.
 class Property CC_CXX11_FINAL
@@ -112,6 +113,12 @@ private:
     inline void convert(FourCC value)
     {
         m_string = (QString)value;
+    }
+
+    //! Converts HexArray to strings.
+    inline void convert(HexArray value)
+    {
+        m_string = QByteArray((char*)value.data(), value.size()).toHex();
     }
 
     //! Converts DateTime values to strings.

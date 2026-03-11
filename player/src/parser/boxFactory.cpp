@@ -57,6 +57,7 @@
 #include "trackHeaderBox.hpp"
 #include "trackRunBox.hpp"
 #include "correctstarttimebox.hpp"
+#include "protectionSystemSpecificHeaderBox.hpp"
 
 BoxFactory::BoxFactory()
 {
@@ -134,6 +135,7 @@ BoxFactory::BoxFactory()
     registerCreator<TrackHeaderBox>();
     registerCreator<TrackRunBox>();
     registerCreator<CorrectStartTimeBox>();
+    registerCreator<ProtectionSystemSpecificHeaderBox>();
 }
 
 BoxFactory & BoxFactory::instance()

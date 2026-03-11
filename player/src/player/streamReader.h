@@ -29,6 +29,7 @@
 #define MAINCONTEXT_H
 
 #include "crosscompilation_cxx11.h"
+#include "segmentInfo.h"
 
 #include "ffmpeg.h"
 
@@ -50,7 +51,7 @@ public:
     ~StreamReader();
 
     //! Init MainContext with file.
-    bool open(const QString& file_name, const QSet<int>& valid_streams = QSet<int>());
+    bool open(const QString& file_name, const SegmentInfo *info, const QSet<int>& valid_streams = QSet<int>());
 
     //! Clear MainContext;
     void clear();
@@ -79,7 +80,7 @@ public:
 
 private:
     //! Init with file.
-    bool init(const QString& file_name, const QSet<int>& valid_streams = QSet<int>());
+    bool init(const QString& file_name, const SegmentInfo *segment, const QSet<int>& valid_streams = QSet<int>());
 
 protected:
     //! Structure that describes one stream in video file.

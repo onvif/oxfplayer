@@ -53,7 +53,8 @@ PlayerWidget::PlayerWidget(QWidget* parent) :
     QObject::connect(m_ui->actionOpen, SIGNAL(triggered()), this, SLOT(onOpenFile()));
     QObject::connect(m_ui->actionFile_structure, SIGNAL(triggered()), this, SIGNAL(showFileStructure()));
     QObject::connect(m_ui->actionFile_signature, SIGNAL(triggered()), this, SIGNAL(verifyFileSignature()));
-    QObject::connect(m_ui->actionCertificate_storage, SIGNAL(triggered()), this, SIGNAL(openCertificateStorage()));
+    QObject::connect(m_ui->actionCertificate_storage, SIGNAL(triggered()), this, SIGNAL(openTrustedCertificate()));
+    QObject::connect(m_ui->actionKey_storage, SIGNAL(triggered()), this, SIGNAL(openKeyStore()));
     QObject::connect(m_ui->actionExit, SIGNAL(triggered()), this, SIGNAL(exit()));
 	QObject::connect(m_ui->actionLocalTime, SIGNAL(triggered()), this, SLOT(showLocalTime()));
 #ifdef MEMORY_INFO

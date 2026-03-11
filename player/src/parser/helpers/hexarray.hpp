@@ -25,43 +25,18 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ************************************************************************************/
 
-#ifndef CERTIFICATESTORAGE_H
-#define CERTIFICATESTORAGE_H
+#ifndef HELPERS_HEXARRAY_H
+#define HELPERS_HEXARRAY_H
 
-#include <QFileInfo>
-#include "helpers/hexarray.hpp"
-#include "ProtectionSystemSpecificHeaderBox.hpp"
-
-//! Certificate storage.
-class CertificateStorage
+#include <vector>
+//! Union describing uint24_t data type.
+class HexArray : public std::vector<uint8_t>
 {
 public:
-    CertificateStorage(const char *folder);
+    HexArray() {}
+    HexArray(uint8_t *data, size_t size) : std::vector<uint8_t>(data, data + size) {}
 
-    ~CertificateStorage();
-
-    //! Get folders with certificate.
-    QString getCertificateFolder();
-
-    //! Update certificate storage.
-    void update();
-
-    //! Get sertificate files info.
-    const QFileInfoList& getFilesList() { return m_files; }
-
-    //! Remove certificate file.
-    void removeCertificate(int index);
-
-    //! Check if certificate known.
-    bool isCertificateKnown(const QByteArray& binary_certificate);
-
-    //! Try to load pkcs12 file and decrypt the key
-    HexArray decryptKey(ProtectionSystemSpecificHeaderBox* box);
-
-private:
-    //! List of files
-    QFileInfoList   m_files;
-    QString m_folder;
 };
 
-#endif // CERTIFICATESTORAGE_H
+
+#endif // HELPERS_UINT24_H
