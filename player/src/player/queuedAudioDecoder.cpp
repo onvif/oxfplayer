@@ -62,12 +62,13 @@ void QueuedAudioDecoder::setIndex(int index)
 void QueuedAudioDecoder::processPacket(AVPacket* packet, int timestamp_ms)
 {
     AVFrame* frame = av_frame_alloc();
+    auto stream = m_streams[m_streamIndex];
 
-    avcodec_send_packet(m_stream->codec, packet);
+    avcodec_send_packet(stream.m_codec, packet);
 
-    while (avcodec_receive_frame(m_stream->codec, frame) == 0)
+    while (avcodec_receive_frame(stream.m_codec, frame) == 0)
     {
-        int data_size = av_samples_get_buffer_size(0, frame->channels, frame->nb_samples, (AVSampleFormat)frame->format, 1);
+        int data_size = av_samples_get_buffer_size(0, frame->ch_layout.nb_channels, frame->nb_samples, (AVSampleFormat)frame->format, 1);
 
         if(data_size > 0)
         {
@@ -111,9 +112,9 @@ void QueuedAudioDecoder::processPacket(AVPacket* packet, int timestamp_ms)
 
 void QueuedAudioDecoder::initSwrContext(AVFrame* frame)
 {
-    m_swr_context = swr_alloc_set_opts(0,
-        m_context.m_audio_params.m_channel_layout, m_context.m_audio_params.m_fmt, m_context.m_audio_params.m_freq,
-                                       frame->channel_layout, (AVSampleFormat)frame->format, frame->sample_rate,
+    swr_alloc_set_opts2(&m_swr_context,
+        &m_context.m_audio_params.m_channel_layout, m_context.m_audio_params.m_fmt, m_context.m_audio_params.m_freq,
+                                       &frame->ch_layout, (AVSampleFormat)frame->format, frame->sample_rate,
                                        0, 0);
     if(m_swr_context != nullptr)
     {

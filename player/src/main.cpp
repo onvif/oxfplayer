@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     return a.exec();
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <Windows.h>
 int CALLBACK WinMain(HINSTANCE , HINSTANCE , LPSTR pCmdLine, int )
 {

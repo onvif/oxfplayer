@@ -62,7 +62,7 @@ public:
 				int64_t time;
 				stream.read(id);
 				stream.read(time);
-				CorrectionEntry value(id, QDateTime(QDate(1601, 1, 1), QTime(0, 0), Qt::UTC).addMSecs(time / 10000) );
+				CorrectionEntry value(id, QDateTime(QDate(1601, 1, 1), QTime(0, 0), QTimeZone::utc()).addMSecs(time / 10000) );
 				m_entries.append(value);
 			}
     }

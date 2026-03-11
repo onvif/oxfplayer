@@ -45,7 +45,7 @@ struct AudioParams
     //! Channels count.
     int             m_channels;
     //! Channel layout.
-    int64_t         m_channel_layout;
+    AVChannelLayout m_channel_layout;
     //! Format of audio data.
     AVSampleFormat  m_fmt;
     //! Size of one sample in specified format.
@@ -54,7 +54,7 @@ struct AudioParams
     AudioParams() :
         m_freq(0),
         m_channels(0),
-        m_channel_layout(0),
+        m_channel_layout({}),
         m_fmt(AV_SAMPLE_FMT_NONE),
         m_fmt_size(0)
     {}

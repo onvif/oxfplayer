@@ -50,8 +50,8 @@ public:
     explicit MediaHeaderBox(ChildrenMixin * parent = nullptr)
         : Box(parent)
         , FullBoxType()
-        , m_creation_time(QDate(1904, 1, 1), QTime(0, 0), Qt::UTC)
-        , m_modification_time(QDate(1904, 1, 1), QTime(0, 0), Qt::UTC)
+        , m_creation_time(QDate(1904, 1, 1), QTime(0, 0), QTimeZone::utc())
+        , m_modification_time(QDate(1904, 1, 1), QTime(0, 0), QTimeZone::utc())
     {}
 
 public:

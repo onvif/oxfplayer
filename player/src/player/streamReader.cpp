@@ -77,7 +77,7 @@ AVCodecContext* StreamReader::getCodecContext(int index)
 {
     if(index >= 0 &&
        index < m_streams.size())
-        return m_streams[index].m_codec_context;
+        return m_streams[index].m_codec;
     return 0;
 }
 
@@ -94,7 +94,7 @@ bool StreamReader::seek(int timestamp_ms)
         res = avformat_seek_file(m_format_context, cIter->m_stream->index, 0, pos, pos, 0);
         if(res < 0)
             res = avformat_seek_file(m_format_context, cIter->m_stream->index, 0, pos, pos, 0);
-        if (cIter->m_codec) avcodec_flush_buffers(cIter->m_codec_context);
+        if (cIter->m_codec) avcodec_flush_buffers(cIter->m_codec);
     }
     return true;
 }
@@ -113,34 +113,35 @@ bool StreamReader::init(const QString& file_name, const QSet<int>& valid_streams
 
     for(unsigned int index = 0; index < m_format_context->nb_streams; ++index)
     {
-        if(m_format_context->streams[index]->codec->codec_type != m_stream_type ||
+        if(m_format_context->streams[index]->codecpar->codec_type != m_stream_type ||
            (valid_streams.size() &&
             !valid_streams.contains(m_format_context->streams[index]->id))
           )
             continue;
         StreamInfo si;
         si.m_index = index;
-        if(openStream(index, si.m_stream, si.m_codec_context, si.m_codec) || m_stream_type == AVMEDIA_TYPE_DATA)
+        if(openStream(index, &si) || m_stream_type == AVMEDIA_TYPE_DATA)
             m_streams.push_back(si);
     }
-
     return true;
 }
 
-bool StreamReader::openStream(int index, AVStream*& stream, AVCodecContext*& codec_context, AVCodec*& codec)
+bool StreamReader::openStream(int index, StreamInfo* si)
 {
-    stream = m_format_context->streams[index];
+    si->m_stream = m_format_context->streams[index];
 
-    if(stream == nullptr)
+    if(si->m_stream == nullptr)
         return false;
 
-    codec_context = stream->codec;
+    auto codec = (AVCodec*)avcodec_find_decoder(si->m_stream->codecpar->codec_id);
 
-    codec = avcodec_find_decoder(codec_context->codec_id);
-    if(codec == nullptr)
+    if (codec == nullptr)
         return false;
 
-    if(avcodec_open2(codec_context, codec, 0) != 0)
+    si->m_codec = avcodec_alloc_context3(codec);
+    avcodec_parameters_to_context(si->m_codec, si->m_stream->codecpar);
+
+    if(avcodec_open2(si->m_codec, codec, 0) != 0)
         return false;
 
     return true;

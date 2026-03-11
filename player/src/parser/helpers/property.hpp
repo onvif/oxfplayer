@@ -87,7 +87,7 @@ private:
     //! Converts boolean values to strings.
     inline void convert(bool value)
     {
-        m_string = value ? "True" : "False";
+        m_string = QString::fromStdString(value ? "True" : "False");
     }
 
     //! Converts UUID values to strings.

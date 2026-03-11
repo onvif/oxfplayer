@@ -34,7 +34,7 @@
 #include <sstream>
 #include <unordered_map>
 
-#include "../../ext/pugixml/src/pugixml.hpp"
+#include <pugixml.hpp>
 
 #include <QDebug>
 #include <qdatetime.h>
@@ -94,8 +94,8 @@ static void addChildren(pugi::xml_node& node, QTreeWidgetItem *parent)
 {
     for (auto attr = node.first_attribute(); attr; attr = attr.next_attribute()) {
         auto item = new QTreeWidgetItem(parent);
-        item->setText(0, attr.name());
-        item->setText(1, attr.value());
+        item->setText(0, QString::fromLatin1(attr.name()));
+        item->setText(1, QString::fromLatin1(attr.value()));
     }
     for (auto child = node.first_child(); child; child = child.next_sibling()) {
         const char* name = strchr(child.name(), ':');
@@ -103,7 +103,7 @@ static void addChildren(pugi::xml_node& node, QTreeWidgetItem *parent)
         if (!strcmp(name, "SimpleItem")) {
             auto item = new QTreeWidgetItem(parent);
             for (auto attr = child.first_attribute(); attr; attr = attr.next_attribute()) {
-                item->setText(attr.name()[0] == 'V' ? 1 : 0, attr.value());
+                item->setText(attr.name()[0] == 'V' ? 1 : 0, QString::fromLatin1(attr.value()));
             }
         }
         else if (!strcmp(name, "ElementItem")) {
@@ -111,9 +111,9 @@ static void addChildren(pugi::xml_node& node, QTreeWidgetItem *parent)
         }
         else {
             auto item = new QTreeWidgetItem(parent);
-            item->setText(0, name);
+            item->setText(0, QString::fromLatin1(name));
             if (child.first_child()) addChildren(child, item);
-            item->setText(1, child.value());
+            item->setText(1, QString::fromLatin1(child.value()));
         }
     }
 }
@@ -123,8 +123,6 @@ void MetadataDecoder::processPacket(AVPacket* packet, int timestamp_ms)
     VideoFrame video_frame(timestamp_ms);
     video_frame.m_isOverlay = true;
     if (m_decoder) {
-        m_frame_height = m_decoder->frameHeight();
-        m_frame_width = m_decoder->frameWidth();
         parseMetadata(video_frame, packet->buf->data, packet->buf->size, timestamp_ms);
     }
 }
@@ -132,13 +130,13 @@ void MetadataDecoder::processPacket(AVPacket* packet, int timestamp_ms)
 void MetadataDecoder::parseMetadata(VideoFrame& frame, const unsigned char* buffer, size_t bytes, int time)
 {
     bool hasMetadata = false;
-    QImage image(m_frame_width, m_frame_height, QImage::Format_RGB32);
+    QImage image(m_decoder->frameWidth(), m_decoder->frameHeight(), QImage::Format_RGB32);
     image.fill(Qt::black);
     QPainter painter(&image);
     QPen redpen(Qt::red, 5
     );
     painter.setPen(redpen);
-    Transform trans(m_frame_width, m_frame_height);
+    Transform trans(m_decoder->frameWidth(), m_decoder->frameHeight());
 
     pugi::xml_document doc;
     if (doc.load_buffer(buffer, bytes, pugi::encoding_utf8).status == 0) {
@@ -192,7 +190,7 @@ void MetadataDecoder::parseMetadata(VideoFrame& frame, const unsigned char* buff
                         auto msg = read(mc, "Message");
                         auto ttmsg = msg.first_child();
                         auto utctime = ttmsg.attribute("UtcTime").value();
-                        auto datetime = QDateTime::fromString(utctime, Qt::ISODate);
+                        auto datetime = QDateTime::fromString(QString::fromLatin1(utctime), Qt::ISODate);
                         int timeoff = m_context.m_segment->getStartTime().msecsTo(datetime);
                         if (msg && topic) {
                             std::stringstream ss;
@@ -201,7 +199,7 @@ void MetadataDecoder::parseMetadata(VideoFrame& frame, const unsigned char* buff
                             auto test = ss.str();
                             auto item = new EventItem(timeoff >= 0 ? timeoff : time, hasher(ss.str()));
                             item->setText(0, "Event");
-                            item->setText(1, topic.first_child().value());
+                            item->setText(1, QString::fromLatin1(topic.first_child().value()));
                             addChildren(ttmsg, item);
                             m_eventQueue.push(item);
                         }

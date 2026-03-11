@@ -32,6 +32,7 @@
 
 #include <QList>
 #include <QHash>
+#include <qtimezone.h>
 
 #include <functional>
 
