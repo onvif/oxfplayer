@@ -44,44 +44,6 @@ if(MSVC)
 endif()
 
 ################################################################################
-# Global linker options
-################################################################################
-if(MSVC)
-    # remove default flags provided with CMake for MSVC
-    set(CMAKE_EXE_LINKER_FLAGS "")
-    set(CMAKE_MODULE_LINKER_FLAGS "")
-    set(CMAKE_SHARED_LINKER_FLAGS "")
-    set(CMAKE_STATIC_LINKER_FLAGS "")
-    set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS}")
-    set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_STATIC_LINKER_FLAGS_DEBUG "${CMAKE_STATIC_LINKER_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS}")
-    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_STATIC_LINKER_FLAGS_RELEASE "${CMAKE_STATIC_LINKER_FLAGS}")
-endif()
-
-################################################################################
-# Nuget packages function stub.
-################################################################################
-function(use_package TARGET PACKAGE VERSION)
-    message(WARNING "No implementation of use_package. Create yours. "
-                    "Package \"${PACKAGE}\" with version \"${VERSION}\" "
-                    "for target \"${TARGET}\" is ignored!")
-endfunction()
-
-################################################################################
-# Common utils
-################################################################################
-include(CMake/Utils.cmake)
-
-################################################################################
-# Additional Global Settings(add specific info there)
-################################################################################
-include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
-
-################################################################################
 # Use solution folders feature
 ################################################################################
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -212,26 +174,8 @@ set(ALL_FILES
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 
-use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
-set(ROOT_NAMESPACE ONVIFPlayer)
+#set(ROOT_NAMESPACE ONVIFPlayer)
 
-#set_target_properties(${PROJECT_NAME} PROPERTIES
-#    VS_GLOBAL_KEYWORD "Qt4VSv1.0"
-#)
-################################################################################
-# Target name
-################################################################################
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    TARGET_NAME_DEBUG   "ONVIFPlayer"
-    TARGET_NAME_RELEASE "ONVIFPlayer"
-)
-################################################################################
-# Output directory
-################################################################################
-#set_target_properties(${PROJECT_NAME} PROPERTIES
-#    OUTPUT_DIRECTORY_DEBUG   "${OUTPUT_DIRECTORY}"
-#    OUTPUT_DIRECTORY_RELEASE "${OUTPUT_DIRECTORY}"
-#)
 ################################################################################
 # MSVC runtime library
 ################################################################################
@@ -251,29 +195,19 @@ set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUN
 # Include directories
 ################################################################################
 target_include_directories(${PROJECT_NAME} PUBLIC
-    "$<$<CONFIG:Debug>:"
-        "${CMAKE_CURRENT_SOURCE_DIR}/Debug"
-    ">"
-    "$<$<CONFIG:Release>:"
-        "${CMAKE_CURRENT_SOURCE_DIR}/release"
-    ">"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/common;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/player;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/playerUI;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/parser;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/parserUI;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/ext/PortAudio/include;"
+    "./src;"
+    "./src/common;"
+    "./src/player;"
+    "./src/playerUI;"
+    "./src/parser;"
+    "./src/parserUI;"
+    "./ext/PortAudio/include;"
     "$ENV{QTDIR}/include;"
     "$ENV{QTDIR}/include/QtMultimedia;"
     "$ENV{QTDIR}/include/QtWidgets;"
     "$ENV{QTDIR}/include/QtNetwork;"
     "$ENV{QTDIR}/include/QtGui;"
-    "$ENV{QTDIR}/include/QtANGLE;"
     "$ENV{QTDIR}/include/QtCore;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/.;"
-    "$ENV{QTDIR}/mkspecs/win32-msvc2012;"
-    "${CMAKE_CURRENT_SOURCE_DIR}/GeneratedFiles"
 )
 
 ################################################################################
@@ -288,16 +222,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
         "QT_NO_DEBUG;"
         "NDEBUG"
     ">"
-    "_WINDOWS;"
-    "UNICODE;"
-    "WIN32;"
-    "DECODE_USING_QUEUE;"
-    "QT_MULTIMEDIA_LIB;"
-    "QT_WIDGETS_LIB;"
-    "QT_NETWORK_LIB;"
-    "QT_GUI_LIB;"
-    "QT_CORE_LIB;"
-    "QT_OPENGL_ES_2"
+   "UNICODE;"
 )
 
 ################################################################################

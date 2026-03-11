@@ -54,7 +54,7 @@ CertificateStorage::~CertificateStorage()
 QString CertificateStorage::getCertificateFolder()
 {
     QString certificates_folder;
-#ifdef WIN32
+#ifdef _WIN32
     certificates_folder = QDir::homePath() + WINP_APP_DATA_ROAMING + COMPANY_NAME + "/" + PRODUCT_NAME + "/" + m_folder;
 #endif //WIN32
 #ifdef UNIX

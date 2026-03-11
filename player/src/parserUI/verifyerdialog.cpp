@@ -220,10 +220,9 @@ void VerifyerDialog::onCertificateActionClicked(void)
 {
     QString filter = CERT_FORMAT_EXTENSIONS;
     QString dir;
-#ifdef WIN32
+#ifdef _WIN32
     dir = QDir::homePath() + WINP_APP_DATA_ROAMING + COMPANY_NAME + "/" + PRODUCT_NAME + "/" + CERTIFICATES_FOLDER + "/";
-#endif //WIN32
-#ifdef UNIX
+#else
     dir = QDir::homePath() + "/." + PRODUCT_NAME + "/" + CERTIFICATES_FOLDER + "/";
 #endif //UNIX
     if(!QDir(dir).exists())
