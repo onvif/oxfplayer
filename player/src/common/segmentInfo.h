@@ -46,6 +46,7 @@
 #include "correctstarttimebox.hpp"
 #include "helpers/optional.hpp"
 #include "templateTableBoxes.hpp"
+#include "protectionSystemSpecificHeaderBox.hpp"
 
 /** 
  * Class that descibes one MP4 file. 
@@ -72,6 +73,7 @@ public:
 	void read(CompositionOffsetBox* box);
 	void read(TrackRunBox* box);
 	void read(MediaHeaderBox* box);
+    void read(ProtectionSystemSpecificHeaderBox* box);
 
     //! Returns if a fragment is a Surveillance file.
     bool isSurveillanceFragment() const;
@@ -154,6 +156,7 @@ private:
 public:
 	uint32_t						m_currentParserTrackId;		///< track id currently beingparsed
     uint32_t                        m_defaultSampleDuration;    ///< default sample duration of last tfhd read in order to pass to trun
+    HexArray                        m_key; ///< optional key for decrypting
 };
 
 typedef QList<SegmentInfo> SegmentList;

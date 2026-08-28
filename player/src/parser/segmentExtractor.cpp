@@ -115,5 +115,8 @@ void SegmentExtractor::onBoxCreated(Box *box)
 	case 'mdhd':
 		m_segments.back().read(dynamic_cast<MediaHeaderBox*>(box));
 		break;
+	case 'pssh':
+		m_segments.back().read(dynamic_cast<ProtectionSystemSpecificHeaderBox*>(box));
+		break;
 	}
 }

@@ -55,6 +55,7 @@
 #include "trackHeaderBox.hpp"
 #include "trackRunBox.hpp"
 #include "correctstarttimebox.hpp"
+#include "protectionSystemSpecificHeaderBox.hpp"
 
 ConsistencyChecker::ConsistencyChecker()
     : m_current_box(nullptr)
@@ -89,7 +90,8 @@ ConsistencyChecker::ConsistencyChecker()
         this->zeroOrOneCheck<MetaBox>();
         this->zeroOrOneCheck<MovieExtendsBox>();
         this->zeroOrOneCheck<UserDataBox>();
-    });
+        this->zeroOrOneCheck<ProtectionSystemSpecificHeaderBox>();
+        });
 
     registerChecker<TrackBox>( [this] () {
         this->exactlyOneCheck<MediaBox>();

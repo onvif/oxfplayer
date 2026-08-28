@@ -249,9 +249,9 @@ bool Engine::initDecoders(const QString& file_name, SegmentInfo *segment)
 {
     bool res = true;
 
-    res = res && m_video_decoder.open(file_name);
-    res = res && m_audio_decoder.open(file_name);
-    res = res && m_metadata_decoder.open(file_name);
+    res = res && m_video_decoder.open(file_name, segment);
+    res = res && m_audio_decoder.open(file_name, segment);
+    res = res && m_metadata_decoder.open(file_name, segment);
     res = res && m_video_decoder.getStreamsCount();
     m_video_decoder.m_context.m_segment = segment;
     m_metadata_decoder.m_context.m_segment = segment;

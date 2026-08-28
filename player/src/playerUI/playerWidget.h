@@ -75,7 +75,10 @@ signals:
     void verifyFileSignature();
 
     //! Open certificate storage.
-    void openCertificateStorage();
+    void openTrustedCertificate();
+
+    //! Open key storage.
+    void openKeyStore();
 
     //! Change video stream.
     void changeVideoStream(int index);

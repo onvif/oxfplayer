@@ -55,7 +55,8 @@ Controller::Controller(Engine& engine,
     QObject::connect(&m_player_widget, SIGNAL(changeAudioStream(int)), this, SLOT(onAudioStreamIndexChanged(int)));
     QObject::connect(&m_player_widget, SIGNAL(showFileStructure()), this, SLOT(showFileStructure()));
     QObject::connect(&m_player_widget, SIGNAL(verifyFileSignature()), this, SLOT(verifyFileSignature()));
-    QObject::connect(&m_player_widget, SIGNAL(openCertificateStorage()), this, SLOT(openCertificateStorage()));
+    QObject::connect(&m_player_widget, SIGNAL(openTrustedCertificate()), this, SLOT(openTrustedCertificate()));
+    QObject::connect(&m_player_widget, SIGNAL(openKeyStore()), this, SLOT(openKeyStore()));
     QObject::connect(&m_player_widget, SIGNAL(exit()), this, SLOT(exit()));
     QObject::connect(&m_player_widget, SIGNAL(showLocalTimeChanged(bool)), this, SLOT(onshowLocalTimeChanged(bool)));
 
@@ -167,9 +168,15 @@ void Controller::verifyFileSignature()
     m_verifyer_dialog.show();
 }
 
-void Controller::openCertificateStorage()
+void Controller::openTrustedCertificate()
 {
-    CertificateStorageDialog certificate_storage_dialog(&m_player_widget);
+    CertificateStorageDialog certificate_storage_dialog(&m_player_widget, "Trusted Certificate Authorities", "Certificates (*.der;*.cer;*.crt)", CERTIFICATES_FOLDER);
+    certificate_storage_dialog.exec();
+}
+
+void Controller::openKeyStore()
+{
+    CertificateStorageDialog certificate_storage_dialog(&m_player_widget, "Decryption Keys", "PKCS12 (*.pfx)", KEYSTORE_FOLDER);
     certificate_storage_dialog.exec();
 }
 
